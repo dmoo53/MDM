@@ -1,0 +1,44 @@
+//set values
+entry.setEntryAttrib("NEW UCoA Programme Primary Spec/Parent", "Yes") ;
+entry.setEntryAttrib("NEW UCoA Programme Primary Spec/Allow Budgeting", "No") ;
+entry.setEntryAttrib("NEW UCoA Programme Primary Spec/Allow Posting", "No") ;
+entry.setEntryAttrib("NEW UCoA Programme Primary Spec/Account Type", "Programme") ;
+entry.setEntryAttrib("NEW UCoA Programme Primary Spec/Third Party Control Account", "No") ;
+entry.setEntryAttrib("NEW UCoA Programme Primary Spec/Reconcile", "No") ;
+
+
+
+//Add relevant secondary Specs
+
+
+secondarySpec =[];
+//Level 0 dummy 
+secondarySpec.add("nothing");
+//Level one Secondary spec
+secondarySpec.add("nothing");
+//Level 2 secondarySpec
+secondarySpec.add("UCoA Programme Level 2");
+//Level 2 secondarySpec
+secondarySpec.add("UCoA Programme Level 3");
+
+
+
+categoryLevels =[];
+
+categoryLevels = entry.getCategoryLevels();
+itemLevel=categoryLevels[0];
+
+
+
+for(i=1; i<secondarySpec.size();i++)
+{
+	if (itemLevel==i && secondarySpec[i]!="nothing")
+	{
+	
+		entry.addSecondarySpecToCategory(secondarySpec[i]);
+	}
+	else 
+	{
+	//no secondary spec required
+	}
+}

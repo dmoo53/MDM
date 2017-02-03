@@ -1,0 +1,125 @@
+//Build the categories in the following function
+function buildMyCategory(attrs){
+
+	ctr = getCategoryTreeByName("Fall 2008 Sale");
+
+	level1Id 		= checkString(attrs[0], "");
+	sectionName 		= checkString(attrs[1], "");
+	level2Id 		= checkString(attrs[2], "");
+	page 			= checkString(attrs[3], "");
+	level3Id 		= checkString(attrs[4], "");
+	coreHierarchyId		= checkString(attrs[5], "");
+	subSectionName		= checkString(attrs[6], "");
+	thumbnailImage		= checkString(attrs[7], "");
+	fullImage		= checkString(attrs[8], "");
+
+	//key = categoryID;
+	//path = "101" + "/" + parentCategoryID + "/" + categoryID;
+	
+	//effective date information
+	currentDate = today();
+	nextDate = currentDate;
+	nextDate = nextDate.addDate("YEAR" , 10);
+	
+	
+	
+	var key;
+	var path;
+	var categoryName;
+	
+	if ( ( level2Id == "") && ( level3Id == "") ){
+		
+		key = level1Id;	
+		path = level1Id;
+		categoryName = sectionName;
+	}else if ( level3Id == ""){
+		
+		key = level2Id;	
+		path = level1Id + "/" + level2Id;
+		categoryName = page;
+	} else {
+		
+		key = level3Id;	
+		path = level1Id + "/" + level2Id + "/" + level3Id;
+		categoryName = subSectionName;
+	}
+	
+	out.writeln(ctr);
+	
+	var myCat;
+	
+	//build only once, update, if exists
+	cats = ctr.getCategorySetByPrimaryKey(key);
+	
+	if (cats.getCategorySetSize() < 1){
+	
+               myCat = new Category(ctr, path, "/", key);
+
+	}else{
+	
+		forEachCategorySetElement(cats, cat) { 
+			
+			myCat = cat;	
+		}
+	}
+
+	if (myCat != null){
+		
+		out.writeln("Building category " + key + "....");
+		
+		out.writeln("key: " + key);
+		out.writeln("path: " + path);
+		out.writeln("displayName: " + categoryName);
+
+		myCat.setCategoryAttrib("Master Category Spec/Display Name/en_US", categoryName);
+		myCat.setCategoryAttrib("Master Category Spec/Display Name/es_ES", categoryName);
+		myCat.setCategoryAttrib("Master Category Spec/Display Name/de_DE", categoryName);
+		myCat.setCategoryAttrib("Master Category Spec/Display Name/fr_FR", categoryName);
+		myCat.setCategoryAttrib("Master Category Spec/Short Description", categoryName);
+		myCat.setCategoryAttrib("Master Category Spec/Long Description", categoryName);
+		myCat.setCategoryAttrib("Master Category Spec/Status", "Active");
+
+		
+		if (fullImage != ""){
+
+			myCat.setCategoryAttrib("Master Category Spec/Department Image", fullImage);
+		}
+
+		if (thumbnailImage != ""){
+
+			myCat.setCategoryAttrib("Master Category Spec/Banner Image", thumbnailImage);
+		}
+		
+		myCat.setCategoryAttrib("Master Category Spec/Effective Start Date", currentDate);
+		myCat.setCategoryAttrib("Master Category Spec/Effective End Date", nextDate);
+
+	getScriptByPath("/scripts/triggers/WPC.Utils.Global.FunctionLibrary").getFunctionByName("writeCat").invoke(myCat);
+
+		//out.writeln(myCat);
+		//ctr.saveCategoryTree();
+	}
+
+}
+parser = newCSVParser(in);
+
+var headers = parser.splitLine();
+
+bDone = false;
+
+//for (lineCount=0; lineCount < 5; lineCount++){
+while(!bDone){
+	attrs = parser.splitLine();
+	
+	
+		 
+	bDone = (null == attrs);
+	
+	if (bDone==false){
+						
+		  if (attrs != null){
+  			  	
+			buildMyCategory(attrs);
+
+		}
+	}
+}

@@ -1,0 +1,4 @@
+if(item.getEntryAttrib("Digital Asset/AssociationId") == null)
+{
+  item.setEntryAttrib("Digital Asset/AssociationId", rand(10000000));
+}

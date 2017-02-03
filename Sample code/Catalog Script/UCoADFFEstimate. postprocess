@@ -1,0 +1,24 @@
+// validate key format
+var rexp = buildRE("(\d\d\d_\D\D\d\d|NA)",1);
+var Name = checkString(entry.getEntryAttrib("New UCoA Spport Key and Desc/Key"),"");
+var rootnode = entry.getRootEntryNode();
+var node = rootnode.getEntryNode("New UCoA Spport Key and Desc/Key");
+var NameAfterRe = rexp.substitute(Name,"");
+if(NameAfterRe!=""){
+	// fail validation
+	node.throwValidationError("PATTERN","The supplied value does not match the required pattern \d\d\d_\D\D\d\d");
+} else { 
+	//OK
+}
+	
+
+//Check whether Description is not empty
+var check = checkString(entry.getEntryAttrib("New UCoA Spport Key and Desc/Name"),"");
+var rootnode = entry.getRootEntryNode();
+var node = rootnode.getEntryNode("New UCoA Spport Key and Desc/Name");
+if (check=="") {
+	// fail validation
+	node.throwValidationError("VALIDATION_RULE","DFF Estimate Row cannot be empty");
+} else { 
+	//OK
+}

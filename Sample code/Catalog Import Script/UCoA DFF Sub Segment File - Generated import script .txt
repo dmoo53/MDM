@@ -1,0 +1,24 @@
+in.nextLine();
+var parser = newCSVParser(in);
+var bDone = false;
+while(!bDone)
+{
+    var attrs = parser.splitLine();
+    bDone = (null == attrs);
+    if (!bDone)
+    {
+        var itemAttrs = [];
+        itemAttrs["UCoA DFF Sub Segment File/Category ID"] = attrs[0];
+        itemAttrs["UCoA DFF Sub Segment File/Category Name"] = attrs[1];
+        itemAttrs["UCoA DFF Sub Segment File/Item ID"] = attrs[2];
+        itemAttrs["UCoA DFF Sub Segment File/Item Name"] = attrs[3];
+        itemAttrs["UCoA DFF Sub Segment File/Estimate Row"] = attrs[4];
+        var itemValidatedAttrs = validateMappedAttribs(itemAttrs);
+        if (null != itemValidatedAttrs)
+        {
+            var item = buildCtgItem();
+            item.setCtgItemMappedAttribs(itemValidatedAttrs);
+            item.saveCtgItem();
+        }
+    }
+}

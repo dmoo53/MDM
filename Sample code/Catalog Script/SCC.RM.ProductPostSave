@@ -1,0 +1,50 @@
+/// @file 
+/// This script handle processing post saving on the Product container
+/// @author Vincent Fages-Gouyou
+/// @date 16-Feb-2007
+/// $Id: SCC.RM.ProductPostSave.wpcs,v 1.2 2008/03/27 12:42:05 vfagesgo Exp $ 
+
+/// @name Functions
+/// @brief Function imported from library to be used.
+/// @{
+
+var sLib = getScriptByPath("/scripts/triggers/SCC.RM.LibContainerUDL");
+var init = sLib.getFunctionByName("init");
+var trackUDLChange = sLib.getFunctionByName("trackUDLChange");
+
+///@}
+
+init.invoke("SCC.RM.ProductPostSave");
+trackUDLChange.invoke(item);
+
+/// $Log: SCC.RM.ProductPostSave.wpcs,v $
+/// Revision 1.2  2008/03/27 12:42:05  vfagesgo
+/// Update naming convention
+///
+/// Revision 1.1  2008/03/27 12:18:12  vfagesgo
+/// *** empty log message ***
+///
+/// Revision 1.2  2007/03/14 13:27:56  cgrote
+/// Standardized headers and footers.
+///
+
+
+// ------------------------------------------------------------
+/// @file
+/// $Title: WPC.Catalog.PostSave $
+/// $Description: Post-save script for items$
+/// @brief This catalog script is invoked when an item is saved and it saves the
+/// item information to a UDL
+
+//Global Script Variables
+//******************************
+var udlScriptPath = "/scripts/triggers/WPC.Delta.SaveToUDL";
+var udlScriptName = "writeLog";
+var productActionscript = "productAction";
+
+var oLogger = getLogger("PROFILE_TEST");
+oLogger.loggerDebug("_Func [WPC.Catalog.PostSave]");
+oLogger.loggerDebug("Time Stamp: " + today());
+
+var saveResult = entry.getEntrySaveResult();
+getScriptByPath(udlScriptPath).getFunctionByName(productActionscript).invoke(entry,saveResult);

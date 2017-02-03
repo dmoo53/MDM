@@ -1,0 +1,12 @@
+// if this is level 2 category item
+var rexp = buildRE("\d\d\d\d\d\D",1);
+var Name = checkString(entry.getEntryAttrib("UCoA Programme Level 2/Programme Level 2 Code"),"");
+var rootnode = entry.getRootEntryNode();
+var node = rootnode.getEntryNode("UCoA Programme Level 2/Programme Level 2 Code");
+var NameAfterRe = rexp.substitute(Name,"");
+if(NameAfterRe==Name){
+	// fail validation
+	node.throwValidationError("PATTERN","The supplied value does not match the required pattern dddddD");
+} else { 
+	//OK
+}

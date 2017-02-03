@@ -1,0 +1,72 @@
+/// @file 
+/// Defines validations to ensure product information matches business rules.
+/// Validations include the following:
+/// <ul>
+///   <li>If there is there is a marketing text provided in any language, a translation must be provided in all other languages.
+/// </ul>
+/// @author Christopher Grote
+/// @date 23-Feb-2007
+/// $Id: SCC.RM.ProductValidations.wpcs,v 1.1 2008/03/27 12:18:12 vfagesgo Exp $ 
+
+var error_productValidations;
+catchError(error_productValidations) {
+
+	var enRoot = entry.getRootEntryNode();
+
+	var sMarketingAttrEN = "Product_Spec/LongMarketingDescription/en_US";
+	var sMarketingAttrFR = "Product_Spec/LongMarketingDescription/fr_FR";
+	
+	var sMarketingValueEN = checkString(entry.getEntryAttrib(sMarketingAttrEN), "");
+	var sMarketingValueFR = checkString(entry.getEntryAttrib(sMarketingAttrFR), "");
+
+	if (sMarketingValueFR != "" && sMarketingValueEN == "") {
+		var enValidation = enRoot.getEntryNode(sMarketingAttrEN);
+		enValidation.throwValidationError("MIN_OCCURENCE", "Must provide an English translation.");
+	} else if (sMarketingValueEN != "" && sMarketingValueFR == "") {
+		var enValidation = enRoot.getEntryNode(sMarketingAttrFR);
+		enValidation.throwValidationError("MIN_OCCURENCE", "Must provide a French translation.");
+	}
+
+	var aDescAttrs = [];
+	aDescAttrs.add(checkString(entry.getEntryAttrib("Product_Spec/Name"), ""));
+	aDescAttrs.add(checkString(entry.getEntryAttrib("Product_Spec/Description"), ""));
+	aDescAttrs.add(checkString(entry.getEntryAttrib("Product_Spec/LongMarketingDescription/en_US"), ""));
+	aDescAttrs.add(checkString(entry.getEntryAttrib("Product_Spec/LongMarketingDescription/fr_FR"), ""));
+
+	var sCombinedDesc = "";
+	for (var iDs = 0; iDs < aDescAttrs.size(); iDs++) {
+		sCombinedDesc = sCombinedDesc + " || " + aDescAttrs[iDs];
+	}
+	entry.setEntryAttrib("Product_Spec/ConcatenatedDescriptions", sCombinedDesc);
+
+}
+
+/// $Log: SCC.RM.ProductValidations.wpcs,v $
+/// Revision 1.1  2008/03/27 12:18:12  vfagesgo
+/// *** empty log message ***
+///
+/// Revision 1.3  2007/08/01 11:34:54  cgrote
+/// Updates to search custom tool, data model, and post-processing to avoid expensive OR-based queries.
+///
+/// Revision 1.2  2007/03/14 13:27:56  cgrote
+/// Standardized headers and footers.
+///
+// ------------------------------------------------------------
+/// @file
+/// $Title: WPC.Catalog.UDLPostProc $
+/// $Description: Post-processing script
+/// @brief This script is invoked when an item is saved. It saves any 
+/// modified attributes and mappings and sets the version.
+
+//Global Script Variables
+//******************************
+
+
+	var udlScriptPath = "/scripts/triggers/WPC.Delta.SaveToUDL";
+	var udlScriptName = "postProcActions";
+
+	var oLogger = getLogger("PROFILE_TEST");
+	oLogger.loggerDebug("_Func [WPC.Catalog.PostProc]");
+
+	
+	getScriptByPath(udlScriptPath).getFunctionByName(udlScriptName).invoke(item);

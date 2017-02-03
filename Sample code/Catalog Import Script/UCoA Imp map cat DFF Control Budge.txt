@@ -1,0 +1,71 @@
+//Print Category To Product Mapping - maps products to print publishing hierarchy
+
+function getCategory(ctrName, catCode){
+	
+	ctr = getCategoryTreeByName(ctrName);
+	cats = ctr.getCategorySetByPrimaryKey(catCode);
+	
+	var cat;
+	
+	forEachCategorySetElement(cats, tempCat) { 
+	
+		cat = tempCat;	
+	}
+
+	return cat;
+}
+
+function mapMyItem(attrs){
+
+	//prepare the attributes
+	printCategoryID 	= attrs[0];
+	categoryDisplayName 	= attrs[1];
+	productID 		= attrs[2];
+	productDisplayName 	= attrs[3];
+
+
+	//get the item. if it's not built, build it
+	ctg = getCtgByName("New UCoA DFF Control Budget");
+	myItem = ctg.getCtgItemByPrimaryKey(productID);
+	
+	if (myItem != null){
+	
+		//go get all categories and map to the item
+		printHierarchyCategory= getCategory("New UCoA Support Entity Hierarchy", printCategoryID);
+	
+		//getScriptByPath("/scripts/triggers/WPC.Utils.Global.FunctionLibrary").getFunctionByName("writeCat").invoke(printHierarchyCategory);
+	
+		if ( printHierarchyCategory != null){
+			
+			myItem.mapCtgItemToCategory(printHierarchyCategory);
+			test = myItem.saveCtgItem();
+			
+			out.writeln("results" + test);
+			
+			
+				//getScriptByPath("/scripts/triggers/WPC.Utils.Global.FunctionLibrary").getFunctionByName("writeItem").invoke(myItem);
+		
+		}
+	
+		////	out.writeln("item save result: " + test);
+	}
+}
+
+parser = newCSVParser(in);
+
+attrs = parser.splitLine();
+
+bDone = false;
+
+while(!bDone)
+{
+	attrs = parser.splitLine();
+	 
+	bDone = (null == attrs);
+	
+	if ((attrs != null)){
+		
+		mapMyItem(attrs);
+		//out.writeln(attrs);
+	}
+}

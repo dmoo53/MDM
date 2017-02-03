@@ -1,0 +1,20 @@
+function associateProduct(item){
+
+	var e = null;
+	
+	catchError(e){
+		
+		var itemID = checkString( item.getEntryAttrib("Product_Spec/Suspect Match Information/Suspect Match Item Number"), "");
+		if (itemID != "") {
+			relatedItem = getCtgByName("Product").getEntryByPrimaryKey(itemID);
+			
+			if (relatedItem != null) {
+			
+					item.setEntryRelationshipAttrib("Product_Spec/Suspect Match Information/Suspect Match Item", getCtgByName("Product"), itemID);
+			}
+		}
+	}
+}
+
+
+associateProduct(item);

@@ -1,0 +1,105 @@
+function buildMyCategory(attrs){
+
+	ctr = getCategoryTreeByName("New Default Programme Hierarchy");
+
+	parentCategoryID	= attrs[0];
+	categoryID 	= attrs[2];
+	categoryName = attrs[3];
+	Enable		= attrs[4];
+	Parent		= attrs[5];
+	AllowBudgeting = attrs[6];
+	AllowPosting = attrs[7];
+	AccountType = attrs[8];
+	ThirdPartyControlAccount = attrs [9];
+	Reconcile = attrs[10];
+	DFFControlBudget = attrs[11];
+	AdminProgramme = attrs[12];
+	Voted = attrs[13];
+
+	//the dates were required for the original file. I have commented them out
+	//currentDate = today();
+	//nextDate = currentDate;
+	//nextDate = nextDate.addDate("YEAR" , 10);
+
+	key = categoryID;
+	//Replaced 101 with1000TT for top level
+	
+	//path = "1000TT" + "/" + parentCategoryID + "/" + categoryID;
+	path = "1000TT" +  "/" + categoryID;
+	
+	out.writeln(ctr);
+	
+	var myCat;
+	
+	cats = ctr.getCategorySetByPrimaryKey(key);
+	
+	if (cats.getCategorySetSize() < 1){
+	
+               myCat = new Category(ctr, path, "/", key);
+
+	}else{
+	
+		forEachCategorySetElement(cats, cat) { 
+			
+			myCat = cat;	
+		}
+	}
+
+	if (myCat != null){
+		
+		out.writeln("Building category " + key + "....");
+		
+		out.writeln("key: " + key);
+		out.writeln("path: " + path);
+		out.writeln("displayName: " + categoryName);
+
+		myCat.setCategoryAttrib("NEW UCoA Programme Primary Spec/Name", categoryName);
+		myCat.setCategoryAttrib("NEW UCoA Programme Primary Spec/Enable", Enable);
+		//myCat.setCategoryAttrib("NEW UCoA Programme Primary Spec/Parent", Parent);
+		//myCat.setCategoryAttrib("NEW UCoA Programme Primary Spec/Allow Budgeting", AllowBudgeting);
+		//myCat.setCategoryAttrib("NEW UCoA Programme Primary Spec/Allow Posting", AllowPosting);
+		//myCat.setCategoryAttrib("NEW UCoA Programme Primary Spec/Account Type", AccountType);
+		//myCat.setCategoryAttrib("NEW UCoA Programme Primary Spec/Third Party Control Account", ThirdPartyControlAccount);
+		//myCat.setCategoryAttrib("NEW UCoA Programme Primary Spec/Reconcile", Reconcile);
+		myCat.setCategoryAttrib("UCoA Programme Level 2/DFF Control Budget", DFFControlBudget);
+		//var rootnode = myCat.getRootEntryNode();
+		//var node = rootnode.getEntryNode("UCoA Programme Level 2/Admin Programme");
+		//node.setEntryRelationshipAttribUsingItem("New UCoA Admin Programme","1","1");
+		
+		
+		//myCat.setEntryRelationshipAttrib("UCoA Programme Level 2/Admin Programme","New UCoA Admin Programme","1");
+		//myCat.setCtgItemRelationshipAttribUsingItem("UCoA Programme Level 2/Admin Programme","1");
+		//myCat.setCategoryAttrib("UCoA Programme Level 2/Admin Programme", AdminProgramme);
+	    myCat.setCategoryAttrib("UCoA Programme Level 2/Voted", Voted);
+
+	//I think the line below just writes out attributes, I have commented it in.
+	//getScriptByPath("/scripts/triggers/WPC.Utils.Global.FunctionLibrary").getFunctionByName("writeCat").invoke(myCat);
+
+		//out.writeln(myCat);
+		ctr.saveCategoryTree();
+	}
+
+}
+parser = newCSVParser(in);
+
+var headers = parser.splitLine();
+
+bDone = false;
+
+//for (lineCount=0; lineCount < 5; lineCount++){
+while(!bDone){
+	attrs = parser.splitLine();
+	
+	
+		 
+	bDone = (null == attrs);
+	
+	if (bDone==false){
+						
+		  if (attrs != null){
+  			  	
+			buildMyCategory(attrs);
+
+		}
+	}
+}

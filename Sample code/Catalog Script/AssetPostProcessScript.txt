@@ -1,0 +1,1 @@
+//script_execution_mode=java_api="japi://com.ibm.tech.dam.extensions.MDMPostSaveChangeEventGenerator.class"

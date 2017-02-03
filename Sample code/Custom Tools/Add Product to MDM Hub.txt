@@ -1,0 +1,6 @@
+<div id='wait_process_image_msg' style='position: absolute; width:660; height:2000; z-index:20; top: 30; left:; display:block'>
+  	<b><center><br><br><br><br><br><blink>Processing Preview Request</blink><br><br></center></b>
+        <b><center>Loading Page....</center></b>
+  	<b><center><br><blink>Please Stand By...</blink></center></b>
+  </div>
+<IFRAME id='modifyImage' name='modifyImage' frameborder=0 height='3000' width='100%' scrolling='no' src='http://mdmpim:7507/utils/invoker.jsp?script=AddProductTool&company_code=gb&invoking_user=Admin&bUserOutput=false' style='visibility: visible' topmargin='0' leftmargin='0' marginwidth='0' marginheight='0' onLoad="document.getElementById('wait_process_image_msg').style.display='none';"></IFRAME>

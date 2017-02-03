@@ -1,0 +1,16 @@
+grossWeight = item.getEntryAttrib("Product_Spec/Gross Weight");
+netWeight = item.getEntryAttrib("Product_Spec/Net Weight");
+
+
+if ( (grossWeight != null)&&(netWeight != null)){
+
+     if (grossWeight < netWeight){
+
+	 rn = item.getRootEntryNode();
+	 var itemNode = rn.getEntryNode( "Product_Spec/Net Weight" );
+          
+          itemNode.throwValidationError( "VALIDATION_RULE", "Gross weight must be greater than net weight.");
+           
+          //res = false;
+     }
+}

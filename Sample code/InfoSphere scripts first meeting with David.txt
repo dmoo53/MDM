@@ -1,0 +1,146 @@
+Correct Regex script
+
+
+var rexp = buildRE("\d\d\d\d\d\d",1);
+var Name = checkString(entry.getEntryAttrib("NEW UCoA Programme Primary Spec/Key"),"");
+var rootnode = entry.getRootEntryNode();
+var node = rootnode.getEntryNode("NEW UCoA Programme Primary Spec/Key");
+var NameAfterRe = rexp.substitute(Name,"");
+if(NameAfterRe!=""){
+	// fail validation
+	node.throwValidationError("PATTERN","The supplied value does not match the required pattern dddddd");
+} else { 
+	//OK
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+My Post Process (working)
+
+//Check whether name is not empty
+var checkName = checkString(entry.getEntryAttrib("NEW UCoA Programme Primary Spec/Name"),"");
+var rootnode = entry.getRootEntryNode();
+var node = rootnode.getEntryNode("NEW UCoA Programme Primary Spec/Name");
+if (checkName=="") {
+	// fail validation
+	node.throwValidationError("VALIDATION_RULE","Name cannot be empty");
+} else { 
+	//OK
+}
+
+
+
+//Validate Key according to level
+itemCategories =[];
+categoryLevels =[];
+itemCategories = item.getCtgItemCategories();
+categoryLevels = itemCategories[0].getCategoryLevels();
+itemLevel=categoryLevels[0];
+item.setEntryAttrib("NEW UCoA Programme Primary Spec/Third Party Control Account", itemLevel) ;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Accounttype (enumeration):
+var library  = getScriptByPath("scripts/triggers/scriptLibrary");
+getEnumeration = library.getFunctionByName("getEnumerations");
+res = getEnumeration.invoke("Account Type");
+
+supporting library triggers/scripts:
+//
+// InfoSphere MDM Collaboration Server Script
+function getEnumerations(type) {
+	var lkpTable = getLkpByName(type);
+	var values = lkpTable.getLkpKeys();
+	return values;
+}
+
+
+
+Add secondary spec to category:
+entry.addSecondarySpecToCategory("UCoA Programme Level 2");
+
+
+Validation reg with message (post script):
+// if this is level 2 category item
+var rexp = buildRE("\d\d\d\d\d\D",1);
+var Name = checkString(entry.getEntryAttrib("UCoA Programme Level 2/Programme Level 2 Code"),"");
+var rootnode = entry.getRootEntryNode();
+var node = rootnode.getEntryNode("UCoA Programme Level 2/Programme Level 2 Code");
+var NameAfterRe = rexp.substitute(Name,"");
+if(NameAfterRe==Name){
+	// fail validation
+	node.throwValidationError("PATTERN","The supplied value does not match the required pattern dddddD");
+} else { 
+	//OK
+}
+
+
+
+
+
+
+
+
+^/d/d/d/_\/D/D/d/d$
+
+
+
+
+
+res =  forEachCtgItem([String sCatalogName, ] Item item) { statements }item.getEntryAttrib("UCoA Programme Level 3/Programme Level 3 Code") forEachCategorySetElement(CATEGORYSET, OCATEGORY){STATEMENTS} 
+
+
+
+var result;
+
+currentcode = checkString(item.getEntryAttrib("UCoA Programme Level 3/Programme Level 3 Code") ,"");
+
+if (currentcode=="000000")
+
+{result= false;err.writeln("Result is 00000");}
+
+else {result=true ;}
+
+res = result;
+
+
+
+
+
+
+var result;
+
+currentcode = "000000";
+
+if (currentcode=="000000")
+
+{result= false;err.writeln("Result is 00000");out.writeln("test");}
+
+
+
+

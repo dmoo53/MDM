@@ -1,0 +1,36 @@
+in.nextLine();
+var parser = newCSVParser(in);
+var bDone = false;
+while(!bDone)
+{
+    var attrs = parser.splitLine();
+    bDone = (null == attrs);
+    if (!bDone)
+    {
+        var itemAttrs = [];
+        itemAttrs["Product File Spec/Product ID"] = attrs[0];
+        itemAttrs["Product File Spec/Corporate Category ID"] = attrs[1];
+        itemAttrs["Product File Spec/Online Category ID"] = attrs[2];
+        itemAttrs["Product File Spec/Department"] = attrs[3];
+        itemAttrs["Product File Spec/Class"] = attrs[4];
+        itemAttrs["Product File Spec/Name"] = attrs[5];
+        itemAttrs["Product File Spec/Short Description"] = attrs[6];
+        itemAttrs["Product File Spec/Long Description"] = attrs[7];
+        itemAttrs["Product File Spec/Thumbnail Image"] = attrs[8];
+        itemAttrs["Product File Spec/Full Image"] = attrs[9];
+        itemAttrs["Product File Spec/Part Number"] = attrs[10];
+        var itemValidatedAttrs = validateMappedAttribs(itemAttrs);
+        if (null != itemValidatedAttrs)
+        {
+            var item = buildCtgItem();
+            var catalog = item.getCatalog();
+            var item2 = catalog.getCtgItemByPrimaryKey(attrs[0]);
+            if( item2 != null )
+            {
+                item = item2;
+            }
+            item.setCtgItemMappedAttribs(itemValidatedAttrs);
+            item.saveCtgItem();
+        }
+    }
+}

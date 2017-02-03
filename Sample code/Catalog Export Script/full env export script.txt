@@ -1,0 +1,116 @@
+/// @file full environment export.java
+/// $Title: Template $ Export full environment configuration to XML/CSV
+/// $Description: $ Export full environment configuration to XML/CSV
+/// @brief 
+/// Export full environment configuration to XML/CSV
+/// @author Vis Bowatte
+/// @date Oct 20th 2006
+
+var hm_entityOrder = [];
+var temp = [];
+
+//*****
+
+temp = [];
+temp.add("COMPANY_ATTRIBUTES");
+temp.add("ROLES");
+temp.add("DATASOURCE");
+temp.add("LOOKUP_TABLE_SPEC");
+temp.add("DESTINATION_SPEC");
+temp.add("FILE_SPEC");
+temp.add("ACG");
+temp.add("LOOKUP_TABLE");
+temp.add("USERS");
+temp.add("MY_SETTINGS");
+hm_entityOrder.add(temp);
+
+//*****
+
+temp = [];
+temp.add("LOOKUP_TABLE_CONTENT");
+temp.add("PRIMARY_SPEC");
+temp.add("DOC_STORE");
+temp.add("ATTRIBUTE_COLS");
+temp.add("SEARCH_TEMPLATES");
+temp.add("SECONDARY_SPEC");
+temp.add("WORKFLOW");
+hm_entityOrder.add(temp);
+
+//*****
+
+temp = [];
+temp.add("HIERARCHY");
+temp.add("ORG_HIERARCHY");
+temp.add("CATALOG");
+temp.add("MAPS");
+temp.add("CATALOG_VIEW");
+temp.add("HIERARCHY_VIEW");
+temp.add("COLLABORATION_AREA");
+temp.add("EXPORTS");
+temp.add("FEEDS");
+hm_entityOrder.add(temp);
+
+//*****
+//
+//temp = [];
+//temp.add("HIERARCHY_MAPS");
+//temp.add("ALERT");
+//temp.add("DISTRIBUTION");
+//temp.add("REPORTS");
+//temp.add("ROLE_LOCALE_ACCESS");
+//temp.add("UDL");
+//temp.add("UDL_CONTENT");
+//temp.add("WEBSERVICE");
+//temp.add("DISTRIBUTION_GROUP");
+//temp.add("JOBS");
+//temp.add("QUEUE");
+//temp.add("CONTAINER_ACCESSPRV");
+//hm_entityOrder.add(temp);
+
+
+//*****
+
+temp = [];
+temp.add("HIERARCHY_CONTENT");
+temp.add("ORG_HIERARCHY_CONTENT");
+temp.add("CATALOG_CONTENT");
+temp.add("SELECTION");
+//temp.add("COLLABORATION_AREA_CONTENT");
+hm_entityOrder.add(temp);
+
+//*********************************************
+
+var sToday   = today().formatDate("yyyyMMdd_HHmm.ss");
+var sDocFilePath = "/migration/EnvironmentExport/" + "/" + getCompanyName() + "/" + sToday;
+
+
+var index;
+
+for(index = 0; index < hm_entityOrder.size(); index ++)
+{
+    var hm_objectTypes = hm_entityOrder[index];
+
+	var index2;
+	var objectType;
+
+	var envObjList = new EnvObjectList();
+
+	forEachHmElement(hm_objectTypes,index2,objectType)
+	{
+		if(objectType=="DOC_STORE")
+		{
+			//envObjList.addObjectByNameToExport("/aggregated_files","DOC_STORE");
+			envObjList.addObjectByNameToExport("/feed_files","DOC_STORE");
+			envObjList.addObjectByNameToExport("/scripts","DOC_STORE");
+			envObjList.addObjectByNameToExport("/migration/import_files","DOC_STORE");
+			envObjList.addObjectByNameToExport("/migration/data_export","DOC_STORE");
+			envObjList.addObjectByNameToExport("/workflow","DOC_STORE");
+		}
+		else
+		{
+		    envObjList.addAllObjectsToExport(objectType, "CREATE_OR_UPDATE");
+	        }
+	}
+
+	exportEnv(envObjList, sDocFilePath + "/" + (index +1) + "_" + getCompanyName() + "_" + sToday + "_environment_export.zip");
+}

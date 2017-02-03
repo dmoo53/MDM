@@ -1,0 +1,28 @@
+<%
+//[GB] - Preview Product Online
+
+//Preview Product Online
+
+//var hostName = lookup("WPC - Advanced Config", "hostName");
+
+
+var entryStr = "";
+var containerName = "";
+
+forEachEntrySetElement(entrySet, localEntry)
+{
+	var entryID = localEntry.getPrimaryKey();
+	entryStr = entryID;
+	
+	containerName = localEntry.getEntryContainer().getCtgName();
+	
+
+}
+%>
+ 
+<div id='wait_process_image_msg' style='position: absolute; width:660; height:2000; z-index:20; top: 30; left:; display:block'>
+  	<b><center><br><br><br><br><br><blink>Processing Preview Request</blink><br><br></center></b>
+        <b><center><img src='/suppliers/gb_enterprises/data_repository/Preview/wait_anim.gif'></center></b>
+  	<b><center><br><blink>Please Stand By...</blink></center></b>
+  </div>
+<IFRAME id='modifyImage' name='modifyImage' frameborder=0 height='3000' width='800' scrolling='no' src='/utils/invoker.jsp?script=WPC.Util.Preview.Screen &company_code=gb&invoking_user=Admin&bUserOutput=false&containerName=<%=containerName%>&entryStr=<%=entryStr%>' style='visibility: visible' topmargin='0' leftmargin='0' marginwidth='0' marginheight='0' onLoad="document.getElementById('wait_process_image_msg').style.display='none';"></IFRAME>

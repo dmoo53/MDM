@@ -1,0 +1,12 @@
+var item;
+forEachCtgItem(item)
+{
+    var itemAttrs = item.getCtgItemMappedAttribs();
+    var itemValidatedAttrs = validateMappedAttribs(itemAttrs);
+    if (null != itemValidatedAttrs)
+    {
+        out.writeln(buildCSV(
+            item.getCtgItemDiffStatus(),
+        checkString(itemValidatedAttrs["full env export file spec/a"], "")));
+    }
+}

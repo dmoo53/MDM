@@ -1,0 +1,174 @@
+//Check whether name is not empty
+var checkName = checkString(entry.getEntryAttrib("NEW UCoA Programme Primary Spec/Name"),"");
+var rootnode = entry.getRootEntryNode();
+var node = rootnode.getEntryNode("NEW UCoA Programme Primary Spec/Name");
+if (checkName=="") {
+	// fail validation
+	node.throwValidationError("VALIDATION_RULE","Name cannot be empty");
+} else { 
+	//OK
+}
+
+
+
+
+
+
+//Check whether Enable is not empty
+var checkEnable = checkString(entry.getEntryAttrib("NEW UCoA Programme Primary Spec/Enable"),"");
+var rootnodeEnable = entry.getRootEntryNode();
+var nodeEnable = rootnodeEnable.getEntryNode("NEW UCoA Programme Primary Spec/Enable");
+if (checkEnable=="") {
+	// fail validation
+	nodeEnable.throwValidationError("VALIDATION_RULE","Enable cannot be empty");
+} else { 
+	//OK
+}
+
+
+
+
+
+//set values
+entry.setEntryAttrib("NEW UCoA Programme Primary Spec/Parent", "Yes") ;
+entry.setEntryAttrib("NEW UCoA Programme Primary Spec/Allow Budgeting", "No") ;
+entry.setEntryAttrib("NEW UCoA Programme Primary Spec/Allow Posting", "No") ;
+entry.setEntryAttrib("NEW UCoA Programme Primary Spec/Account Type", "Programme") ;
+entry.setEntryAttrib("NEW UCoA Programme Primary Spec/Third Party Control Account", "No") ;
+entry.setEntryAttrib("NEW UCoA Programme Primary Spec/Reconcile", "No") ;
+
+
+
+
+
+//Validate attributes at 1-3 levels
+
+
+
+
+
+validationRules =[];
+//Level 0 dummy Regex
+validationRules.add("nothing");
+//Level one Regex
+validationRules.add("\d\d\d\dTT");
+//Level 2 Regex
+validationRules.add("\d\d\d\d\D\D");
+//Level 3 Regex
+validationRules.add("\d\d\d\d(\d\D|DC)");
+
+
+//error messages
+
+errorMessage=[];
+//Level 0 dummy message
+errorMessage.add("nothing");
+//Level one Regex
+errorMessage.add("the pattern should be \d\d\d\dTT");
+//Level 2 Regex
+errorMessage.add("te pattern should be \d\d\d\d\D\D");
+//Level 3 Regex
+errorMessage.add("the pattern should be \d\d\d\d(\d\D|DC)");
+
+categoryLevels =[];
+
+categoryLevels = entry.getCategoryLevels();
+itemLevel=categoryLevels[0];
+
+
+//Check attributes for level 2 
+
+if (itemLevel ==2)
+{
+
+	//Check whether Voted is not empty
+	var checkVoted = checkString(entry.getEntryAttrib("UCoA Programme Level 2/Voted"),"");
+	var rootnodeVoted = entry.getRootEntryNode();
+	var nodeVoted = rootnodeVoted.getEntryNode("UCoA Programme Level 2/Voted");
+	if (checkVoted=="") {
+		// fail validation
+		nodeVoted.throwValidationError("VALIDATION_RULE","Voted cannot be empty");
+	} else { 
+		//OK
+	}
+
+	//Check whether Admin Programme is not empty
+	var checkAdmin = checkString(entry.getEntryAttrib("UCoA Programme Level 2/Admin Programme"),"");
+	var rootnodeAdmin = entry.getRootEntryNode();
+	var nodeAdmin = rootnodeAdmin.getEntryNode("UCoA Programme Level 2/Admin Programme");
+	if (checkAdmin=="") {
+		// fail validation
+		nodeAdmin.throwValidationError("VALIDATION_RULE","Admin Programme cannot be empty");
+	} else { 
+		//OK
+	}
+}
+else
+{
+	//OK
+}
+
+
+
+
+
+//Check attributes for level 3 
+
+if (itemLevel ==3)
+{
+
+	//Check whether ringfence is not empty
+	var checkRingfence = checkString(entry.getEntryAttrib("UCoA Programme Level 3/DFF Ringfence"),"");
+	var rootnodeRingfence = entry.getRootEntryNode();
+	var nodeRingfence = rootnodeRingfence.getEntryNode("UCoA Programme Level 3/DFF Ringfence");
+	if (checkRingfence=="") {
+		// fail validation
+		nodeRingfence.throwValidationError("VALIDATION_RULE","ringfence cannot be empty");
+	} else { 
+		//OK
+	}
+	
+	
+		//Check whether DFF Estimate Row is not empty
+	var checkEstimate = checkString(entry.getEntryAttrib("UCoA Programme Level 3/DFF Estimate Row"),"");
+	var rootnodeEstimate = entry.getRootEntryNode();
+	var nodeEstimate = rootnodeRingfence.getEntryNode("UCoA Programme Level 3/DFF Estimate Row");
+	if (checkEstimate=="") {
+		// fail validation
+		nodeEstimate.throwValidationError("VALIDATION_RULE","DFF Estimate Row cannot be empty");
+	} else { 
+		//OK
+	}
+
+}	
+else
+{
+	//OK
+}
+
+
+
+//check key validation for various levels
+
+
+for(i=1; i<validationRules.size();i++)
+{
+	if (itemLevel==i)
+	{
+
+		var rexp = buildRE(validationRules[i],1);
+		var Name = checkString(entry.getEntryAttrib("NEW UCoA Programme Primary Spec/Key"),"");
+		var rootnode = entry.getRootEntryNode();
+		var node = rootnode.getEntryNode("NEW UCoA Programme Primary Spec/Key");
+		var NameAfterRe = rexp.substitute(Name,"");
+		if(NameAfterRe!=""){
+			// fail validation
+			node.throwValidationError("PATTERN",errorMessage[i]);
+		} else { 
+			//OK
+		}
+	}
+	else {
+	//no validation 
+	}
+}

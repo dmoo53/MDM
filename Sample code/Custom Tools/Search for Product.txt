@@ -1,0 +1,1 @@
+<IFRAME id='modifyImage' name='modifyImage' frameborder=0 height='100%' width='100%' scrolling='yes' src='http://bigdata:9080/vivisimo/cgi-bin/query-meta?v%3aframe=form&frontpage=1&v%3aproject=gb-enterprises-product-search&' style='visibility: visible' topmargin='0' leftmargin='0' marginwidth='0' marginheight='0'></IFRAME>

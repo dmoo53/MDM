@@ -1,0 +1,12 @@
+catchError(e){
+ctr = getCategoryTreeByName("Product Dev Hierarchy");
+
+
+	var sProdType = checkString(item.getEntryAttrib("Misses Knit Tops Spec/Category"), "");
+	if( (sProdType != "")&&(sProdType == "Knit Tops")  )
+	{
+		var cat = ctr.getCategoryByPath("4/1/51", "/");
+		item.mapCtgItemToCategory(cat);
+		
+	}
+}

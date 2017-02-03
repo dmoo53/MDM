@@ -1,0 +1,19 @@
+var item;
+forEachCtgItem(item)
+{
+    var itemAttrs = item.getCtgItemMappedAttribs();
+    var itemValidatedAttrs = validateMappedAttribs(itemAttrs);
+    if (null != itemValidatedAttrs)
+    {
+        out.writeln(buildCSV(
+            item.getCtgItemDiffStatus(),
+        checkString(itemValidatedAttrs["UCoA Programme/L1 Key"], ""),
+        checkString(itemValidatedAttrs["UCoA Programme/L1 Name"], ""),
+        checkString(itemValidatedAttrs["UCoA Programme/L2 Key"], ""),
+        checkString(itemValidatedAttrs["UCoA Programme/L2 Name"], ""),
+        checkString(itemValidatedAttrs["UCoA Programme/L3 Key"], ""),
+        checkString(itemValidatedAttrs["UCoA Programme/L3 Name"], ""),
+        checkString(itemValidatedAttrs["UCoA Programme/L4 Key"], ""),
+        checkString(itemValidatedAttrs["UCoA Programme/L4 Name"], "")));
+    }
+}

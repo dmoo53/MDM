@@ -1,0 +1,3 @@
+<script>
+parent.rightframe.document.location = "/utils/new_homepage.jsp";
+</script>

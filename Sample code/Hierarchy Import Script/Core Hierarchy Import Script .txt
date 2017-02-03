@@ -1,0 +1,87 @@
+function buildMyCategory(attrs){
+
+	ctr = getCategoryTreeByName("Core Hierarchy");
+
+	categoryID 		= attrs[0];
+	parentCategoryID 	= attrs[2];
+	categoryName 		= attrs[3];
+	thumbnailImage 		= attrs[4];
+	fullImage 		= attrs[5];
+
+	currentDate = today();
+	nextDate = currentDate;
+	nextDate = nextDate.addDate("YEAR" , 10);
+
+	key = categoryID;
+	path = "101" + "/" + parentCategoryID + "/" + categoryID;
+	
+	out.writeln(ctr);
+	
+	var myCat;
+	
+	cats = ctr.getCategorySetByPrimaryKey(key);
+	
+	if (cats.getCategorySetSize() < 1){
+	
+               myCat = new Category(ctr, path, "/", key);
+
+	}else{
+	
+		forEachCategorySetElement(cats, cat) { 
+			
+			myCat = cat;	
+		}
+	}
+
+	if (myCat != null){
+		
+		out.writeln("Building category " + key + "....");
+		
+		out.writeln("key: " + key);
+		out.writeln("path: " + path);
+		out.writeln("displayName: " + categoryName);
+
+		myCat.setCategoryAttrib("Master Category Spec/Display Name/en_US", categoryName);
+		myCat.setCategoryAttrib("Master Category Spec/Display Name/es_ES", categoryName);
+		myCat.setCategoryAttrib("Master Category Spec/Display Name/de_DE", categoryName);
+		myCat.setCategoryAttrib("Master Category Spec/Display Name/fr_FR", categoryName);
+		myCat.setCategoryAttrib("Master Category Spec/Short Description", categoryName);
+		myCat.setCategoryAttrib("Master Category Spec/Long Description", categoryName);
+		myCat.setCategoryAttrib("Master Category Spec/Status", "Active");
+
+		myCat.setCategoryAttrib("Master Category Spec/Department Image", fullImage);
+		myCat.setCategoryAttrib("Master Category Spec/Banner Image", thumbnailImage);
+
+		myCat.setCategoryAttrib("Master Category Spec/Effective Start Date", currentDate);
+		myCat.setCategoryAttrib("Master Category Spec/Effective End Date", nextDate);
+
+	getScriptByPath("/scripts/triggers/WPC.Utils.Global.FunctionLibrary").getFunctionByName("writeCat").invoke(myCat);
+
+		//out.writeln(myCat);
+		ctr.saveCategoryTree();
+	}
+
+}
+parser = newCSVParser(in);
+
+var headers = parser.splitLine();
+
+bDone = false;
+
+//for (lineCount=0; lineCount < 5; lineCount++){
+while(!bDone){
+	attrs = parser.splitLine();
+	
+	
+		 
+	bDone = (null == attrs);
+	
+	if (bDone==false){
+						
+		  if (attrs != null){
+  			  	
+			buildMyCategory(attrs);
+
+		}
+	}
+}

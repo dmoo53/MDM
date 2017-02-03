@@ -1,0 +1,55 @@
+ctg = getCtgByName("Master Product Catalog");
+ctr = getCategoryTreeByName("Fall 2008 Sale");
+
+catSet = ctr.getCategorySetByLevel(1);
+
+//run export generate routine
+forEachCategorySetElement(catSet, sectionCat) {
+
+	//output section information
+	sectionPrimaryKey = sectionCat.getPrimaryKey();
+	sectionName = sectionCat.getCategoryAttrib("Master Category Spec/Display Name/en_US");
+	out.writeln( "Subsection: " + sectionPrimaryKey + "," + sectionName );
+
+	pageCats = sectionCat.getCategoryChildren();
+	
+	for (pageCount=0; pageCount < pageCats.size(); pageCount++){
+		
+		pageCat = pageCats[pageCount];
+		
+		//output page information
+		pagePrimaryKey = pageCat.getPrimaryKey();
+		pageName = pageCat.getCategoryAttrib("Master Category Spec/Display Name/en_US");
+		out.writeln( "Page: " + pagePrimaryKey + "," + pageName );
+		
+		subsectionCats = pageCat.getCategoryChildren();
+	
+		for (subsectionCount=0; subsectionCount < subsectionCats.size(); subsectionCount++){
+	
+			subsectionCat = subsectionCats[subsectionCount];
+			
+			//output subsection information
+			subsectionPrimaryKey = subsectionCat.getPrimaryKey();
+			subsectionName = subsectionCat.getCategoryAttrib("Master Category Spec/Display Name/en_US");
+			subsectionImage = subsectionCat.getCategoryAttrib("Master Category Spec/Department Image");
+			
+			out.writeln( "Subsection: " + subsectionPrimaryKey + "," + subsectionName + "," + subsectionImage );
+			
+			subsectionItems = subsectionCat.getItemSetForCategory(ctg);
+		
+			forEachItemSetElement(subsectionItems, subsectionItem) {
+				
+				itemId = subsectionItem.getPrimaryKey();
+				displayName = subsectionItem.getCtgItemAttrib("Master Product Spec/Display Name/en_US");
+				thumbnailImage = subsectionItem.getCtgItemAttrib("Master Product Spec/Thumbnail Image");
+				status = subsectionItem.getCtgItemAttrib("Master Product Spec/Status");
+				
+				if (status != "Inactive"){
+					out.writeln( "Product: " + itemId + "," + displayName + "," + thumbnailImage );
+				}
+			}
+		}
+
+	}
+
+}

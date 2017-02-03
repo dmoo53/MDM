@@ -1,0 +1,10 @@
+//Check whether Description is not empty
+var check = checkString(entry.getEntryAttrib("New UCoA Supporting Entities/Description"),"");
+var rootnode = entry.getRootEntryNode();
+var node = rootnode.getEntryNode("New UCoA Supporting Entities/Description");
+if (check=="") {
+// fail validation
+node.throwValidationError("VALIDATION_RULE","Description cannot be empty");
+	} else { 
+		//OK
+	}

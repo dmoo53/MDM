@@ -1,0 +1,106 @@
+//Product Import Script - maps to corporate and online hierarchy
+
+function getCategory(ctrName, catCode){
+	
+	ctr = getCategoryTreeByName(ctrName);
+	cats = ctr.getCategorySetByPrimaryKey(catCode);
+	
+	var cat;
+	
+	forEachCategorySetElement(cats, tempCat) { 
+	
+		cat = tempCat;	
+	}
+
+	return cat;
+}
+
+function buildMyItem(attrs){
+
+	//prepare the attributes
+	primaryKey = attrs[0];
+	corporateCategoryID 	= attrs[1];
+	onlineCategoryID 	= attrs[2];
+	displayName 		= attrs[5];
+	shortDescription 	= attrs[6];
+	longDescription 	= attrs[7];
+	thumbnailImage 		= attrs[8];
+	fullImage 		= attrs[9];
+	internalPartNumber 	= attrs[10];
+
+	currentDate = today();
+	nextDate = currentDate;
+	nextDate = nextDate.addDate("YEAR" , 10);
+
+	//get the item. if it's not built, build it
+	ctg = getCtgByName("Master Product Catalog");
+	myItem = ctg.getCtgItemByPrimaryKey(primaryKey);
+	
+	if (myItem == null){
+		
+		myItem = new CtgItem("Master Product Catalog");
+		myItem.setPrimaryKey(primaryKey);
+	}
+	
+	//set all attributes on the item
+	myItem.setCtgItemAttrib("Master Product Spec/Display Name/en_US", displayName);
+	myItem.setCtgItemAttrib("Master Product Spec/Display Name/es_ES", displayName);
+	myItem.setCtgItemAttrib("Master Product Spec/Display Name/de_DE", displayName);
+	myItem.setCtgItemAttrib("Master Product Spec/Display Name/fr_FR", displayName);
+	myItem.setCtgItemAttrib("Master Product Spec/Internal Part Number", internalPartNumber);
+	myItem.setCtgItemAttrib("Master Product Spec/Short Description", shortDescription);
+	myItem.setCtgItemAttrib("Master Product Spec/Long Description", longDescription);
+	myItem.setCtgItemAttrib("Master Product Spec/Status", "Active");
+	myItem.setCtgItemAttrib("Master Product Spec/Effective Start Date", currentDate);
+	myItem.setCtgItemAttrib("Master Product Spec/Effective End Date", nextDate);
+	myItem.setCtgItemAttrib("Master Product Spec/In Distribution Date", currentDate);
+	myItem.setCtgItemAttrib("Master Product Spec/Full Image", fullImage);
+	myItem.setCtgItemAttrib("Master Product Spec/Thumbnail Image", thumbnailImage);
+
+	//go get all categories and map to the item
+	itemTypeCategory = getCategory("Product Types", "Color and Size SKU");
+	coreHierarchyCategory= getCategory("Online Hierarchy", corporateCategoryID);
+	onlineHierarchyCategory= getCategory("Core Hierarchy", onlineCategoryID);
+
+	if ( itemTypeCategory != null){
+		
+		myItem.mapCtgItemToCategory(itemTypeCategory);
+	}
+	
+	if ( coreHierarchyCategory != null){
+		
+		myItem.mapCtgItemToCategory(coreHierarchyCategory);
+	}
+	
+	if ( onlineHierarchyCategory != null){
+		
+		myItem.mapCtgItemToCategory(onlineHierarchyCategory);
+	}
+
+
+	getScriptByPath("/scripts/triggers/WPC.Utils.Global.FunctionLibrary").getFunctionByName("writeItem").invoke(myItem);
+
+		
+	test = myItem.saveCtgItem();
+//	out.writeln("item save result: " + test);
+
+}
+
+parser = newCSVParser(in);
+
+attrs = parser.splitLine();
+
+bDone = false;
+
+while(!bDone)
+{
+	attrs = parser.splitLine();
+	 
+	bDone = (null == attrs);
+	
+	if ((attrs != null)){
+		
+		buildMyItem(attrs);
+			out.writeln(attrs);
+	}
+}

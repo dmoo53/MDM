@@ -1,0 +1,29 @@
+in.nextLine();
+var parser = newCSVParser(in);
+var bDone = false;
+while(!bDone)
+{
+    var attrs = parser.splitLine();
+    bDone = (null == attrs);
+    if (!bDone)
+    {
+        var itemAttrs = [];
+        itemAttrs["Imp Supporting Ent Auto Key/Category Key"] = attrs[0];
+        itemAttrs["Imp Supporting Ent Auto Key/Category Name"] = attrs[1];
+        itemAttrs["Imp Supporting Ent Auto Key/Item Key"] = attrs[2];
+        itemAttrs["Imp Supporting Ent Auto Key/Item Name"] = attrs[3];
+        var itemValidatedAttrs = validateMappedAttribs(itemAttrs);
+        if (null != itemValidatedAttrs)
+        {
+            var item = buildCtgItem();
+            var catalog = item.getCatalog();
+            var item2 = catalog.getCtgItemByPrimaryKey(attrs[2]);
+            if( item2 != null )
+            {
+                item = item2;
+            }
+            item.setCtgItemMappedAttribs(itemValidatedAttrs);
+            item.saveCtgItem();
+        }
+    }
+}

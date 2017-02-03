@@ -1,0 +1,29 @@
+in.nextLine();
+var parser = newCSVParser(in);
+var bDone = false;
+while(!bDone)
+{
+    var attrs = parser.splitLine();
+    bDone = (null == attrs);
+    if (!bDone)
+    {
+        var itemAttrs = [];
+        itemAttrs["UcoA Programme Level 2/Enable"] = attrs[0];
+        itemAttrs["UcoA Programme Level 2/Parent"] = attrs[1];
+        itemAttrs["UcoA Programme Level 2/AllowBudgeting"] = attrs[2];
+        itemAttrs["UcoA Programme Level 2/Allow Posting"] = attrs[3];
+        itemAttrs["UcoA Programme Level 2/Account Type"] = attrs[4];
+        itemAttrs["UcoA Programme Level 2/Third Party Control Account"] = attrs[5];
+        itemAttrs["UcoA Programme Level 2/Reconcile"] = attrs[6];
+        itemAttrs["UcoA Programme Level 2/DFF Control Budget"] = attrs[7];
+        itemAttrs["UcoA Programme Level 2/Admin Programme"] = attrs[8];
+        itemAttrs["UcoA Programme Level 2/Voted"] = attrs[9];
+        var itemValidatedAttrs = validateMappedAttribs(itemAttrs);
+        if (null != itemValidatedAttrs)
+        {
+            var item = buildCtgItem();
+            item.setCtgItemMappedAttribs(itemValidatedAttrs);
+            item.saveCtgItem();
+        }
+    }
+}

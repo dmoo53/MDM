@@ -1,0 +1,101 @@
+<%
+// ---------------------------------------------------------------------------
+// Title:       DS.Import.File.JSP.wpcs
+// Author:      Amar Nadig nadig@us.ibm.com
+// Company:     Copyright 2005 IBM Corporation
+// Date:        02/11/2005
+// Description: Uploads files into DocStore without needing to create an
+//		Import Job
+//
+// Assumptions:
+//
+// Usage:	JSP UI
+// Audit:
+// ---------------------------------------------------------------------------
+
+var sVersion		= "1.0";
+var companyCode 	= getCompanyCode();
+
+var default_directory = "/migration/entrydata/";
+
+%>
+
+<html>
+<body>
+<div class=Section1>
+
+<form name="main" enctype="multipart/form-data" method="POST" action="/utils/invoker.jsp" target="_blank href='ccd_docstore/adm_view_document_content.jsp?docstore_selected_path=%2FCatalogDataImport.log'">
+
+<table class=MsoTableGrid border=0 cellspacing=0 cellpadding=0 style='border-collapse:collapse;mso-yfti-tbllook:480;mso-padding-alt:0in 5.4pt 0in 5.4pt'>
+	<tr style='mso-yfti-irow:0'>
+		<td width=415 colspan=2 valign=top style='width:311.4pt;border:none;border-bottom:solid windowtext 1.0pt;mso-border-bottom-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+			<p class=MsoNormal><b style='mso-bidi-font-weight:normal'><span style='font-family:Tahoma'>File Uploader</span></b><span style='font-family:Tahoma'><o:p></o:p></span></p>
+		</td>
+		<td width=122 valign=top style='width:91.3pt;border:none;border-bottom:solid windowtext 1.0pt;mso-border-bottom-alt:solid windowtext .5pt;padding:0in 5.4pt 0in 5.4pt'>
+			<p class=MsoNormal align=right style='text-align:right'><span style='font-family:Tahoma'> Version <%=sVersion%> <a id="version" href="javascript://" onClick="window.open('/utils/invoker.jsp?script=DEX.Version.JSP&company_code=<%=companyCode%>&bUserOutput=false','','width=300,height=450')">
+			<o:p></o:p></span></p>
+		</td>
+	</tr>
+	<tr style='mso-yfti-irow:1'>
+		<td width=143 valign=top style='width:107.5pt;padding:0in 5.4pt 0in 5.4pt'>
+			<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt;font-family:Tahoma'><o:p></o:p></span></p>
+		</td>
+		<td width=394 colspan=2 valign=top style='width:4.1in;padding:0in 5.4pt 0in 5.4pt'>
+			<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt;font-family:Tahoma'>Specify the path in <b>DocStore Path</b>, to upload the file into a specific location in the Document Store, if blank; the tool will upload the file into <b>root/<%=companyCode%>.Upload</b> folder.<o:p></o:p></span></p>
+		</td>
+	</tr>
+	<tr style='mso-yfti-irow:2'>
+		<td width=143 valign=top style='width:107.5pt;padding:0in 5.4pt 0in 5.4pt'>
+			<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt;font-family:Tahoma'><o:p>&nbsp;</o:p></span></p>
+		</td>
+		<td width=394 colspan=2 valign=top style='width:4.1in;padding:0in 5.4pt 0in 5.4pt'>
+			<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt;font-family:Tahoma'><o:p>&nbsp;</o:p></span></p>
+		</td>
+	</tr>
+	<tr style='mso-yfti-irow:3'>
+		<td width=143 valign=top style='width:107.5pt;padding:0in 5.4pt 0in 5.4pt'>
+			<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt;font-family:Tahoma'><b>DocStore Path</b><o:p></o:p></span></p>
+		</td>
+		<td width=394 colspan=2 valign=top style='width:4.1in;padding:0in 5.4pt 0in 5.4pt'>
+			<p class=MsoNormal><span style='font-family:Tahoma'>
+			<input type="text" name="search_exp" class="form_small" value="<%=default_directory %>" size="50">
+		</td>
+	</tr>
+	<tr style='mso-yfti-irow:4'>
+		<td width=143 valign=top style='width:107.5pt;padding:0in 5.4pt 0in 5.4pt'>
+			<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt;font-family:Tahoma'><o:p>&nbsp;</o:p></span></p>
+		</td>
+		<td width=394 colspan=2 valign=top style='width:4.1in;padding:0in 5.4pt 0in 5.4pt'>
+			<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt;font-family:Tahoma'><o:p>&nbsp;</o:p></span></p>
+		</td>
+	</tr>
+	<tr style='mso-yfti-irow:5;mso-yfti-lastrow:yes'>
+		<td width=143 valign=top style='width:107.5pt;padding:0in 5.4pt 0in 5.4pt'>
+			<p class=MsoNormal><span style='font-size:10.0pt;mso-bidi-font-size:12.0pt;font-family:Tahoma'><b>File name</b><o:p></o:p></span></p>
+		</td>
+		<td width=394 colspan=2 valign=top style='width:4.1in;padding:0in 5.4pt 0in 5.4pt'>
+			<p class=MsoNormal><span style='font-family:Tahoma'>
+			<INPUT TYPE="file" name="p_file" VALUE="Browse" class="form_small"><span style='mso-spacerun:yes'></span>
+			<INPUT TYPE="submit" name="p_submit" VALUE="Upload" class="form_small"><o:p></o:p></span>
+		</td>
+	</tr>
+<![if !supportMisalignedColumns]>
+<tr height=0>
+<td width=143 style='border:none'></td>
+<td width=272 style='border:none'></td>
+<td width=122 style='border:none'></td>
+</tr>
+<![endif]>
+</table>
+
+<input type="hidden" name="invoking_user" value="Admin">
+<input type="hidden" name="script" value="DS.Import.File.Main">
+<input type="hidden" name="company_code" value="<%=companyCode%>">
+
+</form>
+
+<p class=MsoNormal><span style='font-family:Tahoma'><o:p>&nbsp;</o:p></span></p>
+
+</div>
+</body>
+</html>

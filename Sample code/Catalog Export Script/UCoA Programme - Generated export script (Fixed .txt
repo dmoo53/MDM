@@ -1,0 +1,18 @@
+var item;
+forEachCtgItem(item)
+{
+    var itemAttrs = item.getCtgItemMappedAttribs();
+    var itemValidatedAttrs = validateMappedAttribs(itemAttrs);
+    if (null != itemValidatedAttrs)
+    {
+        out.writeln(buildFixedWidth(
+        checkString(itemValidatedAttrs["UCoA Programme/L1 Key"], ""), 3000,
+        checkString(itemValidatedAttrs["UCoA Programme/L1 Name"], ""), 3000,
+        checkString(itemValidatedAttrs["UCoA Programme/L2 Key"], ""), 3000,
+        checkString(itemValidatedAttrs["UCoA Programme/L2 Name"], ""), 3000,
+        checkString(itemValidatedAttrs["UCoA Programme/L3 Key"], ""), 3000,
+        checkString(itemValidatedAttrs["UCoA Programme/L3 Name"], ""), 3000,
+        checkString(itemValidatedAttrs["UCoA Programme/L4 Key"], ""), 3000,
+        checkString(itemValidatedAttrs["UCoA Programme/L4 Name"], ""), 3000));
+    }
+}
