@@ -1,5 +1,5 @@
 //set values
-entry.setEntryAttrib("NEW UCoA Programme Primary Spec/Parent", "No") ;
+entry.setEntryAttrib("UCoA Programme Primary Spec/Parent", "No") ;
 entry.setEntryAttrib("NEW UCoA Programme Primary Spec/Allow Budgeting", "Yes") ;
 entry.setEntryAttrib("NEW UCoA Programme Primary Spec/Allow Posting", "Yes") ;
 entry.setEntryAttrib("NEW UCoA Programme Primary Spec/Account Type", "Programme") ;
