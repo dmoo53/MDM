@@ -1,0 +1,10 @@
+//Check whether name is not empty
+var checkName = checkString(entry.getEntryAttrib("UCoA Supporting Entity User Key Item/Name"),"");
+var rootnode = entry.getRootEntryNode();
+var node = rootnode.getEntryNode("UCoA Supporting Entity User Key Item/Name");
+if (checkName=="") {
+	// fail validation
+	node.throwValidationError("VALIDATION_RULE","Name cannot be empty");
+} else { 
+	//OK
+}
