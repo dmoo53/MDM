@@ -1,0 +1,12 @@
+// validate key format
+var rexp = buildRE("(\d\d\d_\D\D\d\d|NA)",1);
+var Name = checkString(entry.getEntryAttrib("UCoA Supporting Entity User Key Item/Code"),"");
+var rootnode = entry.getRootEntryNode();
+var node = rootnode.getEntryNode("UCoA Supporting Entity User Key Item/Code");
+var NameAfterRe = rexp.substitute(Name,"");
+if(NameAfterRe!=""){
+	// fail validation
+	node.throwValidationError("PATTERN","The supplied value does not match the required pattern \d\d\d_\D\D\d\d");
+} else { 
+	//OK
+}
