@@ -1,12 +1,40 @@
-// validate key format
-var rexp = buildRE("(\d\d\d_\D\D\d\d|NA)",1);
-var Name = checkString(entry.getEntryAttrib("UCoA Supporting Entity User Key Item/Code"),"");
-var rootnode = entry.getRootEntryNode();
-var node = rootnode.getEntryNode("UCoA Supporting Entity User Key Item/Code");
-var NameAfterRe = rexp.substitute(Name,"");
-if(NameAfterRe!=""){
+//Check whether Estimate Row is not empty
+var check1 = checkString(entry.getEntryAttrib("UCoA DFF Sub Segment Item/DFF Estimate Row"),"");
+var rootnode1 = entry.getRootEntryNode();
+var node1 = rootnode1.getEntryNode("UCoA DFF Sub Segment Item/DFF Estimate Row");
+if (check1=="") 
+{
 	// fail validation
-	node.throwValidationError("PATTERN","The supplied value does not match the required pattern \d\d\d_\D\D\d\d");
+	node1.throwValidationError("VALIDATION_RULE","DFF Estimate Row cannot be empty");
+} 
+else
+{ 
+	//OK
+}
+
+	//Check whether Name is not empty
+var check2 = checkString(entry.getEntryAttrib("UCoA DFF Sub Segment Item/Name"),"");
+var rootnode2 = entry.getRootEntryNode();
+var node2 = rootnode2.getEntryNode("UCoA DFF Sub Segment Item/Name");
+if (check2=="") 
+{
+	// fail validation
+	node2.throwValidationError("VALIDATION_RULE","Name cannot be empty");
+} 
+else
+{ 
+	//OK
+}
+
+// validate key format
+var rexp3 = buildRE("X\d\d\dA\d\d\d",1);
+var Name3 = checkString(entry.getEntryAttrib("UCoA DFF Sub Segment Item/Code"),"");
+var rootnode3 = entry.getRootEntryNode();
+var node3 = rootnode3.getEntryNode("UCoA DFF Sub Segment Item/Code");
+var NameAfterRe3 = rexp3.substitute(Name3,"");
+if(NameAfterRe3==Name3){
+	// fail validation
+	node3.throwValidationError("PATTERN","The supplied value does not match the required pattern DdddDddd");
 } else { 
 	//OK
 }
