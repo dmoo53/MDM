@@ -1,0 +1,9 @@
+//set values
+entry.setEntryAttrib("UCoA Programme Item/Parent", "N") ;
+entry.setEntryAttrib("UCoA Programme Item/Allow Budgeting", "Y") ;
+entry.setEntryAttrib("UCoA Programme Item/Allow Posting", "Y") ;
+entry.setEntryAttrib("UCoA Programme Item/Account Type", "Programme") ;
+entry.setEntryAttrib("UCoA Programme Item/Third Party Control Account", "N") ;
+entry.setEntryAttrib("UCoA Programme Item/Reconcile", "N") ;
+
+
