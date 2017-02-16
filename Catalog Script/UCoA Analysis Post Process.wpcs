@@ -1,0 +1,24 @@
+//set values
+entry.setEntryAttrib("UCoA Analysis Item/Parent", "N") ;
+entry.setEntryAttrib("UCoA Analysis Item/Allow Budgeting", "Y") ;
+entry.setEntryAttrib("UCoA Analysis Item/Allow Posting", "Y") ;
+
+
+
+
+
+
+//Verify regular expression for Code
+
+
+var rexp = buildRE("\d\d\d\d\d",1);
+var Name = checkString(entry.getEntryAttrib("UCoA Analysis Item/Code"),"");
+var rootnode = entry.getRootEntryNode();
+var node = rootnode.getEntryNode("UCoA Analysis Item/Code");
+var NameAfterRe = rexp.substitute(Name,"");
+if(NameAfterRe!=""){
+	// fail validation
+	node.throwValidationError("PATTERN","The supplied value does not match the five digits pattern");
+} else { 
+	//OK
+}
