@@ -1,0 +1,18 @@
+//sampleScript1 for gb
+function getURL(entry)
+{
+
+	entryPK = entry.getPrimaryKey();
+	
+          args = "displayName="+displayName + "&" +
+	"longDescription=" + longDescription + "&" +
+	"shortDescription="+shortDescription + "&" +
+	"smallImage="+smallImage + "&" +
+	"largeImage="+largeImage + "&" +
+	"internalPartNumber="+internalPartNumber + "&" +
+	"entryStr="+ entryPK;
+	pageLink = "/user/dam/web/jsp/index.jsp";
+ 
+	return pageLink;
+
+}

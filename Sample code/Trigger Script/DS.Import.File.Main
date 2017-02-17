@@ -1,0 +1,56 @@
+// ---------------------------------------------------------------------------
+// Title:       DS.Import.File.Main.wpcs
+// Author:      Amar Nadig (nadig@us.ibm.com)
+// Company:     Copyright 2005 IBM Corporation
+// Date:        2/11/2005
+// Description: Uploads files into DocStore without needing to create an
+//		Import Job
+//
+// Assumptions:
+//
+// Usage:	<input type="hidden" name="script" value="DS.Import.File.Main">
+//
+// Audit:
+// ---------------------------------------------------------------------------
+
+var sCompany = getCompanyCode();
+
+var sDocStoreLoc;	var sFileName;
+
+var sTempFolder = "/" + rand(999999) + "/";
+
+if (request["search_exp"] == "" || request["search_exp"] == null) { sDocStoreLoc = sCompany + ".Upload"; }
+
+else {
+
+	var sDSL = request["search_exp"].trim();
+
+	if (sDSL.endsWith("/") == true) { sDocStoreLoc = substring(sDSL,0,sDSL.length()-1); }
+
+	else { sDocStoreLoc = sDSL; }
+
+}
+
+// kick off this loop if the Upload button is hit
+if ("Upload" == request["p_submit"].trim()) {
+
+	// Save maping information file to docstore
+	var sDocKey;	var sDoc;
+	var aMapDoc = saveMultipartRequestData("import","Cp1252");
+
+	// move files into appropriate folder
+	forEachHmElement(aMapDoc, sDocKey, sDoc) {
+
+		sDoc.copyDoc(sTempFolder);
+
+		var aDocListInHm = getDocStoreFilesInDirectory(sTempFolder);
+
+		var docKey;	var sDocument;
+		forEachHmElement(aDocListInHm, docKey, sDocument) { sFileName = substring(sDocument, 23); }
+
+		sDoc.moveDoc(sDocStoreLoc + "/" + sFileName);
+		getDocByPath(sDocument).deleteDoc(sTempFolder);
+
+	} // end of forEachHmElement(aMapDoc, sDocKey, sDoc) loop
+
+} // end of if if ("Upload" == request["p_submit"].trim()) loop

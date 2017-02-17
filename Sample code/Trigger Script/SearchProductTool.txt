@@ -1,0 +1,65 @@
+<font size=4><b>Search MDM Hub for Product</b></font><br><br>
+<br><br>
+<form action="/utils/invoker.jsp">
+
+<%
+	 companyCode = getCompanyCode();
+
+   productName = checkString(productName, "");
+   
+  
+%>
+
+		Product Name: <input type="text" name="productName" value="<%=productName%>">&nbsp;&nbsp;&nbsp;&nbsp;
+		
+<input type="hidden" name="invoking_user" value="Admin">
+<input type="hidden" name="company_code" value="<%=companyCode%>">
+<input type="hidden" name="script" value="SearchProductTool">
+<input type="hidden" name="bUserOutput" value="false">
+
+<input type="hidden" name="process" value="true">  
+
+<input type=submit name=Search value=Search>
+
+</form>
+
+<%
+
+if (process != null){
+
+		searchResultsHM = getScriptByPath("/scripts/triggers/MDMCallHelper").getFunctionByName("getSearchProductInstance").invoke(productName);
+		
+		%>		
+		Search Results:<br>
+		<table>
+			<tr>
+					<td width=200><b>Product Name</b></td>
+					<td width=100><b>Product ID</b></td>
+					<td width=250><b>Short Description</b></td>
+					<td width=200><b>Long Description</b></td>
+					<td width=40>&nbsp;</td>
+					<td>&nbsp;</td>
+			</tr>
+		<%
+		
+		forEachHmElement(searchResultsHM, productID, searchResultHm){
+		%>
+		
+			<tr>
+					<td><%=searchResultHm["productName"] %></td>
+					<td><%=searchResultHm["productId"] %></td>
+					<td><%=searchResultHm["productShortDescription"] %></td>
+					<td><%=searchResultHm["productDescription"] %></td>
+					<td>&nbsp;</td>
+					
+					<td><input type=button value="Check In" name="Check-In"</td>
+			</tr>
+		
+		<%
+		}
+		%>
+		</table>
+		
+<%
+}
+%>

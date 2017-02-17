@@ -1,0 +1,28 @@
+//ShowMap  for energy
+function getURL(entry)
+{
+
+//entryPK = entry.getPrimaryKey();			
+
+				internetTurnedOff = lookup("MDM Company Properties", "internetTurnedOff");
+
+	
+				var pageLink = "http://www.google.com";
+
+				if ( internetTurnedOff == "false"){
+
+
+				long = checkString( entry.getEntryAttrib("Well Secondary Spec/Well Origin/Location/Longitude"), "0");
+				lat = checkString( entry.getEntryAttrib("Well Secondary Spec/Well Origin/Location/Latitude"), "0");
+				
+				pageLink = "http://www.gorissen.info/Pierre/maps/googleMapLocation.php?lat=" + lat + "&lon=" + long + "&setLatLon=Set";
+				
+				}else{
+				
+									pageLink = "/suppliers/energy/samplemap.gif";
+				
+				}
+				
+				return pageLink;
+
+}

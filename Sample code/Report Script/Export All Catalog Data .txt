@@ -1,0 +1,107 @@
+/// @file export all catalogs
+/// $Title: Template $ export all catalogs
+/// $Description: $ export all catalogs
+/// @brief 
+/// export all catalogs
+/// @author Vis Bowatte
+/// @date Oct 20th 2006
+/// @date June 2008
+
+var myLogger = getLogger("export.all_catalogs");
+
+function writeCSVExportForCatalog(sCatalogName, thisFile, fullFile, relationshipFile)
+{
+
+	var myCtg = getCtgByName(sCatalogName);
+	var itemset = myCtg.getItemSetForCatalog();
+
+	var myItem;
+	forEachItemSetElement(itemset, myItem)
+	{
+		beginPerf("one item");
+		var myPK = myItem.getCtgItemPrimaryKey();
+		thisFile.writeln(buildCSV(sCatalogName, myPK, "ME_MYSELF_I"));
+		fullFile.writeln(buildCSV(sCatalogName, myPK, "ME_MYSELF_I"));
+
+		var fullPaths = myItem.getCtgItemCategoryPaths("//", true);
+		if (fullPaths.size() > 0) 
+		{
+			for (var i = 0; i < fullPaths.size() ; i++)
+			{
+				thisFile.writeln(buildCSV(sCatalogName, myPK, "MY_CAT", fullPaths[i]));
+				fullFile.writeln(buildCSV(sCatalogName, myPK, "MY_CAT", fullPaths[i]));
+			}
+		}
+
+		var myRootEn = myItem.getRootEntryNode();
+		var en=myRootEn.getEntry();
+		var myENs = en.getFlatEntryNodes();
+		for(var l=0; l<myENs.size(); l++) 
+		{
+			var thisEn = myENs[l];
+			var myNode = thisEn.getNodeFromEntryNode();
+			var bIgnoreAllDataErrorsOnNonRootEntryNodes = null;
+			catchError(bIgnoreAllDataErrorsOnNonRootEntryNodes)
+			{
+				if ((myNode != null)
+						&& !myNode.isNodeSpecRoot() 
+						&& !myNode.isNodeGrouping() 
+						&&  (checkString(myNode.getNodeAttributeValue("LOCALIZED"), "no") != "yes") 
+						&& thisEn.hasNonInheritedValue()) 
+				{
+					if (checkString(myNode.getNodeAttributeValue("TYPE"), "") == "RELATIONSHIP")
+					{
+						if ((thisEn.getEntryNodeValue() != null) && (thisEn.getEntryNodeValue() != ""))
+						{
+							var myVals = myItem.getEntryRelationshipAttrib(thisEn.getEntryNodeExactPath());
+							//var myRelStr = myVals[0] + "||" + myVals[1];
+							//thisFile.writeln(buildCSV(sCatalogName, myPK, "DATA", thisEn.getEntryNodeExactPath(), myRelStr));
+							//fullFile.writeln(buildCSV(sCatalogName, myPK, "DATA", thisEn.getEntryNodeExactPath(), myRelStr));
+							relationshipFile.writeln(buildCSV(sCatalogName, myPK, "DATA", thisEn.getEntryNodeExactPath(), myVals[0], myVals[1]));
+							
+							
+						}
+					}
+					else
+					{
+						thisFile.writeln(buildCSV(sCatalogName, myPK, "DATA", thisEn.getEntryNodeExactPath(), thisEn.getEntryNodeValue()));
+						fullFile.writeln(buildCSV(sCatalogName, myPK, "DATA", thisEn.getEntryNodeExactPath(), thisEn.getEntryNodeValue()));
+					}
+				}
+			}
+		}
+		endPerf("one item");
+	}
+}
+
+
+var dt = today().formatDate("yyyyMMdd");
+var tm = today().formatDate("HHmmss");
+var fullFileName = "/migration/data_export/Catalog/all_catalogs/" + dt + "/" + dt + "_" + tm + "_all_catalogs_UTF8_Item_Export.csv";
+
+var relationshipFileName = "/migration/data_export/Catalog/all_catalogs/" + dt + "/" + dt + "_" + tm + "_all_item_relationships_UTF8_Item_Export.csv";
+
+
+out.writeln(fullFileName);
+out.writeln(relationshipFileName);
+
+var fullFile = createOtherOut(fullFileName);
+var relationshipFile = createOtherOut(relationshipFileName);
+
+var hmCatalogsNamesList = getCatalogNamesList();
+//var hmCatalogsNamesList = [];
+//hmCatalogsNamesList.add("Suppliers");
+var hmSize = hmCatalogsNamesList.size();
+for (var iHmCounter = 0; iHmCounter < hmSize; iHmCounter++)
+{
+	beginPerf("one loop");
+	var sCatalogName = hmCatalogsNamesList[iHmCounter];
+	var thisFileName = "/migration/data_export/Catalog/" + sCatalogName + "/" + dt + "/" + dt + "_" + tm + "_" + sCatalogName + "_UTF8_Item_Export.csv";
+	var thisFile = createOtherOut(thisFileName);	
+	writeCSVExportForCatalog(sCatalogName, thisFile, fullFile, relationshipFile);
+	thisFile.save(thisFileName);
+	endPerf("one loop");
+}
+
+fullFile.save(fullFileName);
+relationshipFile.save(relationshipFileName);

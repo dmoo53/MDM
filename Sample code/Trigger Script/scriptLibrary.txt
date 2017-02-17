@@ -1,0 +1,7 @@
+//
+// InfoSphere MDM Collaboration Server Script
+function getEnumerations(type) {
+	var lkpTable = getLkpByName(type);
+	var values = lkpTable.getLkpKeys();
+	return values;
+}

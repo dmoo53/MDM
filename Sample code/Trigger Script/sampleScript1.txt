@@ -1,0 +1,11 @@
+//sampleScript1 for gb
+function getURL(entry)
+{
+
+				entryPK = entry.getPrimaryKey();
+				
+				pageLink = "/utils/invoker.jsp?script=WPC.Util.Preview.Screen &company_code=gb&invoking_user=Admin&bUserOutput=false&containerName=Master Product Catalog&entryStr=" + entryPK;
+				
+				return pageLink;
+
+}

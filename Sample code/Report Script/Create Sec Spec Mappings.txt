@@ -1,0 +1,40 @@
+//build sec spec required
+ctr = getCategoryTreeByName( "Product Types");
+myCat = new Category(ctr, "Color and Size SKU", "/", "Color and Size SKU");
+myCat.addItemSecondarySpecToCategory("Color Size SKU Spec");
+ctr.saveCategoryTree();
+
+
+//now add the category with sec spec to all categories
+ctg = getCtgByName("Master Product Catalog");
+
+items = ctg.getItemSetForCatalog();
+
+//start of quick category pull
+catTree = getCategoryTreeByName("Product Types");
+cats = catTree.getCategorySetByPrimaryKey("Color and Size SKU");
+
+var cat;
+
+forEachCategorySetElement(cats, localCat) {
+
+    cat = localCat;
+
+}
+//END
+
+out.writeln(cat);
+
+
+
+forEachItemSetElement(items, item) {
+	
+	catTree = getCategoryTreeByName("Product Types");
+	item.mapCtgItemToCategory(cat);
+	
+         // out.writeln(item);
+
+	item.saveCtgItem();
+}
+
+//out.writeln(cat);

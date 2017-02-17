@@ -1,0 +1,80 @@
+path = "/";
+oldStr = "wpcl.ibm.com:7507";
+replacementStr = "mdmpim:7508";
+
+//add files types to pull - add and remove as desired
+function getFileTypes(){
+
+	fileTypes = [];
+	fileTypes.add(".wpcs");
+	fileTypes.add(".csv");
+	fileTypes.add(".html");
+	
+	return fileTypes;
+}
+
+//pulls all desired files by file type and returns them
+function getPathsToFilesDesired(path, fileTypes){
+
+	pathsToGet = [];
+
+	pathsToConsider = getDocStoreSubtreeList(path);
+
+	for (fileTypeCount=0; fileTypeCount < fileTypes.size(); fileTypeCount++){
+
+		fileType = fileTypes[fileTypeCount];
+		
+		//out.writeln( fileType);
+
+		for (pathCount=0; pathCount < pathsToConsider.size(); pathCount++){
+			
+			
+			pathToConsider = pathsToConsider[pathCount];
+			
+			if ( pathToConsider.indexOf( "aggregated_files") == -1 ){
+		
+				if ( pathToConsider.indexOf( fileType ) > -1){
+			
+					pathsToGet.add( pathToConsider );				
+					//out.writeln(pathToConsider);
+
+				}
+			}		
+		}
+	}
+	
+	return pathsToGet;
+}
+
+function replaceStrInDocFile( path, oldStr, replacementStr){
+
+	doc = getDocByPath(path);
+	docStr = getDocContentAsString(doc);
+	
+	cleanedDocStr = replace(docStr, oldStr, replacementStr);
+	
+	//out.writeln( cleanedDocStr );
+	out.writeln("changing doc file: " + path);
+	
+	docstoreOut = createOtherOut( path );
+	docstoreOut.writeln(cleanedDocStr);
+	docstoreOut.save( path );
+
+}
+
+function replaceAllOccurencesOfStrInDocFile(oldStr, replacementStr){
+	var fileTypes = getFileTypes();
+	var pathsToGet = getPathsToFilesDesired(path, fileTypes);
+	
+	out.writeln(pathstoGet);
+	
+	for (var pathCount=0; pathCount < pathsToGet.size(); pathCount++){
+							
+				path = pathsToGet[pathCount];
+				out.writeln(path);
+				replaceStrInDocFile( path, oldStr, replacementStr);
+	}
+
+}
+	
+replaceAllOccurencesOfStrInDocFile(oldStr, replacementStr);

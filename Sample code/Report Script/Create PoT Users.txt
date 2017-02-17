@@ -1,0 +1,62 @@
+ctr = getCategoryTreeByName("Default Organization Hierarchy");
+org = ctr.getCategoryByPath("Default Organization", "/");
+
+role1 = getRoleByName("base_acg_view_role");
+role2 = getRoleByName("Buyer Role");
+role3 = getRoleByName("Marketing Role");
+role4 = getRoleByName("Buyer Role");
+role5 = getRoleByName("print_acg_view_role");
+role6 = getRoleByName("VP Product Management");
+role7 = getRoleByName("Photostudio Role");
+role8 = getRoleByName("Print Publishing Role");
+role9 = getRoleByName("base_acg_import_role");
+role10 = getRoleByName("print_acg_hierarchy_data_model_role");
+role11 = getRoleByName("print_acg_import_role");
+
+roles = null;
+roles = [];
+roles.add( role8 );
+roles.add( role9 );
+roles.add( role1 );
+roles.add( role10 );
+roles.add( role11 );
+roles.add( role5 );
+
+user = createUser("rwiggum", "Ralph", "Wiggum", "lsimpson@wpcl.ibm.com", true, "doolin",  roles, org);
+
+
+
+roles = null;
+roles = [];
+roles.add( role1 );
+roles.add( role2 );
+
+user = createUser("lsimpson", "Lisa", "Simpson", "lsimpson@wpcl.ibm.com", true, "doolin",  roles, org);
+
+roles = null;
+roles = [];
+roles.add( role8 );
+roles.add( role9 );
+roles.add( role1 );
+roles.add( role10 );
+roles.add( role11 );
+roles.add( role5 );
+
+user = createUser("bsimpson", "Bart", "Simpson", "bsimpson@wpcl.ibm.com", true, "doolin",  roles, org);
+
+roles = null;
+roles = [];
+roles.add( role1 );
+roles.add( role3 );
+roles.add( role5 );
+
+user = createUser("hsimpson", "Homer", "Simpson", "hsimpson@wpcl.ibm.com", true, "doolin",  roles, org);
+
+roles = null;
+roles = [];
+roles.add( role6 );
+roles.add( role1 );
+roles.add( role5 );
+
+
+user = createUser("nflanders", "Ned", "Flanders", "nflanders@wpcl.ibm.com", true, "doolin",  roles, org);

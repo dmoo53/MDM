@@ -1,0 +1,240 @@
+/// @file import all catalogs
+/// $Title: Template $ Import all catalogs
+/// $Description: $ Import all catalogs
+/// @brief 
+/// Import all catalogs
+/// @author Vis Bowatte
+/// @date Oct 20th 2006
+/// @date June 2008
+
+function getRootNameFromPath(sPath, sDelim) 
+{
+	if ((sPath == null) || (sPath == "")) 
+	{
+		return "";
+	}
+
+	if (sPath.startsWith(sDelim))
+	{
+		sPath = sPath.substring(sDelim.length());
+	}
+
+	var sRootName = "";
+	if (!sPath.contains(sDelim)) 
+	{
+		sRootName = sPath;
+	}
+	else
+	{
+		sRootName = sPath.substring(0, sPath.indexOf(sDelim));
+	}
+	return sRootName;
+}
+
+
+function getRidOfRootNameFromPath(sPath, sDelim) 
+{
+	if ((sPath == null) || (sPath == "")) 
+	{
+		return "";
+	}
+
+	if (sPath.startsWith(sDelim))
+	{
+		sPath = sPath.substring(sDelim.length());
+	}
+
+	if (!sPath.contains(sDelim)) 
+	{
+		return "";
+	}
+	else
+	{
+		return sPath.substring(sPath.indexOf(sDelim)+sDelim.length());
+	}	
+}
+
+
+function returnAllHierarchies() 
+{
+	var hmHierarchyNamesList = getCategoryTreeNamesList();
+
+	var hmAllHierarchies = [];
+	var hmSize = hmHierarchyNamesList.size();
+	for (var iHmCounter = 0; iHmCounter < hmSize; iHmCounter++)
+	{
+		hmAllHierarchies[hmHierarchyNamesList[iHmCounter]] = getCategoryTreeByName(hmHierarchyNamesList[iHmCounter]);
+	}
+
+	return hmAllHierarchies;
+}
+
+
+function returnAllCatalogs() 
+{
+	var hmCatalogNamesList = getCatalogNamesList();
+
+	var hmAllCatalogs = [];
+	var hmSize = hmCatalogNamesList.size();
+	for (var iHmCounter = 0; iHmCounter < hmSize; iHmCounter++)
+	{
+		hmAllCatalogs[hmCatalogNamesList[iHmCounter]] = getCtgByName(hmCatalogNamesList[iHmCounter]);
+	}
+
+	return hmAllCatalogs;
+}
+
+var myLogger = getLogger("import.all_catalogs");
+var sItemSaveResults;
+
+var default_directory = "/test/";
+var catalogFileName = "gb_items_6_17_2013.csv";
+var filePath = default_directory +catalogFileName;
+var reader = new Reader(filePath);
+var oParser = newCSVParser(reader);
+
+//var default_directory = "/migration/data_import/Hierarchy/all_hierarchies/";
+//var hierarchyFileName = "20081222_180134_all_hierarchies_UTF8_Hierarchy_Export.csv";
+
+//var oParser = newCSVParser(in);
+var hmAttrs = oParser.splitLine(); 
+var bDone = (null == hmAttrs);
+var sOldCtgName = "_trash_";
+var sNewCtgName = null;
+var oCtg = null;
+var oItem = null;
+var oItemRootEN = null;
+var sOldPk = "_trash_";
+var sNewPk = null;
+var sType;
+var sAttrPath;
+var sAttrValue;
+var hmAllHierarchies = returnAllHierarchies();
+var hmAllCatalogs = returnAllCatalogs();
+
+
+while (!bDone) 
+{
+	sNewCtgName = trim(checkString(hmAttrs[0], ""));
+	sNewPk = trim(checkString(hmAttrs[1], ""));
+	sType = trim(checkString(hmAttrs[2], ""));
+	sAttrPath = trim(checkString(hmAttrs[3], ""));
+	sAttrValue = trim(checkString(hmAttrs[4], ""));
+
+	if (sNewCtgName != sOldCtgName)
+	{
+		oCtg = hmAllCatalogs[sNewCtgName];
+		sOldCtgName = sNewCtgName;
+	}
+
+	//out.writeln(hmAttrs[0]);
+	
+	if (sNewPk != sOldPk )
+	{
+		if (oItem != null) 
+		{
+			sItemSaveResults = oItem.saveCtgItem();
+			
+			out.writeln("sItemSaveResults:" + sItemSaveResults);
+			
+			if ((sItemSaveResults != null) && (sItemSaveResults.getGlobalErrors().size() != 0)) 
+			{
+				myLogger.loggerError("Save failed on item [" + sOldPk + "] res =[" + sItemSaveResults + "]");
+			}
+		}
+
+
+		oItem = oCtg.getCtgItemByPrimaryKey(sNewPk);
+		
+		if (oItem == null){
+
+			oItem = new CtgItem(oCtg);
+		}
+		
+		oItemRootEN = null;
+		if (oItem != null) 
+		{
+			oItem.setCtgItemPrimaryKey(sNewPk);
+			oItemRootEN = oItem.getRootEntryNode();
+			myLogger.loggerInfo("New item [" + sNewPk + "]");
+		} 
+		else 
+		{
+			myLogger.loggerError("Big trouble, could not create item [" + sOldPk + "]");
+		}
+		sOldPk = sNewPk;
+	}
+
+	if (oItem != null) 
+	{
+		if ((sType == "MY_CAT") && (sAttrPath != "") && (sAttrPath != "null"))
+		{
+			var sCatPath = getRidOfRootNameFromPath(sAttrPath, "//");
+			var oCategoryTree = hmAllHierarchies[getRootNameFromPath(sAttrPath, "//")];
+			var oCategory = oCategoryTree.getCategoryByPath(sCatPath, "//");
+
+			if (oCategory != null)
+			{
+				oItem.mapCtgItemToCategory(oCategory);
+			}
+		}
+
+		//Process line as new item data
+		if (sType == "DATA") 
+		{
+			myLogger.loggerDebug("DATA/Attrpath: [" + sAttrPath + "]");
+
+			if ((sAttrPath != null) && (sAttrPath != ""))
+			{
+				var myEN = oItemRootEN.setEntryNode(sAttrPath);
+
+				if (myEN != null) 
+				{
+					var myNode = myEN.getNodeFromEntryNode();
+					if (!myNode.isNodeSpecRoot() && !myNode.isNodeGrouping() 
+							&&  (checkString(myNode.getNodeAttributeValue("LOCALIZED"), "no") != "yes"))
+					{
+						if (checkString(myNode.getNodeAttributeValue("TYPE"), "") == "RELATIONSHIP")
+						{
+							//var hmRelData = parseDelim(sAttrValue, "||");
+							//myLogger.loggerInfo("setting reln catalog [" + hmRelData[0] + "] pkey [" + hmRelData[1] + "]");
+							//myEN.setEntryNodeRelationshipValue(hmAllCatalogs[hmRelData[0]], hmRelData[1]);
+						}
+						else
+						{
+							myLogger.loggerDebug("DATA/Attrpath: [" + sAttrPath + "]");
+							myEN.setEntryNodeValue(sAttrValue);
+						}
+					}
+					else
+					{
+						myLogger.loggerInfo("skip grping node DATA/Attrpath: [" + sAttrPath + "]");
+					}
+				}
+				else
+				{
+					myLogger.loggerInfo("skip no EN !! DATA/Attrpath: [" + sAttrPath + "]");
+				}
+			}
+		}
+	}
+	hmAttrs = oParser.splitLine();
+	bDone = (null == hmAttrs);
+}
+
+
+//don't forget to save the very last item
+
+if (oItem != null) 
+{
+	getScriptByPath("/scripts/triggers/WPC.Utils.Global.FunctionLibrary").getFunctionByName("writeItem").invoke(oItem);
+	
+	sItemSaveResults = oItem.saveCtgItem();
+	
+	out.writeln("sItemSaveResults:" + sItemSaveResults);
+	
+	if ((sItemSaveResults != null) && (sItemSaveResults.getGlobalErrors().size() != 0))
+	{
+		myLogger.loggerError("Save failed on item [" + sOldPk + "] res =[" + sItemSaveResults + "]");
+	}
+}

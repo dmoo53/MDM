@@ -1,0 +1,1239 @@
+//
+// WebSphere Product Center Script
+//
+
+function getDate()
+{
+	return formatDate(today(), "MM.dd.yyyy 'at' hh:mm:ss a z");
+}
+
+
+function getUsers() 
+{
+	var i;
+	var j;
+
+	var usersHM = [];
+	var allRoles = getRoles();
+	for (i=0; i < allRoles.size(); i++) {
+		var currentRole = allRoles[i];
+		var usersInRoleI = currentRole.getUsersFromRole();
+		for (j=0; j < usersInRoleI.size(); j++) {
+			var currentUser = usersInRoleI[j];
+			usersHM[currentUser.getUserName()] = currentUser;
+		}
+	}
+	return usersHM;
+}
+
+function getUserEmail(userName)
+{
+	userName = checkString(userName,"");
+	var user = getUserByUsername(getCurrentUserName(),getCompanyCode());
+	if (userName != "")
+	{
+		user = getUserByUsername(userName,getCompanyCode());		
+	}		
+	return user.getUserEmail();
+}
+
+//Use In Lieu Of 'getUserLocale()' script operation; Returns a default locale if none is available.
+//getScriptByPath("/scripts/triggers/WPC.Utils.Global.FunctionLibrary").getFunctionByName("normal").invoke( ,"User Defined Acronyms");
+function getMyLocale()
+{
+	var myLocale = getUserLocale();
+	if (myLocale == null) {
+		myLocale = new Locale("en", "US");
+	}
+	return myLocale;
+}
+
+//Returns a HashMap with each user name as a 'key' and each corresponding user object as a 'value'
+
+//Takes in a Collaboration Area 'Object' (remove the commented line to take in a Collaboration Area 'Name')
+//Returns a string with just the numeric Collaboration Area ID
+
+function getColAreaID (collaborationArea) 
+{
+	//collaborationArea = getCtgByName(collaborationArea);
+	var strColArea = collaborationArea + "";
+	var iStartIndex = strColArea.indexOf("id=")+3;
+	var iEndIndex = strColArea.indexOf(")");
+	var colAreaID = substring(strColArea, iStartIndex, iEndIndex);
+	return colAreaID;
+}
+
+//Delete the DocStore directory and any subdirectories of that directory at the specified 'strDocPath' path
+
+function deleteDocStoreDirectory(strDocPath)
+{
+	var myarray = [];
+	var i;
+	var mypath;
+	var mydoc;
+	
+	myarray = getDocStoreSubtreeList(strDocPath);
+	for (i=0; i < myarray.size(); i++) {
+		mypath = myarray[i];
+		mydoc = getDocByPath(mypath);
+		mydoc.deleteDoc();
+	}
+	myarray = getDocStoreSubtreeList(strDocPath);
+	out.writeln(myarray);
+}
+
+
+
+function getFilenameDate()
+{
+	return formatDate(today(), "MM-dd-yyyy'_at_'hhmm-ss-a(z)--");
+}
+
+function getUserDetails(userName)
+{
+	userName = checkString(userName,"");
+	var user = getUserByUsername(getCurrentUserName(),getCompanyCode());
+	var userString = "WPC System";
+	
+	if (userName != "")
+	{
+		user = getUserByUsername(userName,getCompanyCode());		
+	}
+	if (user != null)
+	{
+		userString = user.getUserFirstName() + " " + user.getUserLastName() + " (" + user.getUserName() + ")";
+	}
+		
+	return userString;
+}
+
+function writeScriptLog(logMessage, logPath)
+{
+	logMessage = checkString(logMessage, "writeScriptLog:  Error with Message");
+	logPath = checkString(logPath, "/temp/logs/writeScriptLog.txt");
+	
+	var logDoc = getDocByPath(logPath);	
+	
+	if (logDoc == null)
+	{
+		var logDocExists = false;
+		var logOut = createOtherOut(logPath);
+		logOut.writeln("DATE STAMP" + "|" + "WPC USER" + "|" + "LOG MESSAGE");
+		logOut.writeln(getDate() + "|" + getCurrentUserName() + "|" + logMessage);
+		logOut.save(logPath);
+	}
+	if (logDoc != null)
+	{
+		var logOrg = createOtherOut(logPath);
+		logOrg.writeDoc(logDoc);
+		logOrg.writeln(getDate() + "|" + getCurrentUserName() + "|" + logMessage);
+		logOrg.save(logPath);
+	}	
+	
+}
+
+
+function getItemDocuments(item, attribPath)
+{
+    var values = [];
+	values[0] = "Not Avaliable";
+	if (item != null)
+	{
+		var categories = item.getCtgItemCategories("Internal Hierarchy");
+		if (categories != null)
+		{
+			var paths = [];
+			var categoryID = [];
+			
+			var i;		
+			for (i = 0; i < categories.size(); i++)
+			{
+				if (categories[i] != null)
+				{
+					paths[i] = categories[i].getCategoryAttrib(attribPath);				
+					if (paths[i] != null)
+					{
+						var str = paths[i];
+						str = substring(str, 1);
+						var tokens = [];
+						var tCount = 0;
+						while(str.contains("/"))
+						{
+							var tmpStr = str;
+							var strEnd = str.lastIndexOf("/");
+							str = substring(str, 0, str.lastIndexOf("/"));
+							var strStart = str.lastIndexOf("/") + 1;
+							tokens[tCount] = substring(tmpStr, strStart, strEnd);	
+							tCount++;
+						}				
+						categoryID[i] = tokens[1] + "/" + tokens[0];
+					}		
+				}
+			}		
+			if (paths[0] != null)
+			{
+				var docs = [];
+				var x;
+				for (x = 0; x < paths.size(); x++)
+				{
+					var tempDocs = getDocStoreFilesInDirectory(paths[x]);				
+					if (tempDocs != null)
+					{
+						var xi;	
+						for (xi = 0; xi < tempDocs.size(); xi++)
+						{
+							if (tempDocs[xi].contains("/"))
+							{
+								docs.add(categoryID[x] + substring(tempDocs[xi],tempDocs[xi].lastIndexOf("/")));
+							}					
+						}					
+					}
+				}
+				if (docs[0] != null)
+				{
+					values = docs;
+					
+				}
+			}
+		}
+	}
+	return values;
+}
+
+function getCategoryPath(item,attribPath,categoryID)
+{
+	var path;
+	path = "";
+	var i;
+	var paths = [];
+	
+	var categories = item.getCtgItemCategories("Internal Hierarchy");
+	if (categories != null)
+	{
+		for (i = 0; i < categories.size(); i++)
+		{
+			if (categories[i] != null)
+			{
+				paths[i] = categories[i].getCategoryAttrib(attribPath);
+				var categoryBranch = substring(categoryID,0,categoryID.lastIndexOf("/"));			
+				if (paths[i].contains(categoryBranch))
+				{
+					path = paths[i];	
+				}		
+			}
+		}
+	}
+	return path;
+}
+
+function acronymFinder(valueToParse, lTableName ){
+
+	var lTable = getLkpByName( lTableName );
+	var keys = lTable.getLkpKeys();
+	var  key;
+	var symbol;
+	
+	
+	forEachHmElement(keys, key, symbol) { 
+	
+	  var replacement = lookup("User Defined Acronyms", symbol );
+	  var replaceLocation = valueToParse.indexOf(symbol);
+	
+	  if ( replaceLocation  > -1 )
+	  {
+	 
+	     var replacementLength = symbol.length();
+	     var replaceEndLocation = replaceLocation + replacementLength;
+	
+	     var beginName = substring( valueToParse, 0, replaceLocation);
+	     var endName =  substring( valueToParse, replaceEndLocation, valueToParse.length() );
+	
+	     valueToParse = beginName + replacement + endName;
+	   }	  
+	}
+	return valueToParse;
+}
+
+function normal(normalize, lTable)
+	{
+        var lookupTable;
+        var lPath;
+        var lToken;
+        var token;        
+	lookupTable = getCtgByName(lTable);
+	if (normalize != null)
+	{
+		normalize = normalize + " ";
+		
+		token = "";
+		lToken = "";
+		lPath = "";	
+		while (normalize.indexOf(" ") != -1)
+			{
+				token = substring(normalize, 0, normalize.indexOf(" "));
+				var checkToken = lookupTable.getCtgItemByPrimaryKey(token);	
+				if (checkToken != null)
+				{					
+					lToken = checkString(checkToken.getCtgItemAttrib("Key - Value - LS/Value"), "");
+					
+				}
+				else
+				{
+					lToken = token;
+				}
+			lPath = lPath + lToken + " ";			
+			normalize = substring(normalize, normalize.indexOf(" ") + 1);				
+			}
+		lPath = substring(lPath, 0, lPath.length() - 1);
+		
+		return lPath;	
+	}
+	else
+	{
+		return "";
+	}
+	
+}
+
+function getBasicDocuments(docType)
+{
+	docType = checkString(docType, "");
+	var path = "/data_repository/product_images/";
+	if (docType == "documents")
+	{
+		path = "/data_repository/product_documents/";		
+	}	
+	var docsList = [];
+	docsList[0] = "Not Available";
+	
+	var tempDocs = getDocStoreFilesInDirectory(path);				
+	if (tempDocs != null)
+	{
+		docsList = tempDocs;		
+	}
+	return docsList;
+}
+
+function getWPCCookie(uName, pWord, cCode)
+{	
+	var hostName = lookup("WPC - Advanced Config", "intHostName");
+	var WPCUrl = "http://" + hostName + "/utils/enterLogin.jsp";
+	var sessionCookie = "";
+	var hm1 = [];
+	hm1["Content-Type"]="application/x-www-form-urlencoded";
+	var hm = [];
+	// Doing the HTTP Get for First Session Cookie
+	var hmResponse = getFullHTTPResponse(WPCUrl, hm1, hm, "GET"); 
+	
+	var page = "";
+	page = hmResponse["RESPONSE_READER"];
+	var header = hmResponse["RESPONSE_HEADER_FIELDS"];	
+	var cookie = header["Set-Cookie"];	
+	if (page != null)
+	{
+		hm1 = [];
+		hm1["Content-Type"]="application/x-www-form-urlencoded";
+		hm1["Cookie"] = cookie;
+		
+		//Post Data
+		hm = [];
+		hm["doit"] = "chk_login";
+		hm["username"] = uName;
+		hm["password"] = pWord;
+		hm["company_code"] = cCode;
+						
+		//Get the Key by doing the Post
+		hmResponse = getFullHTTPResponse(WPCUrl, hm1, hm, "POST"); 
+		//var newHeader = hmResponse["RESPONSE_HEADER_FIELDS"];		
+		
+		page = hmResponse["RESPONSE_READER"];
+		if (page != null)
+		{
+			sessionCookie = cookie;				
+		}		
+	}
+	return sessionCookie;
+}
+
+function returnHMAsArray(hashMap, type)
+{
+	var key;
+	var value;
+
+	var newArray;
+	newArray = [];
+	var elementCount;
+	elementCount = 0;
+	forEachHmElement(hashMap, key, value)
+	{
+		if (type=="value")
+		{
+			newArray[elementCount] = value;
+		}
+		else
+		{
+			newArray[elementCount] = key;
+		}			
+		elementCount++;
+	}	
+	return newArray.sort();
+}
+
+function getItemFamily(item)
+{
+	//var productType = checkString(item.getCtgItemAttrib("Master Catalog Spec/UCCnet/Product Type"), "Each");
+	//var attribs = item.getCtgItemAttribsList();
+	var relationshipAttrib = item.getCtgItemAttrib("Master Catalog Spec/Product Hierarchy/GTIN");
+	var itemFamily = [];
+	if (relationshipAttrib != null)
+	{
+		//var relatedItemInfo = item.getEntryRelatedItemInfo(relationshipAttrib);
+		
+		var basePath = "Master Catalog Spec/Product Hierarchy";
+		var rootNode = item.getRootEntryNode();
+		var familySize = 0;		
+		var nodes = rootNode.getEntryNodes (basePath);	
+		if (nodes != null)
+		{
+				var i;
+		
+		    	for(i=0; i < nodes.size(); i++)
+		    	{
+			        var nodePath = nodes[i].getEntryNodePath() + "#" + i;
+			        var currentItemGTIN = rootNode.getEntryNode(nodePath + "/GTIN").getEntryNodeValue();
+			        if (currentItemGTIN != null)
+			        {
+				        relationshipAttrib = item.getEntryRelatedItemInfo(currentItemGTIN);	
+				                
+				        if (relationshipAttrib != null)
+			        	{        				        	
+				        	var currentItemQuantity = rootNode.getEntryNode(nodePath + "/Quantity").getEntryNodeValue();
+				        	var currentItemExtendedDescription = rootNode.getEntryNode(nodePath + "/Extended Description").getEntryNodeValue();	
+				        	var tempHM = [];
+				        	tempHM["itemCatalog"] = relationshipAttrib[0];
+				        	tempHM["itemPrimaryKey"] = relationshipAttrib[1];		        	
+				        	tempHM["itemQuantity"] = currentItemQuantity;
+				        	tempHM["itemExtendedDescription"] = currentItemExtendedDescription;
+				        	itemFamily[familySize] = tempHM;
+				        	familySize++;        	
+			        	}
+				 	}
+			        	
+				}	
+		}
+	}	
+	return itemFamily;
+}
+
+function getMappedOrganizations(item, orgCatTreeStr, orgRolePath, orgRoleType)
+{
+	var orgs;
+	var orgList;
+	var catInt;
+	var orgCount;
+	orgCount = 0;
+	orgs = item.getCtgItemCategories(orgCatTreeStr);	
+	orgList = [];
+	orgList[0] = "Please Map This Item to: " + orgRoleType;
+	if ( null != orgs )
+	{		
+		for(catInt = 0; catInt < orgs.size(); catInt++)
+		{
+			var currentOrg = orgs[catInt];
+			var tempAttribValue = checkString(currentOrg.getCategoryAttrib(orgRolePath), "");
+			if (tempAttribValue == orgRoleType)
+			{
+					orgList[orgCount] = checkString(currentOrg.getPathValue(), "");
+					orgCount++;
+			}	   	   
+		}		
+	    
+	}
+	return orgList;
+}
+
+function getWPCPage(pageName, cookie)
+{	
+	var hostName = lookup("WPC - Advanced Config", "hostName");
+	var WPCUrl = "http://" + hostName + pageName ;
+	var sessionCookie = "";
+	var hm1 = [];
+	hm1["Content-Type"]="application/x-www-form-urlencoded";
+	hm1["Cookie"] = cookie;
+	hm1["User-Agent"] = "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0)";
+	hm1["Host"] = hostName;
+	hm1["Accept-Language"] = "en-us";
+	
+	
+	var hm = [];
+	// Doing the HTTP Get for First Session Cookie
+	out.writeln(WPCUrl);
+	var hmResponse = getFullHTTPResponse(WPCUrl, hm1, hm, "GET"); 
+	
+	var  page = "";
+	page = hmResponse["RESPONSE_READER"];
+	var header = hmResponse["RESPONSE_HEADER_FIELDS"];	
+	var pagestr = "";
+	
+	var line;
+	
+	if (page != null)
+	{	
+		pagestr = pagestr + "<BASE href=\"http://" + hostName + "/\">";	
+		forEachLine(page, line)
+		{
+			pagestr = pagestr + line; 
+		}			
+	}
+	return pagestr;
+}
+function addUserDefinedLogEntry(logName, entry, entryType, message)
+{
+	var containerType = "";
+
+    if (entryType == "ITEM" || entryType == "item")
+    {
+        containerType = "CATALOG";
+        container = entry.getCatalog();
+    }
+    else if (entryType == "CATEGORY" || entryType == "Category")
+    {
+        containerType = "CATEGORY TREE";
+        container = entry.getCategoryTree();
+    }
+    
+    var userName = getUserDetails(getCurrentUserName());
+    var messageTerminator = " [entry generated by: " + userName + "]";
+    
+    var log = container.getUserDefinedLog(logName);
+    log.userDefinedLogAddEntry(entry, message + "<br>" + messageTerminator);
+}
+
+
+function getChildCategoryList(categoryTreeName, categoryParentPath, nameAttribPath)
+{	
+	var cTree;
+	var parentCategory;
+	var childrenCategories;
+	var childrenCategoriesNames;
+	var catInt;
+	childrenCategoriesNames = [];
+	childrenCategoriesNames[0] = "Not Available";
+	cTree = getCategoryTreeByName(categoryTreeName);
+	if (cTree != null)
+	{
+		parentCategory = cTree.getCategoryByPath(categoryParentPath, "/");
+		if (parentCategory != null)
+		{
+			childrenCategories = parentCategory.getCategoryChildren();		
+			for(catInt = 0; catInt < childrenCategories.size(); catInt++)
+			{
+			    childrenCategoriesNames[catInt] = childrenCategories[catInt].getCategoryAttrib(nameAttribPath);	   
+			}
+		}
+			
+	}
+	return childrenCategoriesNames;	
+}
+
+function getOrganizationTypeList(organizationTreeName, organizationAttribPath, organizationValueAttrib)
+{		
+	var cTree;
+	var parentCategory;		
+	var childrenCategoriesNames;	
+	var cTreeSet;
+	childrenCategoriesNames = [];
+	childrenCategoriesNames[0] = "Not Available";
+	var orgCount;
+	orgCount = 0;
+	cTree = getCategoryTreeByName(organizationTreeName);
+	if (cTree != null)
+	{
+		cTreeSet = cTree.getCategorySet();
+		forEachCategorySetElement(cTreeSet, parentCategory) 						
+		{
+			var tempAttribValue = checkString(parentCategory.getCategoryAttrib("Internal - Org - Spec/Organization Role"), "");
+			if (tempAttribValue != "")
+			{
+				if (tempAttribValue == organizationValueAttrib)
+				{
+					childrenCategoriesNames[orgCount] = checkString(parentCategory.getPathValue(), "");
+					orgCount++;
+				}
+				
+			}	    
+		}
+	}
+	return childrenCategoriesNames;	
+}
+
+function getDateHorizon(dateObject1, dateObject2)
+{
+	//var statusTime = new Date("MMM ", dateString);
+        var statusTime = dateObject1;
+        var dateToday = dateObject2;
+	var statusSince = dateToday.getTime() - statusTime.getTime();				
+	//out.writeln(statusSince);
+	var days = statusSince / 86400;
+	var hours = (statusSince - (86400 * days)) / 3600;
+	var minutes = (statusSince - (86400 * days) - (3600 * hours)) / 60;
+	var statusSinceString = "";
+	if (days == 1)
+        {
+        	statusSinceString = days + " day ";
+        }
+       	else if (days > 0)
+        {
+        	statusSinceString = days + " days ";
+        }
+        if (hours == 1)
+        {
+            	statusSinceString = statusSinceString + hours + " hour ";
+        }
+        else if(hours > 0)
+        {
+            	statusSinceString = statusSinceString + hours + " hours ";
+        }
+        if(minutes == 1)
+        {
+            	statusSinceString = statusSinceString + minutes + " minute ";
+        }
+        else if(minutes > 0)
+        {
+        	statusSinceString = statusSinceString + minutes + " minutes ";
+        }
+        else if((minutes == 0) && (hours == 0) && (days == 0))
+        {
+		statusSinceString = "Less than 1 minute";
+        }
+        return statusSinceString;
+}
+
+function getFormattedDate(givenDate, timeBool)
+{
+	if (null == timeBool)
+	{
+	    timeBool = true;
+	}
+	
+	if (timeBool)
+	{
+        return formatDate(givenDate, "MM.dd.yyyy 'at' hh:mm:ss a z");
+	}
+	else
+	{
+        return formatDate(givenDate, "MM.dd.yyyy");
+	}
+}
+
+function getImage(urlImage,sessionKey,saveLocation)
+{
+	 var hm1 = [];
+	 hm1["Accept"]="image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, application/vnd.ms-powerpoint, application/vnd.ms-excel, application/msword, application/pdf, application/groove.preview, application/x-shockwave-flash"; 
+	 hm1["User-Agent"] = "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0; sbcydsl 3.12; YComp 5.0.0.0)"; 
+	 hm1["Proxy-Connection"] = "Keep-Alive";
+	 hm1["Cookie"] = sessionKey;
+	 hm1["Accept-Language"] = "en-us";
+	 hm1["Host"] = "www.oldnavy.com"; 
+	 var parametersHM = []; 
+	 var hmResponse = getFullHTTPResponse(urlImage, hm1, parametersHM, "GET",  null, null, null, false, false, saveLocation);  
+}
+ 
+function getMultiSessionKey(url)
+{
+	 var keyCookie = "";
+	 // 
+	 var hm1 = [];
+	 hm1["Accept"]="image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, application/vnd.ms-powerpoint, application/vnd.ms-excel, application/msword, application/pdf, application/groove.preview, application/x-shockwave-flash"; 
+	 hm1["User-Agent"] = "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0; sbcydsl 3.12; YComp 5.0.0.0)"; 
+	 hm1["Proxy-Connection"] = "Keep-Alive"; 
+	 hm1["Accept-Language"] = "en-us";
+	 hm1["Host"] = "www.oldnavy.com";
+	 var hm = [];
+	 
+	 // Doing the HTTP Get for First Session Cookie
+	 var hmResponse = getFullHTTPResponse(url, hm1, hm, "GET", "Cp1252"); 
+	 var page = hmResponse["RESPONSE_READER"];
+	 
+	 var newHM = hmResponse["RESPONSE_HEADER_FIELDS"]; 
+	 var cookie = newHM["Set-Cookie"];   
+	 var pagestr = "";  
+	 var line;
+	 
+	 forEachLine(page, line)
+	 {
+	    pagestr = pagestr + line; 
+	    
+	 }      
+	 return cookie;
+}
+function updateWorkflowHostName(oldHostName, newHostName)
+{
+	var wf_GUIs = getDocStoreSubtreeList("/workflow/gui/");
+	
+	var docCountPath;
+	var currentLine;
+	
+	for (docCountPath = 0; docCountPath < wf_GUIs.size(); docCountPath++)
+	{	
+		var currentGUIPath = wf_GUIs[docCountPath];
+		var guiReader = new Reader(currentGUIPath);		
+		if (guiReader != null)
+		{
+			var newGUIHTMLOut = createOtherOut(currentGUIPath);
+			forEachLine(guiReader, currentLine) 
+			{
+				currentLine = replace(currentLine, oldHostName, newHostName);
+				newGUIHTMLOut.writeln(currentLine);			
+			}
+			newGUIHTMLOut.save(currentGUIPath);		
+		}		
+	}
+	
+}
+
+function calcCD(str)  
+	{             
+		var factor;          
+		var sum;          
+		var index;          
+		var tmp;          
+		var div;                            
+		factor = 3;          
+		sum = 0;          
+		for (index = 13; index > 0; --index)          
+		{                  
+		sum = sum + toInteger(str.substring (index-1, index)) * factor;                  
+		factor = 4 - factor;          }  //      cc = ((1000 - sum) % 10);          
+		tmp = 1000 - sum;          
+		div = tmp / 10;          
+		return(tmp - 10 * div);  
+	}  
+	
+function simpleCalcCD(str, type)  
+{             
+	var factor;         
+	var sum;          
+	var index;          
+	var tmp;          
+	var div;                            
+	factor = 3;          
+	sum = 0;          
+		for (index = 3; index > 0; --index)          
+		{                  
+			sum = sum + toInteger(str.substring (index-1, index)) * factor;                  
+			factor = 4 - factor;          
+			}  
+			//      cc = ((1000 - sum) % 10);         
+			tmp = 1000 - sum;          
+			div = tmp / 10;          
+			return(tmp - 10 * div);  
+}  
+	
+	
+
+function buildUPCCode(code, price)
+{
+	
+	var upcCode = "020000000000";  
+	var pluCode = code; 
+	var defPrice = price; 
+	if ((pluCode != "") && (defPrice != ""))  {   defPrice = replace(defPrice, ".", "");    
+	defPrice = ("0" * (4 - defPrice.length())) + defPrice;   upcCode = "02" + pluCode + getScriptByPath("/scripts/triggers/WPC.Utils.Global.FunctionLibrary").getFunctionByName("calcCD").invoke(pluCode) + defPrice + getScriptByPath("/scripts/triggers/WPC.Utils.Global.FunctionLibrary").getFunctionByName("calcCD").invoke(defPrice);   
+	}  
+	
+	return upcCode;
+
+}
+
+function thumbnailValueRule(entry)
+{
+	var processAcroRules = lookup("WPC - Advanced Config", "Process Acronym Rules");
+	
+	if (processAcroRules == "true")
+	{
+		entry.setEntryAttrib("Master Item Spec/Short Description", getScriptByPath("/scripts/triggers/WPC.Utils.Global.FunctionLibrary").getFunctionByName("normal").invoke(checkString(entry.getEntryAttrib("Master Item Spec/Short Description"),""), "User Defined Acronyms"));
+		entry.setEntryAttrib("Master Item Spec/Long Description", getScriptByPath("/scripts/triggers/WPC.Utils.Global.FunctionLibrary").getFunctionByName("normal").invoke(checkString(entry.getEntryAttrib("Master Item Spec/Long Description"),""), "User Defined Acronyms"));
+		entry.setEntryAttrib("Master Item Spec/Label Description", getScriptByPath("/scripts/triggers/WPC.Utils.Global.FunctionLibrary").getFunctionByName("normal").invoke(checkString(entry.getEntryAttrib("Master Item Spec/Label Description"),""), "User Defined Acronyms"));
+		
+	}
+	var processSpanishRules = lookup("WPC - Advanced Config", "Process Spanish Rules");
+	if (processSpanishRules == "true")
+	{
+		var languagePairs = [];
+		languagePairs["Master Item Spec/Spanish Version/Short Description"] = "Master Item Spec/Short Description";
+		languagePairs["Master Item Spec/Spanish Version/Long Description"] = "Master Item Spec/Long Description";
+		languagePairs["Master Item Spec/Spanish Version/Label Description"] = "Master Item Spec/Label Description";
+		
+		var lpKey;
+		var lpValue;
+		
+		forEachHmElement(languagePairs, lpKey, lpValue)
+		{
+		 
+		 var englishValue = checkString(entry.getEntryAttrib(lpValue),""); 
+		 var currentTranslatedValue = checkString(entry.getEntryAttrib(lpKey), null); 
+		 if ((englishValue != "") && (currentTranslatedValue == null))
+		 {
+		 	entry.setEntryAttrib(lpKey, getScriptByPath("/scripts/triggers/WPC.Utils.Global.FunctionLibrary").getFunctionByName("translate").invoke(checkString(entry.getEntryAttrib(lpValue),""), "en_es"));
+		
+		 }
+		}
+	}
+	
+
+	var hostName = lookup("WPC - Advanced Config", "hostName");
+	var imageURL = "http://" + hostName + "/suppliers/"+ getCompanyCode() + "/data_repository/product_images/tm_na.jpg";
+	var imageLocation = checkString(item.getCtgItemAttrib("Master Item Spec/Product Content/Thumbnail Image"),"");
+
+
+	if (imageLocation != "")
+	{	
+		imageURL = imageLocation;
+	}
+
+	return imageURL;
+}
+
+
+function gtinValueRule(entry)
+{
+	var cTree;  
+	var categoryTreeName = "TM - Product Types";  
+	cTree = getCategoryTreeByName(categoryTreeName);
+		  
+	var itemTypePaths = [];  
+	itemTypePaths["Master Item Spec/Item Regulation"] = "Regulated Item";  
+	itemTypePaths["Master Item Spec/Item Source"] = "Sourced Item"; 
+	itemTypePaths["Master Item Spec/Item Type"] = "Selling Item";  
+	itemTypePaths["Master Item Spec/Perishable Type"] = "Random Weight";
+	  
+	var categoryCount;  
+	categoryCount = 0;  
+	var tempCategories;
+	 
+	 var tpKey;
+	 var tpValue;
+	 
+	forEachHmElement(itemTypePaths, tpKey, tpValue)  
+	{   
+		var internalItemType = checkString(entry.getCtgItemAttrib(tpKey),"");   
+		if (internalItemType != "")   
+		{      
+			var tempCategory = cTree.getCategoryByPath(tpValue + "*****" + internalItemType, "*****");    
+			if (tempCategory != null)    
+			{     
+				entry.mapCtgItemToCategory(tempCategory);     
+			}    
+		}  
+	}    
+	
+	var res = false;
+	var currentGTIN = checkString(entry.getCtgItemAttrib("Master Item Spec/GTIN"), "N/A");
+	
+	if (currentGTIN.length() == 13)
+	{
+		entry.setCtgItemAttrib("Master Item Spec/GTIN", currentGTIN + getScriptByPath("/scripts/triggers/WPC.Utils.Global.FunctionLibrary").getFunctionByName("calcCD").invoke(currentGTIN));
+		res = true;
+	}
+	
+	
+	if (currentGTIN.length() == 14)
+	{
+		if (getScriptByPath("/scripts/triggers/WPC.Utils.Global.FunctionLibrary").getFunctionByName("calcCD").invoke(currentGTIN) == substring(currentGTIN, 13))
+		{
+			res = true;
+		}
+		else
+		{
+			//getScriptByPath("/scripts/triggers/WPC.Utils.Global.FunctionLibrary").getFunctionByName("addUserDefinedLogEntry").invoke("General Validation", entry, "ITEM", "The GTIN Check Digit is incorrect, please visit for a valid check digit: <A HREF='http://www.uc-council.org/ean_ucc_system/education_support/cdc.html'>Check Digit Calculator</A>");		
+			res = false;
+		}
+	}
+	if (res == false)
+	{
+		//getScriptByPath("/scripts/triggers/WPC.Utils.Global.FunctionLibrary").getFunctionByName("addUserDefinedLogEntry").invoke("General Validation", entry, "ITEM", "The GTIN must be a minimum of 14 Characters");		
+		res = false;
+	}
+	//res = true;
+	return res;
+}
+
+function prepareDescriptionToContainerMappings() {
+
+    var finalNameList = [];
+    finalNameList[0] = "--Please Select A Catalog Or Hierarchy--";
+
+    var catNameList = getCatalogNamesList();
+    var cTreeNameList = getCategoryTreeNamesList();
+
+	var i;
+
+    for (i = 0 ; i < cTreeNameList.size(); i++)
+    {
+        finalNameList.add(cTreeNameList[i]);
+    }
+
+    for (i = 0 ; i < catNameList.size(); i++)
+    {
+        finalNameList.add(catNameList[i]);
+    } 
+ 
+    return finalNameList;
+}
+
+
+function prepareDescriptionToAttributeMappings() {
+
+    var finalNameList = [];
+    finalNameList[0] = "--Please Select An Object First--";
+
+    var catNameList = getCatalogNamesList();
+    var cTreeNameList = getCategoryTreeNamesList();
+    var coaNameList = getColAreaNames();
+
+	var i;
+    for (i = 0 ; i < cTreeNameList.size(); i++)
+    {
+        finalNameList.add("CATEGORY: " + cTreeNameList[i]);
+    }
+    for (i = 0 ; i < catNameList.size(); i++)
+    {
+        finalNameList.add("CATALOG: " + catNameList[i]);
+    } 
+    for (i = 0 ; i < coaNameList.size(); i++)
+    {
+        finalNameList.add("CATALOG: " + coaNameList[i]);
+    } 
+    return finalNameList;
+}
+
+
+function processDescriptionToAttributeMappings()
+{
+	var attribs = [];
+	attribs[0] = "Please Select An Object First";
+	var entryContainer = entry.getEntryAttrib("DescriptionToAttribute Mappings/Object Name");
+	
+	if (entryContainer != null){
+	
+		if(entryContainer.contains("CATALOG: "))
+		{
+			attribs = [];
+			entry = getCtgByName(replaceString(entryContainer,"CATALOG: ",""));
+			
+			var totalSpcs = [];
+			totalSpcs.add(entry.getCatalogSpec());
+			
+			var specName;
+			var spcCount;
+			
+			forEachHmElement(entry.getCtgCategorySpecs(), specName, spec)
+			{
+				totalSpcs.add(spec);			
+			}	
+			for (spcCount = 0; spcCount < totalSpcs.size(); spcCount++)
+			{
+				var currentSpc = totalSpcs[spcCount];
+				var spcAttribs = currentSpc.getSpecAttribPaths();
+				
+				for (var spcAttribCount = 0;spcAttribCount < spcAttribs.size(); spcAttribCount++)
+				{
+					attribs.add(spcAttribs[spcAttribCount]);
+				}
+				
+				
+			}		
+		}
+		if(entryContainer.contains("CATEGORY: "))
+		{
+			attribs = [];
+			entry = getCategoryTreeByName(replaceString(entryContainer,"CATEGORY: ",""));
+			
+			var totalSpcs = [];
+			totalSpcs.add(entry.getCategoryTreeSpec());		
+			for (var spcCount = 0; spcCount < totalSpcs.size(); spcCount++)
+			{
+				var currentSpc = totalSpcs[spcCount];
+				var spcAttribs = currentSpc.getSpecAttribPaths();
+				for (var spcAttribCount = 0;spcAttribCount < spcAttribs.size(); spcAttribCount++)
+				{
+					attribs.add(spcAttribs[spcAttribCount]);
+				}
+				
+				
+			}		
+		}
+		
+		
+	}
+	return attribs;
+}
+// ---------------------------------------------------------------------------
+// Function:    validateUPCCode  
+// Description: checks the UPC Code checkdigit and throws a validation error if incorrec6t
+//				if the check digit does not exist it creates one
+// Author:		Todd Calhoun
+// Date:		11/18/04
+//          
+// Parameters:  an item object
+// ---------------------------------------------------------------------------
+function validateUPCCode(item)
+{
+	var rootEN = item.getRootEntryNode();
+	var iCounter;
+	var modelUPCCodeENArry = [];
+	
+	//get the UPC Code for every model
+	modelUPCCodeENArry = rootEN.getEntryNodes("Lucky Product Catalog Spec/Models/Model Attributes/UPC_CODE");
+	
+    //loop on every UPC Code
+	for(iCounter = 0 ; iCounter < modelUPCCodeENArry.size() ; iCounter++)
+	{
+		//for each UPC_Code check the UPC_Code check digit (CD)
+		var currentUPCCode = checkString(modelUPCCodeENArry[iCounter].getEntryNodeValue(), "N/A");
+		var currentUPCCodePadded = "00" + currentUPCCode;
+		//out.writeln(currentUPCCodePadded);
+		//if the upc code dooes not exist
+		if (currentUPCCodePadded.length() == 13)
+		{
+		    //out.writeln(currentUPCCode + getScriptByPath("/scripts/triggers/WPC.Utils.Global.FunctionLibrary").getFunctionByName("calcCD").invoke(currentUPCCodePadded));
+			modelUPCCodeENArry[iCounter].setEntryNodeValue(currentUPCCode + getScriptByPath("/scripts/triggers/WPC.Utils.Global.FunctionLibrary").getFunctionByName("calcCD").invoke(currentUPCCodePadded));
+			item.saveCtgItem();
+		}
+		//if it exist check to ensure that it is valid
+		if (currentUPCCodePadded.length() == 14)
+		{
+			if (getScriptByPath("/scripts/triggers/WPC.Utils.Global.FunctionLibrary").getFunctionByName("calcCD").invoke(currentUPCCodePadded) == substring(currentUPCCodePadded, 13))
+			{
+				var res = true;
+			}
+			else
+			{
+			    //set a special validation error
+			   modelUPCCodeENArry[iCounter].throwValidationError("VALIDATION_RULE", "The UPC Code Check Digit is not valid.");
+			}
+		}
+	}
+}//end fuunction
+
+
+function sendTheEmail(emailAddress, subject, body){
+	
+	sendEmail(emailAddress, subject, body);	
+}
+
+
+function getDiffDropDowns(entrynode,ruleType)
+{
+	//Value Rule for Setting the Enumeration for Drop Downs 
+	//ruleType = "GROUP";
+	//ruleType = "RANGE";
+	
+	var selectHM = [];
+	selectHM[0] = "-Please Select a Differentiator Type & Selection Method-";	
+	var entryDifParent = entrynode.getEntryNodeParent().getEntryNodeParent();
+	var selectedType = toUpperCase(checkString(entryDifParent.getEntryNode("/Type").getEntryNodeValue(), ""));
+	if (selectedType != "")
+	{
+		var ctr = getCategoryTreeByName("Differentiator Types");
+		var typeCat = ctr.getCategoryByPath(selectedType, "__");
+		
+		if (typeCat != null)
+		{
+			var selectedMethod = checkString(entryDifParent.getEntryNode("/Selection Method").getEntryNodeValue(), "");			
+			if (selectedMethod != "")
+			{
+				var i = 0;
+				if  (ruleType == "GROUP")
+				{
+					if ((selectedMethod == "Group") || (selectedMethod == "Range") || (selectedMethod == "Combo"))  //Ah, we are going one level Deep
+					{
+						var groupCats = typeCat.getCategoryChildren();
+						if (groupCats != null)
+						{
+							var catIdINT;
+							var groupCat;
+													
+							forEachHmElement(groupCats, catIdINT, groupCat) 
+							{						     	  
+								selectHM[i] = groupCat.getCategoryAttrib("Differentiator_Hieararchy_Spec/Name");
+							        i++;
+							}
+						}
+						else
+						{
+							selectHM[0] = "-No Groups Available-";
+						}					
+					}
+					else
+					{
+						selectHM[0] = "-No Groups Available-";
+					}
+					
+				}
+				
+				if (ruleType == "RANGE")
+				{		
+					if ((selectedMethod == "Range") || (selectedMethod == "Combo")) //Ah, we are going two levels Deep
+					{
+						
+						var selectedGroup = toUpperCase(checkString(entrynode.getEntryNodeParent().getEntryNode("/Group").getEntryNodeValue(),""));
+						if (selectedGroup != "")
+						{					
+							var groupCat = ctr.getCategoryByPath(selectedType + "__" + selectedGroup, "__");
+							if (groupCat != null)
+							{
+								var rangeCats = groupCat.getCategoryChildren();
+								if (rangeCats != null)
+								{
+								   var catIdINT;
+								   var rangeCat;
+								   
+									forEachHmElement(rangeCats, catIdINT, rangeCat) 
+									{
+										selectHM[i] = rangeCat.getCategoryAttrib("Differentiator_Hieararchy_Spec/Name");
+									        i++;
+									}
+								}	
+								else
+								{
+									selectHM[0] = "-No Ranges Available-";
+								}	
+							}
+							else
+							{
+								selectHM[0] = "-No Ranges Available-";
+							}	
+						}
+						else
+						{
+							selectHM[0] = "-Please Select a Valid Group-";
+						}			
+					}
+					else
+					{
+						selectHM[0] = "-Please Select a Range or Combo for Selection Method-";			
+					}
+					
+				}
+				
+				if (selectedMethod == "Individual")
+				{
+					selectHM[0] = "-Not Available When Using Indvidual-";
+				}			
+			}
+			else
+			{
+				selectHM[0] = "-Please Select a Selection Method-";
+			}		
+		}
+		
+	}
+	return selectHM;
+}
+
+function getPossibleItemLevels(entry)
+{
+	var selectHM = [];
+	selectHM[0] = "-No Item Levels Exist-";	
+	if (entry != null)
+	{
+		var levelCats = entry.getCtgItemCategories("Item Type");
+		if (levelCats != null)
+		{
+			var i = 0;
+			var intCatId;
+			var currentCat;
+			
+			forEachHmElement(levelCats, intCatId, currentCat)
+			{
+				if (currentCat.getPathValue().contains("LEVEL"))
+				{
+					selectHM[i] = currentCat.getPathValue();
+					i++;
+				}			
+			}
+		}	
+	}	
+	return selectHM;
+}
+
+function getAvailableLevels(entry)
+{
+	var catLevels = [];
+	catLevels[0] = "Not Available";
+	if (entry != null)
+	{
+		
+		catLevels[0] = "Level 1";
+		var mappedCategories = entry.getCtgItemCategories("Item Type");
+		for (var catCount = 0; catCount < mappedCategories.size(); catCount++)
+		{
+			var curCat = mappedCategories[catCount];
+			var catCode = checkString(curCat.getCategoryCode(), "");
+			if (catCode != "")
+			{
+				if (catCode.contains("LEVEL 2"))
+				{
+					catLevels.add("Level 2");
+				}
+				if (catCode.contains("LEVEL 3"))
+				{
+					catLevels.add("Level 3");
+				}			
+			}		
+		}		
+	}
+	return catLevels;	
+}
+
+function getLookupTableHM(lookupTableName){
+
+	var lkp = getLkpByName(lookupTableName);
+	
+	var lkpTableHM = [];
+	
+	var keys = lkp.getLkpKeys();
+	
+	for (var count=0; count < keys.size(); count++){
+	
+		var lkpKey = keys[count];
+		lkpTableHM[lkpKey] = lookup(lookupTableName, lkpKey);
+	}
+
+	return lkpTableHM;
+}
+
+function writeItem(item){
+
+	var attribPaths = item.getCtgItemAttribsList();
+	
+	
+	for(var count=0; count < attribPaths.size(); count++){
+	
+	       var attribPath = attribPaths[count];
+	       var attribValue = checkString(item.getCtgItemAttrib(attribPath), "");
+	
+	
+	       out.writeln(attribPath + ":::::[" + attribValue + "]");
+	}
+	//getScriptByPath("/scripts/triggers/WPC.Utils.Global.FunctionLibrary").getFunctionByName("writeItem").invoke(item);
+	//ctg = getCtgByName("Master JHC Catalog");
+	//item = ctg.getCtgItemByPrimaryKey("654321");
+	//item = new CtgItem("Master JHC Catalog");
+}
+
+function writeCat(cat){
+
+	var attribPaths =cat.getEntryAttribsList();
+	
+	for(var count=0; count < attribPaths.size(); count++){
+		
+	       var attribPath = attribPaths[count];
+	       var attribValue = checkString(cat.getEntryAttrib(attribPath), "");
+	
+	
+	       out.writeln(attribPath + ":::::[" + attribValue + "]");
+	}
+}

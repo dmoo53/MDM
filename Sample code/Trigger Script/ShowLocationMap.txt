@@ -1,0 +1,48 @@
+// ShowLocationMap for gb
+
+//http://maps.google.com/maps?q=101+midland+street,+midland,+tx,usa&hl=en&sll=31.985859,-102.131986&sspn=0.0093,0.013604&vpsrc=0&z=16
+
+function getURL(entry)
+{
+
+//entryPK = entry.getPrimaryKey();			
+				streetAddress = checkString( entry.getEntryAttrib("Location Hierarchy Spec/Street Address 1"), "");
+				city = checkString( entry.getEntryAttrib("Location Hierarchy Spec/City"), "");
+				state = checkString( entry.getEntryAttrib("Location Hierarchy Spec/State"), "");
+				country = checkString( entry.getEntryAttrib("Location Hierarchy Spec/Country"), "");
+				zipCode = checkString( entry.getEntryAttrib("Location Hierarchy Spec/Zip Code"), "");
+				
+				
+				q = "USA";
+				
+				if ( (streetAddress == "")&&(city == "")&&(state == "") ){
+					
+							q = country;
+					
+				} else if( (streetAddress == "")&&(state == "") ){
+					
+							q = city + "," +  country;
+					
+				} else if( (streetAddress == "")&&(city == "") ){
+				
+								q = state + "," +  country;
+								
+				} else if( (streetAddress == "") ){
+				
+								q = city + "," + state + "," +  country;
+				} else{
+								//last resort or full combo
+								q = streetAddress + "," +  city + "," + state + "," +  country;
+				}
+                   
+        pageLink = "http://maps.google.com/maps?q=" + q;
+
+
+           pageLink = pageLink + "&output=embed";
+				//p
+
+ageLink = "http://maps.yahoo.com/index.php?ard=1&q1=508%20Inverness%20Dr%2C%20Pacifica%2C%20CA%2094044#mvt=m&lat=37.647751&lon=-122.475009&zoom=14&q1=508%20Inverness%20Dr%2C%20Pacifica%2C%20CA%2094044";
+				
+				return pageLink;
+
+}

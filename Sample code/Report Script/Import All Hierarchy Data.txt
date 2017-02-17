@@ -1,0 +1,145 @@
+/// @file import all hierarchies
+/// $Title: Template $ Import all Hierarchies
+/// $Description: $ Import all Hierarchies
+/// @brief 
+/// Import all Hierarchies
+/// @author Vis Bowatte
+/// @date Oct 20th 2006
+/// @date June 2008
+
+////
+////  PLACEHOLDER SCRIPT DOES NOT WORK YET.
+////
+////
+
+
+//script here
+var myLogger = getLogger("import.all_hierarchies");
+//var oCtr = getCategoryTreeByName();
+//var sCtrName = oCtr.getCategoryTreeName();
+var default_directory = "/test/";
+var hierarchyFileName = "gb_categories_6_17_2013.csv";
+
+//Hm of Hierarchy Feed Files
+var hmHierarchyFeedFiles = [];
+hmHierarchyFeedFiles.add(hierarchyFileName);
+
+
+//build a category and return it
+function obtainOrBuildCategory(oCtr, sPath, sKey){
+
+	var myCat;
+	
+	myCat = oCtr.getCategoryByPath ( sPath, "//");
+	
+	if (myCat == null){
+		
+		myCat = new Category(oCtr, sPath, "//", sKey);
+	}else{
+		//out.writeln("mycat exists");
+	}
+
+	myCat = oCtr.getCategoryByPath ( sPath, "//");
+
+	return myCat;
+}
+
+
+
+
+//Iterate thru the files and process each file
+
+var fileName;
+var dummy;
+forEachHmElement(hmHierarchyFeedFiles, dummy, fileName)
+{
+	beginPerf("one ctr");
+	var filePath = default_directory +fileName;
+	var reader = new Reader(filePath);
+	var oParser = newCSVParser(reader);
+	var hmAttrs = oParser.splitLine(); 
+	var bDone = (null == hmAttrs);
+	var oCategory = null;
+	var oCategoryRootEN = null;
+	var oCtr = null;
+	var sCtrName = null;
+	var sPathKey = "//";
+	var myCat = null;
+	var hmCtrs = []; //hashmap of ctrs to save in the end
+	
+	out.writeln(filePath);
+	
+	while (!bDone) {
+		
+		oCtr = getCategoryTreeByName(hmAttrs[0]);
+		var sPath = trim(checkString(hmAttrs[1], ""));
+		var sType = trim(checkString(hmAttrs[2], ""));
+		var sAttrPath = trim(checkString(hmAttrs[3], ""));
+		var sAttrValue = trim(checkString(hmAttrs[4], ""));
+		
+		sCtrName = hmAttrs[0];
+		
+		keyLoc = sPath.lastIndexOf(sPathKey) + sPathKey.length();
+		sKey = substring(sPath, keyLoc);
+			
+		myCat = obtainOrBuildCategory(oCtr, sPath, sKey);
+			
+		//out.writeln(sCtrName);
+		out.writeln("sPath: " + sPath);
+		
+		if (sType == "ME_MYSELF_I")
+		{
+			//oCategory = oCtr.buildCategory(substring(sPath, 5), "//");
+			
+			hmCtrs[sCtrName] = oCtr;
+			//getScriptByPath("/scripts/triggers/WPC.Utils.Global.FunctionLibrary").getFunctionByName("writeCat").invoke(myCat);
+		}
+		
+		if (sType == "ITEM_SPEC")
+		{
+			myLogger.loggerDebug("Skipping ITEM_SPEC/Attrpath: [" + sAttrPath + "]");
+			myCat.addItemSecondarySpecToCategory(hmAttrs[3]);
+		}
+		
+		if (sType == "CAT_SPEC")
+		{
+			myLogger.loggerDebug("Skipping DATA/Attrpath: [" + sAttrPath + "]");
+			myCat.addSecondarySpecToCategory(hmAttrs[3]);
+		}
+		
+		if (sType == "DATA") {
+			
+			sAttrPath = substring(sAttrPath, 1);
+			
+			//out.writeln("sAttrPath: " + sAttrPath);
+			//out.writeln("sAttrValue: " + sAttrValue);
+			//getScriptByPath("/scripts/triggers/WPC.Utils.Global.FunctionLibrary").getFunctionByName("writeCat").invoke(myCat);
+			
+			myCat.setEntryAttrib(sAttrPath, sAttrValue);
+			
+			myLogger.loggerDebug("Skipping DATA/Attrpath: [" + sAttrPath + "]");	
+					
+		}
+		hmAttrs = oParser.splitLine();
+		bDone = (null == hmAttrs);
+	}
+	
+	beginPerf("one save");
+	
+	forEachHmElement(hmCtrs, catName, oCtr) { 
+
+	
+		var savedCtrResults=oCtr.saveCategoryTree();
+		out.writeln(savedCtrResults);
+	
+	}
+	
+	endPerf("one save");
+	if (savedCtrResults != null){
+		myLogger.loggerError("Error: Hierarchy save results: [" + sCtrName + "]" + savedCtrResults);
+	}
+	else{
+		myLogger.loggerInfo("Success: Hierarchy save results: [" + sCtrName + "]" + savedCtrResults);
+	}
+	endPerf("one ctr");
+}

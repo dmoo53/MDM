@@ -1,0 +1,33 @@
+function getURL(entry)
+{
+    entryPK = checkString (entry.getPrimaryKey(),"");
+    associationId =checkString (entry.getEntryAttrib("Digital Asset/AssociationId"),"");
+description =checkString (entry.getEntryAttrib("Digital Asset/Description"),"");
+	tags = checkString (entry.getEntryAttrib("Digital Media Properties/Tags"),"");
+	comments = checkString (entry.getEntryAttrib("Digital Media Properties/Comments"), "");
+	name = checkString (entry.getEntryAttrib("Digital Asset/Name"),"");
+category = checkString (entry.getEntryAttrib("Digital Media Properties/Categories"),"");
+filePath =checkString (entry.getEntryAttrib("Digital Media Properties/Primary Media"),"");
+	metadata = checkString (entry.getEntryAttrib("Digital Media Properties/MetaData"),"");
+
+
+	largeImagePath = checkString (entry.getEntryAttribValues("Digital Media Properties/Variants")[0],"");
+	smallImagePath = checkString (entry.getEntryAttribValues("Digital Media Properties/Variants")[1],"");	
+    thumbImagePath = checkString (entry.getEntryAttrib("Digital Media Properties/Thumbnail"),"");
+
+	args = "entryPK="+entryPK + "&" +
+	"associationId=" + associationId + "&" +
+	"tags="+tags + "&" +
+        "description="+description + "&" +
+	"comments="+comments + "&" +
+	"name="+name + "&" +
+	"category="+category + "&" +
+	"metadata="+metadata + "&" +
+	"largeImagePath="+largeImagePath + "&" +
+	"smallImagePath="+smallImagePath + "&" +
+	"thumbImagePath="+thumbImagePath + "&" +
+	"filePath="+ filePath;
+
+	pageLink = "/user/dam/web/jsp/ImageDetail.jsp?"+args ;
+          return pageLink;
+}

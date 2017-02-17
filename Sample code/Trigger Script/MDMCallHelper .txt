@@ -1,0 +1,207 @@
+//MDMCallHelper
+
+//getProductInstance
+//productHM = getScriptByPath("/scripts/triggers/MDMCallHelper").getFunctionByName("getProductInstance").invoke(productID);
+
+//searchProductInstance
+//productsHM = getScriptByPath("/scripts/triggers/MDMCallHelper").getFunctionByName("getSearchProductInstance").invoke(productName);
+
+//addFinancialProduct
+//results = getScriptByPath("/scripts/triggers/MDMCallHelper").getFunctionByName("addFinancialProduct").invoke(productName, shortDescription, description)
+
+function callMDMHub(requestXmlStr){ 
+  
+						  var logger = getLogger("DEMO_2010_10_10");
+						logger.loggerInfo("========================Sync to MDM Server =======================");
+						
+						//var endpointUrl = "http://9.26.163.122:9081/ProductWS_HTTPRouter/services/ProductPort";
+					  var endpointUrl = lookup("MDM Integration Configurations", "MDM Server endpointUrl");
+						
+						var soapClientConstructor = createJavaConstructor("com.ibm.pim.webservice.client.SoapClient");
+						var client = runJavaConstructor(soapClientConstructor );
+						var soapClientMethod = createJavaMethod("com.ibm.pim.webservice.client.SoapClient", "invokeService", "java.lang.String", "java.lang.String", "boolean");
+						var resp = runJavaMethod(client, soapClientMethod, endpointUrl, requestXmlStr, false);
+						
+						//out.writeln(resp);
+						
+						//logger.loggerInfo("resp:\n========\n" + resp);
+						
+						//logger.loggerInfo("========================Sync to MDM Server =======================");
+
+						return resp;
+}
+
+function getXMLTemplate(path){
+	
+						doc = getDocByPath(path);
+						template = doc.getDocContentAsString(doc);
+	
+						return template;
+}
+
+function parseForTag(fullStr, tagName){
+	
+			var tagContent = "";
+	
+			startTag = "<" + tagName + ">";
+			endTag = "</" + tagName + ">";
+	
+			locationOfStartTag = fullStr.indexOf(startTag);
+			
+			if ( locationOfStartTag > -1){
+				
+							locationOfStartTag = locationOfStartTag + startTag.length();
+				
+							locationOfEndTag = fullStr.indexOf(endTag);
+				
+							tagContent = substring(fullStr, locationOfStartTag, locationOfEndTag);							
+				
+			}
+	
+			//out.writeln(tagName + ":" + tagContent);
+	
+			return tagContent;
+}
+
+//GetProductInstance.xml
+function getProductInstanceStr(productID){
+
+			productHM = [];
+
+			getProductInstancePath = "/template/GetProductInstance.xml";
+			getProductInstanceTemplate = getXMLTemplate(getProductInstancePath);
+			getProductInstanceTemplate = replace(getProductInstanceTemplate, "<**productId**>", productID);
+			
+			respStr = callMDMHub(getProductInstanceTemplate);
+					
+			//out.writeln(respStr);
+						
+			return respStr;
+}
+
+//just a sample parsing
+function getProductInstance(productID){
+
+			productHM = [];
+	
+			respStr = getProductInstanceStr(productID);
+	
+			idPK						= parseForTag(respStr, "idPK");
+			lastUpdate			= parseForTag(respStr, "lastUpdate");
+			productTypeId		= parseForTag(respStr, "productTypeId");
+			name						= parseForTag(respStr, "name");
+			shortDescription= parseForTag(respStr, "shortDescription");
+			description				= parseForTag(respStr, "description");
+			productLastUpdate	= parseForTag(respStr, "productLastUpdate");
+			
+			productHM[idPK] = idPK;
+			productHM[lastUpdate] = lastUpdate;
+			productHM[productTypeId] = productTypeId;
+			productHM[name] = name;
+			productHM[shortDescription] = shortDescription;
+			productHM[description] = description;
+			productHM[productLastUpdate] = productLastUpdate;
+	
+			return productHM;
+}
+
+//SearchProductInstance.xml
+function getSearchProductInstanceStr(productName){
+
+			searchProductInstancePath = "/template/SearchProductInstance.xml";
+			searchProductInstanceTemplate = getXMLTemplate(searchProductInstancePath);
+			
+			searchProductInstanceTemplate = replace(searchProductInstanceTemplate, "<**productName**>", productName);
+
+			respStr = callMDMHub(searchProductInstanceTemplate);
+						
+			return respStr;
+}
+
+
+//just a sample parsing
+function getSearchProductInstance(productName){
+	
+			respStr = getSearchProductInstanceStr(productName);
+	
+			searchResultsHM = [];
+			
+			rawResults = respStr.parseDelim("<productSearchResult>");
+			
+			if ( rawResults.size() > 1){
+				
+						for(rawResultCount=1; rawResultCount < rawResults.size(); rawResultCount++){
+				
+								rawResult = rawResults[rawResultCount];
+						
+								searchResultHM = [];
+								
+								productId = parseForTag(rawResult, "productId");
+								
+								searchResultHM["productName"] =  parseForTag(rawResult, "productName");
+								searchResultHM["productTypeId"] =  parseForTag(rawResult, "productTypeId");
+								searchResultHM["productShortDescription"] = parseForTag(rawResult, "productShortDescription");
+								searchResultHM["productDescription"] = parseForTag(rawResult, "productDescription");
+								searchResultHM["relationshipRoleFilter"] = parseForTag(rawResult, "relationshipRoleFilter");
+								searchResultHM["productId"] = productId;
+								searchResultHM["productStructureType"] = parseForTag(rawResult, "productStructureType");
+								
+								searchResultsHM[productId] = searchResultHM;
+								
+					}
+			}
+			
+			return searchResultsHM;
+}
+
+
+//AddFinancialProduct.xml
+function addFinancialProductStr(productName, shortDescription, description){
+
+			productHM = [];
+
+			addFinancialProductPath = "/template/AddFinancialProduct.xml";
+		addFinancialProductTemplate = getXMLTemplate(addFinancialProductPath);
+			addFinancialProductTemplate = replace(addFinancialProductTemplate, "<**productName**>", productName);
+			addFinancialProductTemplate = replace(addFinancialProductTemplate, "<**shortDescription**>", shortDescription);
+			addFinancialProductTemplate = replace(addFinancialProductTemplate, "<**description**>", description);
+			
+			respStr = callMDMHub(addFinancialProductTemplate);
+							
+			return respStr;
+}
+
+function addFinancialProduct(productName, shortDescription, description){
+
+			respStr = addFinancialProductStr(productName, shortDescription, description);
+			
+			productID = "";
+			
+			//out.writeln(respStr);
+			
+			if ( respStr.indexOf("SUCCESS") > -1){
+				
+						productID	= parseForTag(respStr, "idPK");
+
+			}
+		
+			return productID;
+}
+
+//productName = "%a%";
+//searchResultsHM = getSearchProductInstance(productName);
+//out.writeln(searchResultsHM);
+
+//productID = "256131679703842008";
+//productHM = getProductInstance(productID);
+//out.writeln(productHM);
+
+productName = "10 Percent Interest Only";
+shortDescription = "10 Percent Interest Only"; 
+description = "10 Percent Interest Only";
+
+result= addFinancialProduct(productName, shortDescription, description);
+
+//result= getScriptByPath("/scripts/triggers/MDMCallHelper").getFunctionByName("addFinancialProduct").invoke(productName, shortDescription, description);
+
+out.writeln(result);

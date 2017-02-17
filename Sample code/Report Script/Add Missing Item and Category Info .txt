@@ -1,0 +1,135 @@
+//reusable
+function getCategory(ctrName, catCode){
+	
+	ctr = getCategoryTreeByName(ctrName);
+	cats = ctr.getCategorySetByPrimaryKey(catCode);
+	
+	var cat;
+	
+	forEachCategorySetElement(cats, tempCat) { 
+	
+		cat = tempCat;	
+	}
+
+	return cat;
+}
+
+//reusable
+function checkItemIntoWorkflowStep(ctg, primaryKey, collabAreaName, wflName){
+
+	caExistingItems= getColAreaByName(collabAreaName);
+	containerExistingItems= caExistingItems.getColAreaContainer();
+	
+	pkeys = [];
+	pkeys[0]= primaryKey;
+	
+	//check out item
+	Items=ctg.getItemSetForPrimaryKeys(pkeys, false);
+	results=caExistingItems.checkOutEntries(Items, wflName, true);
+	
+	out.writeln(results);
+
+}
+
+
+//create colonial item
+ctg = getCtgByName("Master Product Catalog");
+
+primaryKey = "20061";
+
+myItem = ctg.getCtgItemByPrimaryKey(primaryKey);
+
+if (myItem == null){
+	
+	myItem = new CtgItem("Master Product Catalog");
+	myItem.setPrimaryKey(primaryKey);
+}
+	
+	//set all attributes on the item
+	myItem.setCtgItemAttrib("Master Product Spec/Display Name/en_US", "Colonial Sofa");
+	myItem.setCtgItemAttrib("Master Product Spec/Display Name/es_ES", "Sofá Colonial");
+	myItem.setCtgItemAttrib("Master Product Spec/Internal Part Number", "FULE-20061");
+	myItem.setCtgItemAttrib("Master Product Spec/Short Description", "Sofa");
+	myItem.setCtgItemAttrib("Master Product Spec/Status", "Active");
+	myItem.setCtgItemAttrib("Master Product Spec/Effective Start Date", currentDate);
+	myItem.setCtgItemAttrib("Master Product Spec/Effective End Date", nextDate);
+
+
+cat = getCategory("Online Hierarchy", "10011");
+myItem.mapCtgItemToCategory(cat);
+
+myItem.saveCtgItem();
+
+//check colonial into workflow
+checkItemIntoWorkflowStep(ctg, "20061", "New Product Enrichment", "Initial");
+
+//update Furniture Info
+myCat = getCategory("Online Hierarchy", "10001");
+ctr = getCategoryTreeByName("Online Hierarchy");
+
+//little date action
+currentDate = today();
+nextDate = currentDate;
+nextDate = nextDate.addDate("YEAR" , 10);
+
+
+myCat.setCategoryAttrib("Master Category Spec/Display Name/en_US", "Furniture");
+myCat.setCategoryAttrib("Master Category Spec/Display Name/es_ES", "Muebles");
+myCat.setCategoryAttrib("Master Category Spec/Display Name/de_DE", categoryName);
+myCat.setCategoryAttrib("Master Category Spec/Display Name/fr_FR", categoryName);
+myCat.setCategoryAttrib("Master Category Spec/Short Description", "Furniture");
+myCat.setCategoryAttrib("Master Category Spec/Long Description", "Furniture");
+myCat.setCategoryAttrib("Master Category Spec/Status", "Active");
+
+myCat.setCategoryAttrib("Master Category Spec/Department Image", "http://mdmpim:7508/suppliers/gb_enterprises/data_repository/assets/images/catalog/FU.jpg");
+myCat.setCategoryAttrib("Master Category Spec/Banner Image", "http://mdmpim:7508/suppliers/gb_enterprises/data_repository/assets/images/catalog/FU.jpg");
+myCat.setCategoryAttrib("Master Category Spec/Alternative Image", "http://mdmpim:7508/suppliers/gb_enterprises/data_repository/assets/images/catalog/FU.jpg");
+
+myCat.setCategoryAttrib("Master Category Spec/Effective Start Date", currentDate);
+myCat.setCategoryAttrib("Master Category Spec/Effective End Date", nextDate);
+
+//out.writeln(myCat);
+ctr.saveCategoryTree();
+
+
+//update Coffee Table Info
+myCat = getCategory("Online Hierarchy", "10007");
+ctr = getCategoryTreeByName("Online Hierarchy");
+
+//little date action
+currentDate = today();
+nextDate = currentDate;
+nextDate = nextDate.addDate("YEAR" , 10);
+
+myCat.setCategoryAttrib("Master Category Spec/Display Name/es_ES", "Mesa de Centro");
+myCat.setCategoryAttrib("Master Category Spec/Display Name/fr_FR", "Table Basse");
+
+myCat.setCategoryAttrib("Master Category Spec/Department Image", "http://mdmpim:7508/suppliers/gb_enterprises/data_repository/assets/images/catalog/FUCO.jpg");
+myCat.setCategoryAttrib("Master Category Spec/Banner Image", "http://mdmpim:7508/suppliers/gb_enterprises/data_repository/assets/images/catalog/FUCO.jpg");
+myCat.setCategoryAttrib("Master Category Spec/Alternative Image", "http://mdmpim:7508/suppliers/gb_enterprises/data_repository/assets/images/catalog/FUCO.jpg");
+
+myCat.setCategoryAttrib("Master Category Spec/Effective Start Date", currentDate);
+myCat.setCategoryAttrib("Master Category Spec/Effective End Date", nextDate);
+
+//out.writeln(myCat);
+ctr.saveCategoryTree();
+
+//update 5-piece images
+ctg = getCtgByName("Master Product Catalog");
+
+primaryKey = "10099";
+
+myItem = ctg.getCtgItemByPrimaryKey(primaryKey);
+
+if (myItem == null){
+	
+	myItem = new CtgItem("Master Product Catalog");
+	myItem.setPrimaryKey(primaryKey);
+}
+	
+	//set all attributes on the item
+	myItem.setCtgItemAttrib("Master Product Spec/Full Image", null);
+	myItem.setCtgItemAttrib("Master Product Spec/Thumbnail Image", null);
+
+
+myItem.saveCtgItem();

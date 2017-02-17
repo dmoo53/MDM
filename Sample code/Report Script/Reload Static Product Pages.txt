@@ -1,0 +1,431 @@
+/// @file export all catalogs
+/// $Title: Template $ export all catalogs
+/// $Description: $ export all catalogs
+/// @brief 
+/// export all catalogs
+/// @author Vis Bowatte/modified by Geoff Bernard to publish products to the file system
+/// @date Oct 20th 2006
+/// @date June 2013
+
+//getScriptByPath("/scripts/triggers/WPC.Utils.Publish.MQ").getFunctionByName("publishProduct").invoke(entry);
+
+//var myLogger = getLogger("export.all_catalogs");
+
+
+//http://collabmdm:7507/suppliers/bank/images/financegraph.jpg
+
+//lookup values - kept to script - potato potahto
+var fileWritePath =  "/home/collabmdm/collabmdmV11/public_html/suppliers/bank/pages/";
+var fileLinkPrefix 	= "http://collabmdm:7507/suppliers/bank/pages/";
+var templatePath		=	"/templates/productScreenSpiffed.html";
+var catalogName 		=	"Offer Catalog";
+
+
+//all these values are screen related and could be split off into separate script
+var productIDPath			=	"/Offer Attributes/Offer ID";
+var productDisplayNamePath 		=	"/Offer Attributes/Offer Product Name";
+var productDisplayNamePathForFiles 	= "Offer Attributes/Offer Product Name";
+var productStatusPath			=	"/Offer Attributes/Status";
+var lastUpdatedPath 			=	"/Offer Attributes/EffectiveDate";
+var imageLinkPath	=	"/Offer Attributes/Thumbnail Image";
+var imageNotAvailableLink	=	"http://collabmdm:7507/suppliers/imagenotavailable.gif";
+
+function getCategoryDisplayName(ctrForWords, catCode){
+	
+	var cats = ctrForWords.getCategorySetByPrimaryKey(catCode);
+	
+	var cat;
+	
+	forEachCategorySetElement(cats, tempCat) { 
+	
+		cat = tempCat;	
+	}
+
+	var catDisplayValue = cat.getDisplayValue();
+
+	if ((catDisplayValue == null)||(catDisplayValue == "")){
+	
+			catDisplayValue = catCode; 
+	}
+	return catDisplayValue;
+}
+
+function modifyCatPathToShowDisplays(catPath){
+
+		//var words = [];
+		
+		var catWords = catPath.parseDelim("//");
+				
+		var ctrForWords = getCategoryTreeByName( catWords[0]);
+		
+		var pathWithDisplayNames = catWords[0];
+
+		for (var catWordsCount=1; catWordsCount < catWords.size();  catWordsCount++){
+			
+					var catWord = catWords[catWordsCount];
+					var catDisplayName = getCategoryDisplayName(ctrForWords, catWord);
+					pathWithDisplayNames = pathWithDisplayNames + " >> " + catDisplayName;
+		}
+
+		return pathWithDisplayNames;
+}
+
+function cleanAttributeValue(value){
+
+    lastOccurenceOfSlash = value.lastIndexOf("/");
+    
+    if ( lastOccurenceOfSlash > -1){
+
+    lastOccurenceOfSlash = lastOccurenceOfSlash + 1;
+    value = substring (value, lastOccurenceOfSlash);
+    }
+
+    value = replace(value, "_", " ");
+    
+    return value;
+}
+
+function getDocFileAsStr( path){
+
+	doc = getDocByPath(path);
+	docStr = getDocContentAsString(doc);
+	
+	//cleanedDocStr = replace(docStr, oldStr, newStr);
+	
+	return docStr;
+}
+
+function createIndexFile(fileNames){
+	
+	catchError(sErrMsg) {
+
+				filename = fileWritePath + "/index.html";
+
+				var fileWriterConstructor = createJavaConstructor("java.io.FileWriter","java.lang.String"); 
+				var fileWriterObj = runJavaConstructor(fileWriterConstructor,filename);
+
+				var bufferedWriterConstr = createJavaConstructor("java.io.BufferedWriter","java.io.Writer"); 
+			  var bufferedWriterObj = runJavaConstructor(bufferedWriterConstr ,fileWriterObj);
+
+
+				writeMethod = createJavaMethod("java.io.BufferedWriter","write","java.lang.String");
+		
+				forEachHmElement(fileNames, fileNumber, fileName){
+		
+						fileName = replace(fileName, " ", "_");
+						
+						fileNameForLink = replace(fileName, "/", "_");
+						
+						fileLink = fileLinkPrefix + fileNameForLink + ".html";
+								
+						fileStr = "<a href=\"" + fileLink + "\">" + fileName +"</a><br>";
+						
+						test = runJavaMethod(bufferedWriterObj, writeMethod, fileStr);
+						
+						nuLineMethod = createJavaMethod("java.io.BufferedWriter","newLine");
+						runJavaMethod(bufferedWriterObj, nuLineMethod);
+						
+				}
+			
+				closeMethod = createJavaMethod("java.io.BufferedWriter","close");
+				runJavaMethod(bufferedWriterObj, closeMethod);
+
+				
+	}
+	
+	
+}
+
+
+function writeToFileSystem(fileName, productStr){
+
+	catchError(sErrMsg) {
+
+				filename = fileWritePath + fileName;
+	
+	  		var fileWriterConstructor = createJavaConstructor("java.io.FileWriter","java.lang.String"); 
+				var fileWriterObj = runJavaConstructor(fileWriterConstructor,filename);
+
+				var bufferedWriterConstr = createJavaConstructor("java.io.BufferedWriter","java.io.Writer"); 
+			  var bufferedWriterObj = runJavaConstructor(bufferedWriterConstr ,fileWriterObj);
+
+
+				writeMethod = createJavaMethod("java.io.BufferedWriter","write","java.lang.String");
+		
+				test = runJavaMethod(bufferedWriterObj, writeMethod, productStr);
+				
+				nuLineMethod = createJavaMethod("java.io.BufferedWriter","newLine");
+				runJavaMethod(bufferedWriterObj, nuLineMethod);
+				
+				//test = runJavaMethod(bufferedWriterObj, writeMethod, quickStr);
+
+				closeMethod = createJavaMethod("java.io.BufferedWriter","close");
+				runJavaMethod(bufferedWriterObj, closeMethod);
+			
+	}
+
+}
+
+function writeCSVExportForEntry(itemset)
+{
+  var itemStr = "";
+  var itemHM = [];
+  
+  
+  
+	var itemrelStr = "";
+	
+	var delimiter = "\n";
+	
+	//var myCtg = getCtgByName(sCatalogName);
+	//var itemset = myCtg.getItemSetForCatalog();
+
+	var myItem;
+	forEachItemSetElement(itemset, myItem)
+	{
+		
+		sCatalogName = myItem.getCatalog().getCtgName();
+		
+		beginPerf("one item");
+		var myPK = myItem.getCtgItemPrimaryKey();
+		//thisFile.writeln(buildCSV(sCatalogName, myPK, "ME_MYSELF_I"));
+		//fullFile.writeln(buildCSV(sCatalogName, myPK, "ME_MYSELF_I"));
+
+		itemStr = buildCSV(sCatalogName, myPK, "ME_MYSELF_I") + delimiter;
+
+		var fullPaths = myItem.getCtgItemCategoryPaths("//", true);
+		if (fullPaths.size() > 0) 
+		{
+			for (var i = 0; i < fullPaths.size() ; i++)
+			{
+				//thisFile.writeln(buildCSV(sCatalogName, myPK, "MY_CAT", fullPaths[i]));
+				//fullFile.writeln(buildCSV(sCatalogName, myPK, "MY_CAT", fullPaths[i]));
+				
+				itemStr = itemStr + buildCSV(sCatalogName, myPK, "MY_CAT", fullPaths[i]) + delimiter;
+				
+				var quickCats = itemHM["cats"];
+				
+				if (quickCats == null){
+					
+							quickCats = [];
+					
+				}
+				
+				quickCats.add(fullPaths[i]);
+				
+				itemHM["cats"] = quickCats;
+				
+			}
+		}
+
+		var myRootEn = myItem.getRootEntryNode();
+		var en=myRootEn.getEntry();
+		var myENs = en.getFlatEntryNodes();
+		for(var l=0; l<myENs.size(); l++) 
+		{
+			var thisEn = myENs[l];
+			var myNode = thisEn.getNodeFromEntryNode();
+			var bIgnoreAllDataErrorsOnNonRootEntryNodes = null;
+			catchError(bIgnoreAllDataErrorsOnNonRootEntryNodes)
+			{
+				if ((myNode != null)
+						&& !myNode.isNodeSpecRoot() 
+						&& !myNode.isNodeGrouping() 
+						&&  (checkString(myNode.getNodeAttributeValue("LOCALIZED"), "no") != "yes") 
+						&& thisEn.hasNonInheritedValue()) 
+				{
+					if (checkString(myNode.getNodeAttributeValue("TYPE"), "") == "RELATIONSHIP")
+					{
+						if ((thisEn.getEntryNodeValue() != null) && (thisEn.getEntryNodeValue() != ""))
+						{
+							var myVals = myItem.getEntryRelationshipAttrib(thisEn.getEntryNodeExactPath());
+							//var myRelStr = myVals[0] + "||" + myVals[1];
+							//relationshipFile.writeln(buildCSV(sCatalogName, myPK, "REL_DATA", thisEn.getEntryNodeExactPath(), myVals[0], myVals[1]));
+							
+							itemStr = itemStr + buildCSV(sCatalogName, myPK, "REL_DATA", thisEn.getEntryNodeExactPath(), myVals[0], myVals[1]) + delimiter;
+						}
+					}
+					else
+					{
+						//thisFile.writeln(buildCSV(sCatalogName, myPK, "DATA", thisEn.getEntryNodeExactPath(), thisEn.getEntryNodeValue()));
+						//fullFile.writeln(buildCSV(sCatalogName, myPK, "DATA", thisEn.getEntryNodeExactPath(), thisEn.getEntryNodeValue()));
+						itemStr = itemStr + buildCSV(sCatalogName, myPK, "DATA", thisEn.getEntryNodeExactPath(), thisEn.getEntryNodeValue()) + delimiter;
+
+						attributeName = thisEn.getEntryNodeExactPath();
+						attributeValue = thisEn.getEntryNodeValue();
+
+						itemHM[attributeName] = attributeValue;
+
+					}
+				}
+			}
+		}
+		endPerf("one item");
+	}
+	
+	return itemHM;
+}
+
+//please note this is just a sample pulling a file from docStore
+function buildScreenWithProductValues(productValues, ctgID, entryID){
+	
+	//make this lookup table driven very soon!
+	productPK = checkString(productValues[productIDPath], "Part ID Unknown");
+	productDisplayName = productValues[productDisplayNamePath];
+	productStatus = "Active";
+	lastUpdated = productValues[lastUpdatedPath];
+
+	image = "http://collabmdm:7507/suppliers/bank/images/financegraph.jpg";
+
+	if ((image == "")||(image == null)){
+		
+		image = imageNotAvailableLink;
+	}
+
+
+	//quick date clean up
+	lastUpdatedStr = lastUpdated + "";
+	
+	catchError(e){
+		
+			lastUpdatedStr = lastUpdated.formatDate("MM/dd/yyyy");
+	}
+			
+	cats = productValues["cats"];	
+	
+	var link = "/utils/classicornew.wpc?doit=modify_item_in_data_entry&catalog_id=" + ctgID + "&item_id=" + entryID + "&version_id=999999999&active_tab=0";
+	
+	
+	path = templatePath;
+	docStr = getDocFileAsStr(path);
+	
+	docStr = replace(docStr, "<pk>", productPK);
+	docStr = replace(docStr, "<prodDesc>", productDisplayName);
+	docStr = replace(docStr, "<link>", link);
+	docStr = replace(docStr, "<image>", image);
+	docStr = replace(docStr, "<image>", image);
+	docStr = replace(docStr, "<status>", productStatus);
+	docStr = replace(docStr, "<lastUpdated>", lastUpdatedStr);
+	 
+	
+	
+	//add categories 
+  catHTML = "";
+  for (catsCount = 0; catsCount < cats.size(); catsCount++){
+  	
+  			cat = cats[catsCount];	
+  			
+  			catWithDisplay = modifyCatPathToShowDisplays(cat);
+  			
+  			
+  			catHTML = catHTML + "<tr><td valign=center><SPAN><b>" + catWithDisplay + "</b></SPAN></td> </tr>";
+  }
+	
+	docStr = replace(docStr,"<categories>", catHTML);
+	
+	//run this off a template in the docStore as an example
+	sampleRowHTML = "";
+
+	forEachHmElement(productValues, attributeName, attributeValue){
+	
+	
+						attributeName = cleanAttributeValue(attributeName);
+	
+						sampleRowHTML = sampleRowHTML + "<tr><td valign=center><STRONG>" + attributeName + "</STRONG>&nbsp;&nbsp;&nbsp;&nbsp;</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <SPAN>" + attributeValue + "</SPAN></td></tr>";
+	}
+	
+	docStr = replace(docStr,"<attributesinrows>", sampleRowHTML);
+	
+	//use the following line for debugging - it will do a product values dump
+	//docStr = docStr + productValues;
+	
+	return docStr;
+}
+
+function sendToMQ(message){
+	
+	//uncomment when ready to send
+	//mgr = mqGetQueueMgr("procsvr.rde.sc.ibm.com", "1414", "SYSTEM.DEF.SVRCONN", "QMGR");
+	//out.writeln(mgr);
+	//mgr.mqSendTextMsg(message, "MDM.IN.QUEUE", null, null  );
+	
+ // out.writeln(message);
+  
+}
+
+function publishProduct(entry){
+	
+	  var myCtg = entry.getCatalog();
+		var ctgID = myCtg.getCatalogId();
+		var entryID = entry.getCtgItemId();
+	
+		pk = entry.getPrimaryKey();
+		displayName = checkString( entry.getEntryAttrib(productDisplayNamePathForFiles), pk);
+	
+		if (displayName == null){
+			
+					displayName = pk;
+		} else{
+			
+					displayName = displayName + "_" + pk;
+		}
+	
+		out.writeln( displayName);
+
+		pkeys = [];
+		pkeys[0]= pk;
+		
+		//check out item
+		itemset=myCtg.getItemSetForPrimaryKeys(pkeys, false);
+	
+		productValues = writeCSVExportForEntry(itemset);
+
+		//use line below to dump onto a queue instead
+		//sendToMQ(message);
+	
+		screen = buildScreenWithProductValues(productValues, ctgID, entryID);
+	
+		fileName = displayName + ".html";
+	
+		//just in case your display name has a slash and space in it
+		//...replace with reg expression for file name some day
+		
+		fileName = replace(fileName, "/", "_");
+		fileName = replace(fileName, " ", "_");
+	
+		writeToFileSystem(fileName, screen);
+	
+		return screen;
+	
+}
+
+var fileNames = [];
+
+forEachCtgItem(catalogName,  entry) { 
+
+		entryPK = entry.getPrimaryKey();
+		
+		out.writeln(entryPK);
+		
+		displayName = checkString( entry.getEntryAttrib(productDisplayNamePathForFiles), pk);
+
+		if (displayName == null){
+			
+					displayName = entryPK;
+		} else{
+			
+					displayName = displayName + "_" + entryPK;
+		}
+
+		out.writeln(displayName);
+
+		fileNames[entryPK] = displayName; 
+
+		test = publishProduct(entry);
+	
+		//out.writeln(test);
+}
+
+//out.writeln(fileNames);
+
+createIndexFile(fileNames);

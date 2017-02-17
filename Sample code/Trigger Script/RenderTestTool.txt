@@ -1,0 +1,62 @@
+<%
+companyCode = getCompanyCode();
+
+function callMDMHub(requestXmlStr){ 
+  
+						  var logger = getLogger("DEMO_2010_10_10");
+						logger.loggerInfo("========================Sync to MDM Server =======================");
+						
+						//var endpointUrl = "http://9.26.163.122:9081/ProductWS_HTTPRouter/services/ProductPort";
+					var endpointUrl = lookup("MDM Integration Configurations", "MDM Server endpointUrl");
+						
+						var soapClientConstructor = createJavaConstructor("com.ibm.pim.webservice.client.SoapClient");
+						var client = runJavaConstructor(soapClientConstructor );
+						var soapClientMethod = createJavaMethod("com.ibm.pim.webservice.client.SoapClient", "invokeService", "java.lang.String", "java.lang.String", "boolean");
+						var resp = runJavaMethod(client, soapClientMethod, endpointUrl, requestXmlStr, false);
+						
+						//out.writeln(resp);
+						
+						//logger.loggerInfo("resp:\n========\n" + resp);
+						
+						//logger.loggerInfo("========================Sync to MDM Server =======================");
+
+						return resp;
+}
+
+if (process != null){
+
+			reqStrHTML = escapeForHTML(reqStr);
+			reqStrHTML = replace(reqStr, " ", "&nbsp;");
+
+			resp = callMDMHub(reqStr);
+
+			//resStrHTML = escapeForHTML(resStr);
+			//resStrHTML = replace(resStrHTML, " ", "&nbsp;");
+}
+
+
+%>
+
+
+<b>MDM Data Hub Test Tool </b>
+(Test callouts to an MDM Hub In Preparation For Collaborating in Collaboration Server)
+
+<form action="/utils/invoker.jsp">
+
+<b>Enter Sample XML Here:</b><br>
+<TEXTAREA NAME=reqStr ROWS=15, COLS=100><%=reqStr %> </TEXTAREA>
+<input type=submit name="Test Hub Call" value="Test Hub Call">
+<br><br><br>
+
+<b>View Response Here:</b><br>
+<TEXTAREA NAME=resStr, ROWS=40, COLS=100><%=resp%> </TEXTAREA>
+
+<input type="hidden" name="invoking_user" value="Admin">
+<input type="hidden" name="company_code" value="<%=companyCode%>">
+<input type="hidden" name="script" value="RenderTestTool">
+<input type="hidden" name="bUserOutput" value="false">
+
+
+<input type="hidden" name="process" value="true">  
+
+</form>

@@ -1,0 +1,40 @@
+<font size=4><b>Add Product to MDM Hub</b></font><br><br>
+<br><br>
+<form action="/utils/invoker.jsp">
+
+<%
+	 companyCode = getCompanyCode();
+
+   productName = checkString(productName, "");
+   shortDescription = checkString(shortDescription, "");
+   description = checkString(description, "");
+%>
+
+		Product Name: <input type="text" name="productName" value="<%=productName%>">&nbsp;&nbsp;&nbsp;&nbsp;<br><br>
+		Short Description: <input type="text" name="shortDescription" value="<%=shortDescription%>">&nbsp;&nbsp;&nbsp;&nbsp;<br><br>
+		Description: <input type="text" name="description" value="<%=description%>">&nbsp;&nbsp;&nbsp;&nbsp;<br><br>
+		
+		
+<input type="hidden" name="invoking_user" value="Admin">
+<input type="hidden" name="company_code" value="<%=companyCode%>">
+<input type="hidden" name="script" value="AddProductTool">
+<input type="hidden" name="bUserOutput" value="false">
+
+<input type="hidden" name="process" value="true">  
+
+<input type=submit name="Add Party" value="Add Party">
+
+</form>
+
+<%
+
+if (process != null){
+
+		result= getScriptByPath("/scripts/triggers/MDMCallHelper").getFunctionByName("addFinancialProduct").invoke(productName, shortDescription, description);
+				
+		//some day check if result came back
+%>
+		<font color=red>Product has been added.  Product ID is: <%=result %></font>
+<%
+}
+%>

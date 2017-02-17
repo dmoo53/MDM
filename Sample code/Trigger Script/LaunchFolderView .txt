@@ -1,0 +1,11 @@
+//sampleScript1 for gb
+function getURL(entry)
+{
+
+     var fulPaths  = entry.getFullPaths("/",false);
+    folderPath =checkString (entry.getEntryAttrib("Digital Asset Collection/Name"),"");
+    	args = "folderPath="+ fulPaths[0];
+
+	pageLink = "/user/dam/web/jsp/pmt.jsp?"+args ;
+          return pageLink;
+}

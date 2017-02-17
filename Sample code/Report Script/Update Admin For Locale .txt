@@ -1,0 +1,13 @@
+user = getUserByUsername("Admin");
+
+
+role1 = getRoleByName("base_acg_view_role");
+role2 = getRoleByName("gb_admin");
+role3 = getRoleByName("gb_basic");
+ 
+roles = [];
+roles.add ( role1 );
+roles.add ( role2 );
+roles.add ( role3 );
+
+user.setUserRoles(roles);

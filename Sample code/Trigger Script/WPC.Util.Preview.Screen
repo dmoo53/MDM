@@ -1,0 +1,997 @@
+<%
+
+//WPC.Util.Preview.Screen
+
+function getRelationships(entry, reltnPath){
+	
+	relatedItemHM = [];
+	
+	catchError(e){
+	
+		relInfo = entry.getEntryRelationshipAttrib(reltnPath);
+	
+		if (relInfo != null){
+		
+			var ctg = getCtgByName( relInfo[0]);
+			var relatedEntry = ctg.getCtgItemByPrimaryKey( relInfo[1] );
+			
+			var displayName = checkString( relatedEntry.getEntryAttrib("Master Product Spec/Display Name/en_US") ,"None Available");
+			var smallImage = checkString( relatedEntry.getEntryAttrib("Master Product Spec/Thumbnail Image") ,"/suppliers/gb_enterprises/data_repository/Preview/GB_Enterprises_na.jpg");
+			
+			//modify image links, if neccessary
+			if ( (smallImage.indexOf("suppliers") == -1 ) ){
+			
+				smallImage = "/suppliers/gb_enterprises/ctg_files/" + smallImage;
+			}
+			
+			relatedItemHM["displayName"] = displayName;
+			relatedItemHM["smallImage"] = smallImage;
+			
+		}
+	}
+	
+	return relatedItemHM;
+}
+
+	//containerName = req["containerName"];
+
+	ctg = getCtgByName(containerName);
+	entry = ctg.getCtgItemByPrimaryKey(entryStr);
+	
+	//price hard-coded for now - get all other items
+	displayName = checkString( entry.getEntryAttrib("Master Product Spec/Display Name/en_US") ,"None Available");
+	longDescription = checkString( entry.getEntryAttrib("Master Product Spec/Long Description") ,"None Available");
+	shortDescription = checkString( entry.getEntryAttrib("Master Product Spec/Short Description") ,"None Available");
+	smallImage = checkString( entry.getEntryAttrib("Master Product Spec/Thumbnail Image") ,"/suppliers/gb_enterprises/data_repository/Preview/GB_Enterprises_na.jpg");
+	largeImage = checkString( entry.getEntryAttrib("Master Product Spec/Full Image") ,"/suppliers/gb_enterprises/data_repository/Preview/GB_Enterprises_na.jpg");
+	internalPartNumber = checkString( entry.getEntryAttrib("Master Product Spec/Internal Part Number") ,"None Available");
+		
+	//modify image links, if neccessary
+	if ( (smallImage.indexOf("suppliers") == -1 )  ){
+	
+		smallImage = "/suppliers/gb_enterprises/ctg_files/" + smallImage;
+	}
+	
+	//modify image links, if neccessary
+	if ( (largeImage.indexOf("suppliers") == -1 )  ){
+	
+		largeImage = "/suppliers/gb_enterprises/ctg_files/" + largeImage;
+	}
+		
+	//go get category display name	    
+	catDisplayName = "";
+	
+	cats = entry.getCtgItemCategories( "Online Hierarchy");
+	
+	for (i=0; i<cats.size(); i++){
+	
+		cat = cats[i];
+	
+		catDisplayName = checkString( cat.getEntryAttrib("Master Category Spec/Display Name/en_US"), "");
+	}
+
+	//get category name and call it a day
+	
+	reltnPath = "Master Product Spec/Cross Sell";
+	
+	
+	reltnPath = "Master Product Spec/Cross Sell";
+	relatedItemHM = getRelationships(entry, reltnPath);
+
+	
+	
+	
+%>
+
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0116)http://www.gb_enterprises.com/webapp/wcs/stores/servlet/Product_10151_-1_10001_82040_400013001_400000000_400013000_400-13-1 -->
+<!-- Start - JSP File Name:  ProductDisplay.jsp --><!-- Start - JSPF File Name: JSTLEnvironmentSetup.jspf --><!--c:out value="include/styles/style1/"/--><!-- End - JSPF File Name: JSTLEnvironmentSetup.jspf --><!-- Start - JSP File Name:  SiteTemplate.jsp --><!-- Start - JSPF File Name: JSTLEnvironmentSetup.jspf --><!--c:out value="include/styles/style1/"/--><!-- End - JSPF File Name: JSTLEnvironmentSetup.jspf --><?xml version="1.0" encoding="iso-8859-1"?><HTML 
+xmlns="http://www.w3.org/1999/xhtml"><HEAD><TITLE>Online Product Preview</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=UTF-8"><LINK 
+href="/suppliers/gb_enterprises/data_repository/Preview/styles.css" type=text/css rel=STYLESHEET>
+<META 
+content="Benchmade NRA Osborne Guthook Knife. Patented BILT system for easy disassembly makes cleaning the handle and blade a snap. Blade is made of 440C stainless steel; black leather sheath included. Black/Silver. Blade length: 4-1/4''; overall length: 9''." 
+name=description>
+<META content="Benchmade NRA Osbourne Guthook Knife" name=keywords><LINK 
+href="/suppliers/gb_enterprises/data_repository/Preview/styles.css" type=text/css rel=STYLESHEET><!-- Coremetics .js begin -->
+<SCRIPT language=JavaScript1.1 src="/suppliers/gb_enterprises/data_repository/Preview/eluminatelive.js"></SCRIPT>
+
+<SCRIPT language=JavaScript1.1 src="/suppliers/gb_enterprises/data_repository/Preview/techprops.js"></SCRIPT>
+
+<SCRIPT language=JavaScript1.1 src="/suppliers/gb_enterprises/data_repository/Preview/cmdatatagutils.js"></SCRIPT>
+<!-- Coremetics .js end -->
+<SCRIPT src="/suppliers/gb_enterprises/data_repository/Preview/525popup.js"></SCRIPT>
+
+
+
+<SCRIPT src="/suppliers/gb_enterprises/data_repository/Preview/triggerParams.js" type=text/javascript></SCRIPT>
+
+<SCRIPT src="/suppliers/gb_enterprises/data_repository/Preview/stdLauncher.js" type=text/javascript></SCRIPT>
+
+<SCRIPT type=text/javascript>Poll();</SCRIPT>
+
+<SCRIPT language=JavaScript>
+	<!--
+	function setSearchBoxText(inputForm) {
+
+	}
+	function clearSearchBoxText(inputForm) {
+
+	}
+	
+	function checkSearchBoxText(inputForm) {
+
+	}
+
+	//-->
+</SCRIPT>
+
+<META content="MSHTML 6.00.2900.3199" name=GENERATOR></HEAD>
+<BODY topMargin=0><!-- JSP File Name:  ProductDisplay.jsp -->
+<TABLE width=786 align=center border=0>
+  <TBODY>
+  <TR>
+    <TD><!-- BEGIN LayoutContainerTop.jspf --><!-- Layout enclosing table -->
+      <TABLE height="100%" cellSpacing=0 cellPadding=0 width="100%" border=0>
+        <TBODY>
+        <TR>
+          <TD vAlign=top colSpan=3><!--Header--><!-- BEGIN HeaderDisplay.jspf --><!-- Start - JSP File name:  style1/CachedHeaderDisplay.jsp --><!-- Start - JSPF File Name: JSTLEnvironmentSetup.jspf --><!--c:out value="include/styles/style1/"/--><!-- End - JSPF File Name: JSTLEnvironmentSetup.jspf --><!-- Start - JSP File name:  include/departmentLinks.jspf --><!-- End - JSP File name:  include/departmentLinks.jspf --><!--START HEADER-->
+            <TABLE cellSpacing=0 cellPadding=0 width=760 align=center 
+              border=0><TBODY>
+              <TR>
+                <TD width=127><A 
+                  title="GB Enterprises - Leading Supplier of Household Goods" 
+                  href="http://www.gb_enterprises.com/webapp/wcs/stores/servlet/Shop_10151_-1_10001?CMID=MH_HOME"><IMG 
+                  src="/suppliers/gb_enterprises/data_repository/Preview/GB_Enterprises.jpg" border=0></A></TD>
+                <TD width=633>
+                  <TABLE cellSpacing=0 cellPadding=0 width=633 align=center 
+                  border=0>
+                    <TBODY>
+                    <TR>
+                      <SCRIPT>document.write("<td height='35' colspan='3'><img src='/suppliers/gb_enterprises/data_repository/Preview/spacer.gif' width='633' height='35' border='0' alt=''></td>");</SCRIPT>
+                      <NOSCRIPT>
+                      <TD colSpan=3 height=35><A class=topLinks 
+                        title="Click here to return to the gb_enterprises.com home page." 
+                        href="http://www.gb_enterprises.com/webapp/wcs/stores/servlet/Shop_10151_-1_10001"><STRONG>Home</STRONG></A>&nbsp;&nbsp;|&nbsp;&nbsp;<A 
+                        class=topLinks 
+                        title="Click here to find local retail store information." 
+                        href="http://www.gb_enterprises.com/webapp/wcs/stores/servlet/CFPage?appID=94&amp;storeId=10151&amp;catalogId=10001&amp;langId=-1&amp;CMID=MH_IN_EVENTS"><STRONG>Store 
+                        Locations Events</STRONG></A>&nbsp;&nbsp;|&nbsp;&nbsp;<A 
+                        class=topLinks 
+                        title="Click here to manage your gb_enterprises.com account." 
+                        href="https://www.gb_enterprises.com/webapp/wcs/stores/servlet/LogonForm?storeId=10151&amp;catalogId=10001&amp;langId=-1&amp;CMID=MH_IN_ACCOUNT"><STRONG>Your 
+                        Account</STRONG></A>&nbsp;&nbsp;|&nbsp;&nbsp;<A 
+                        class=topLinks 
+                        title="Click here to view or order our catalogs." 
+                        href="http://www.gb_enterprises.com/webapp/wcs/stores/servlet/Article_10151_-1_10001_gbpro/Promotions/Promotions3waysUseCatalogs?CMID=MH_3WAYSTOUSECATALOG"><STRONG>Catalog</STRONG></A>&nbsp;&nbsp;|&nbsp;&nbsp;<A 
+                        class=topLinks title="Click here to view our site map." 
+                        href="http://www.gb_enterprises.com/webapp/wcs/stores/servlet/CFPage?langId=-1&amp;storeId=10151&amp;catalogId=10001&amp;appID=35&amp;CMID=MH_IN_SITEMAP"><STRONG>Site 
+                        Map</STRONG></A>&nbsp;&nbsp;|&nbsp;&nbsp;<A 
+                        class=topLinks title="Click here to order a gift card." 
+                        href="http://www.gb_enterprises.com/webapp/wcs/stores/servlet/CFPage?pageID=387&amp;CMID=MH_GIFTCARD"><STRONG>Gift 
+                        Cards</STRONG></A>&nbsp;&nbsp;|&nbsp;&nbsp;<A 
+                        class=topClearanceLink 
+                        title="Click here to shop for items in our Clearance department." 
+                        href="http://www.gb_enterprises.com/webapp/wcs/stores/servlet/ClearanceView?storeId=10151&amp;catalogId=10001&amp;langId=-1&amp;CMID=MH_CLEARANCE"><STRONG>Clearance</STRONG></A></TD></NOSCRIPT><!--<td height="35" colspan="3"><img src="http://media.gb_enterprises.com/images/spacer.gif" width="633" height="35" border="0" alt=""></td>--></TR>
+                    <TR>
+                      <TD vAlign=bottom width=323>
+                        <TABLE height=34 cellSpacing=1 cellPadding=0 width=259 
+                        align=center bgColor=#acaa83 border=0>
+                          <FORM name=searchForm 
+                          onsubmit="return checkSearchBoxText(document.searchForm);" 
+                          action=http://www.gb_enterprises.com/webapp/wcs/stores/servlet/SearchResults 
+                          method=get>
+                          <TBODY>
+                          <TR>
+                            <TD class=colorThemeBG2 align=middle><SELECT 
+                              style="WIDTH: 115px" 
+                              onchange=javascript:setSearchBoxText(document.searchForm); 
+                              name=searchOption> <OPTION value=products 
+                                selected>Product Search</OPTION> <OPTION 
+                                value=articles>Article Search</OPTION></SELECT> 
+                              <INPUT class=leftNav style="WIDTH: 110px" 
+                              onfocus=javascript:clearSearchBoxText(document.searchForm); 
+                              size=8 value="keyword or item #" 
+                              name=hvarSearchString> <INPUT type=image 
+                              alt="Enter a keyword at left and then click here to search for products or articles." 
+                              src="/suppliers/gb_enterprises/data_repository/Preview/gobutton_trans.gif" 
+                              align=absMiddle border=0></TD><INPUT type=hidden 
+                            value=10151 name=storeId> <INPUT type=hidden 
+                            value=10001 name=catalogId> <INPUT type=hidden 
+                            value=-1 name=langId> <INPUT type=hidden 
+                            value=TOP_SEARCH_GO name=CMID> 
+                        </TR></FORM></TBODY></TABLE><IMG height=5 
+                        src="/suppliers/gb_enterprises/data_repository/Preview/spacer.gif" width=1 border=0><BR><IMG 
+                        alt="World's Leading Supplier of Premium Outdoor Gear" 
+                        src="/suppliers/gb_enterprises/data_repository/Preview/slogan.jpg" border=0></TD>
+                      <TD vAlign=top align=middle width=95>&nbsp;</TD>
+                      <TD vAlign=top align=right width=217><A 
+                        title="Click here to order by catalog item." 
+                        style="TEXT-DECORATION: none" 
+                        href="http://www.gb_enterprises.com/webapp/wcs/stores/servlet/QuickOrderView?storeId=10151&amp;catalogId=10001&amp;langId=-1&amp;CMID=MH_IN_CATALOGQUICKORDER"><IMG 
+                        src="/suppliers/gb_enterprises/data_repository/Preview/order_by_catalog_number.gif" 
+                        border=0></A></TD></TR></TBODY></TABLE></TD></TR></TBODY></TABLE>
+            <TABLE cellSpacing=0 cellPadding=0 width=760 align=center 
+              border=0><TBODY>
+              <TR>
+                <TD vAlign=bottom>
+                  <TABLE cellSpacing=0 cellPadding=0 border=0>
+                    <TBODY>
+                    <TR>
+                      <TD vAlign=top align=left><IMG height=6 alt="" 
+                        src="/suppliers/gb_enterprises/data_repository/Preview/tabl.gif" width=6></TD>
+                      <TD class=newtab noWrap align=middle width=90 
+                        rowSpan=2><A class=newtab 
+                        href="http://www.gb_enterprises.com/webapp/wcs/stores/servlet/Department_10151_-1_10001_100000000?CMID=MH_OS_FISHING"><STRONG>Men's Clothing</STRONG></A></TD>
+                      <TD vAlign=top align=right><IMG height=6 alt="" 
+                        src="/suppliers/gb_enterprises/data_repository/Preview/tabr.gif" width=6></TD></TR>
+                    <TR>
+                      <TD class=newtab><IMG height=34 alt="" 
+                        src="/suppliers/gb_enterprises/data_repository/Preview/spacer.gif" width=6></TD>
+                      <TD class=newtab><IMG height=34 alt="" 
+                        src="/suppliers/gb_enterprises/data_repository/Preview/spacer.gif" 
+                  width=6></TD></TR></TBODY></TABLE></TD>
+                <TD><IMG height=1 alt="" src="/suppliers/gb_enterprises/data_repository/Preview/spacer.gif" 
+                width=2></TD>
+                <TD vAlign=bottom>
+                  <TABLE cellSpacing=0 cellPadding=0 border=0>
+                    <TBODY>
+                    <TR>
+                      <TD vAlign=top align=left><IMG height=6 alt="" 
+                        src="/suppliers/gb_enterprises/data_repository/Preview/tabl.gif" width=6></TD>
+                      <TD class=newtab noWrap align=middle width=60 
+                        rowSpan=2><A class=newtab 
+                        href="http://www.gb_enterprises.com/webapp/wcs/stores/servlet/Department_10151_-1_10001_175000000?CMID=MH_OS_FLYFISHING"><STRONG>Women's Clothing</STRONG></A></TD>
+                      <TD vAlign=top align=right><IMG height=6 alt="" 
+                        src="/suppliers/gb_enterprises/data_repository/Preview/tabr.gif" width=6></TD></TR>
+                    <TR>
+                      <TD class=newtab><IMG height=34 alt="" 
+                        src="/suppliers/gb_enterprises/data_repository/Preview/spacer.gif" width=6></TD>
+                      <TD class=newtab><IMG height=34 alt="" 
+                        src="/suppliers/gb_enterprises/data_repository/Preview/spacer.gif" 
+                  width=6></TD></TR></TBODY></TABLE></TD>
+                <TD><IMG height=1 alt="" src="/suppliers/gb_enterprises/data_repository/Preview/spacer.gif" 
+                width=2></TD>
+                <TD vAlign=bottom>
+                  <TABLE cellSpacing=0 cellPadding=0 border=0>
+                    <TBODY>
+                    <TR>
+                      <TD vAlign=top align=left><IMG height=6 alt="" 
+                        src="/suppliers/gb_enterprises/data_repository/Preview/seltabl.gif" width=6></TD>
+                      <TD class=selnewtab noWrap align=middle width=57 
+                        rowSpan=2><A class=selnewtab 
+                        href="http://www.gb_enterprises.com/webapp/wcs/stores/servlet/Department_10151_-1_10001_400000000?CMID=MH_OS_HUNTING"><STRONG>Household</STRONG></A></TD>
+                      <TD vAlign=top align=right><IMG height=6 alt="" 
+                        src="/suppliers/gb_enterprises/data_repository/Preview/seltabr.gif" width=6></TD></TR>
+                    <TR>
+                      <TD class=selnewtab><IMG height=34 alt="" 
+                        src="/suppliers/gb_enterprises/data_repository/Preview/spacer.gif" width=6></TD>
+                      <TD class=selnewtab><IMG height=34 alt="" 
+                        src="/suppliers/gb_enterprises/data_repository/Preview/spacer.gif" 
+                  width=6></TD></TR></TBODY></TABLE></TD>
+                <TD><IMG height=1 alt="" 
+                  src="/suppliers/gb_enterprises/data_repository/Preview/spacer(1).gif" 
+                  width=2></TD>
+                <TD vAlign=bottom>
+                  &nbsp;</TD>
+                <TD><IMG height=1 alt="" 
+                  src="/suppliers/gb_enterprises/data_repository/Preview/spacer(1).gif" 
+                  width=2></TD>
+                
+                <TD vAlign=bottom>
+                  <TABLE cellSpacing=0 cellPadding=0 border=0>
+                    <TBODY>
+                    <TR>
+                      <TD vAlign=top align=left><IMG height=6 alt="" 
+                        src="/suppliers/gb_enterprises/data_repository/Preview/spacer.gif" width=6></TD>
+                      <TD bgcolor=#ffffff noWrap align=middle width=84 
+                        rowSpan=2><A bgcolor=#ffffff 
+                        href="http://www.gb_enterprises.com/webapp/wcs/stores/servlet/Department_10151_-1_10001_350000000?CMID=MH_OS_CAMPING"><STRONG></STRONG></A></TD>
+                      <TD vAlign=top align=right><IMG height=6 alt="" 
+                        src="/suppliers/gb_enterprises/data_repository/Preview/spacer.gif" width=6></TD></TR>
+                    <TR>
+                      <TD bgcolor=#ffffff><IMG height=34 alt="" 
+                        src="/suppliers/gb_enterprises/data_repository/Preview/spacer.gif" width=6></TD>
+                      <TD bgcolor=#ffffff><IMG height=34 alt="" 
+                        src="/suppliers/gb_enterprises/data_repository/Preview/spacer.gif" 
+                  width=6></TD></TR></TBODY></TABLE></TD>
+                <TD><IMG height=1 alt="" 
+                  src="/suppliers/gb_enterprises/data_repository/Preview/spacer(1).gif" 
+                  width=2></TD>
+                <TD vAlign=bottom>
+                  <TABLE cellSpacing=0 cellPadding=0 border=0>
+                    <TBODY>
+                    <TR>
+                      <TD vAlign=top align=left><IMG height=6 alt="" 
+                        src="/suppliers/gb_enterprises/data_repository/Preview/spacer.gif" width=6></TD>
+                      <TD bgcolor=#ffffff noWrap align=middle width=90 
+                        rowSpan=2><A bgcolor=#ffffff 
+                        href="http://www.gb_enterprises.com/webapp/wcs/stores/servlet/Department_10151_-1_10001_200000000?CMID=MH_OS_MARINE"><STRONG></STRONG></A></TD>
+                      <TD vAlign=top align=right><IMG height=6 alt="" 
+                        src="/suppliers/gb_enterprises/data_repository/Preview/spacer.gif" width=6></TD></TR>
+                    <TR>
+                      <TD bgcolor=#ffffff><IMG height=34 alt="" 
+                        src="/suppliers/gb_enterprises/data_repository/Preview/spacer.gif" width=6></TD>
+                      <TD bgcolor=#ffffff><IMG height=34 alt="" 
+                        src="/suppliers/gb_enterprises/data_repository/Preview/spacer.gif" 
+                  width=6></TD></TR></TBODY></TABLE></TD>
+                <TD><IMG height=1 alt="" src="/suppliers/gb_enterprises/data_repository/Preview/spacer.gif" 
+                width=2></TD>
+                <TD vAlign=bottom>
+                  <TABLE cellSpacing=0 cellPadding=0 border=0>
+                    <TBODY>
+                    <TR>
+                      <TD vAlign=top align=left><IMG height=6 alt="" 
+                        src="/suppliers/gb_enterprises/data_repository/Preview/spacer.gif" width=6></TD>
+                      <TD bgcolor=#ffffff noWrap align=middle width=58 
+                        rowSpan=2><A bgcolor=#ffffff 
+                        href="http://www.gb_enterprises.com/webapp/wcs/stores/servlet/Department_10151_-1_10001_600000000?CMID=MH_OS_APPAREL"><STRONG></STRONG></A></TD>
+                      <TD vAlign=top align=right><IMG height=6 alt="" 
+                        src="/suppliers/gb_enterprises/data_repository/Preview/spacer.gif" width=6></TD></TR>
+                    <TR>
+                      <TD bgcolor=#ffffff><IMG height=34 alt="" 
+                        src="/suppliers/gb_enterprises/data_repository/Preview/spacer.gif" width=6></TD>
+                      <TD bgcolor=#ffffff><IMG height=34 alt="" 
+                        src="/suppliers/gb_enterprises/data_repository/Preview/spacer.gif" 
+                  width=6></TD></TR></TBODY></TABLE></TD>
+                <TD><IMG height=1 alt="" src="/suppliers/gb_enterprises/data_repository/Preview/spacer.gif" 
+                width=2></TD>
+                <TD vAlign=bottom>
+                  <TABLE cellSpacing=0 cellPadding=0 border=0>
+                    <TBODY>
+                    <TR>
+                      <TD vAlign=top align=left><IMG height=6 alt="" 
+                        src="/suppliers/gb_enterprises/data_repository/Preview/spacer.gif" width=6></TD>
+                      <TD bgcolor=#ffffff noWrap align=middle width=67 
+                        rowSpan=2><A bgcolor=#ffffff 
+                        href="http://www.gb_enterprises.com/webapp/wcs/stores/servlet/Department_10151_-1_10001_500000000?CMID=MH_OS_FOOTWEAR"><STRONG></STRONG></A></TD>
+                      <TD vAlign=top align=right><IMG height=6 alt="" 
+                        src="/suppliers/gb_enterprises/data_repository/Preview/spacer.gif" width=6></TD></TR>
+                    <TR>
+                      <TD bgcolor=#ffffff><IMG height=34 alt="" 
+                        src="/suppliers/gb_enterprises/data_repository/Preview/spacer.gif" width=6></TD>
+                      <TD bgcolor=#ffffff><IMG height=34 alt="" 
+                        src="/suppliers/gb_enterprises/data_repository/Preview/spacer.gif" 
+                  width=6></TD></TR></TBODY></TABLE></TD>
+                <TD><IMG height=1 alt="" src="/suppliers/gb_enterprises/data_repository/Preview/spacer.gif" 
+                width=2></TD>
+                <TD vAlign=bottom>
+                  <TABLE cellSpacing=0 cellPadding=0 border=0>
+                    <TBODY>
+                    <TR>
+                      <TD vAlign=top align=left><IMG height=6 alt="" 
+                        src="/suppliers/gb_enterprises/data_repository/Preview/spacer.gif" width=6></TD>
+                      <TD bgcolor=#ffffff noWrap align=middle width=63 
+                        rowSpan=2></TD>
+                      <TD vAlign=top align=right><IMG height=6 alt="" 
+                        src="/suppliers/gb_enterprises/data_repository/Preview/spacer.gif" width=6></TD></TR>
+                    <TR>
+                      <TD bgcolor=#ffffff><IMG height=34 alt="" 
+                        src="/suppliers/gb_enterprises/data_repository/Preview/spacer.gif" width=6></TD>
+                      <TD bgcolor=#ffffff><IMG height=34 alt="" 
+                        src="/suppliers/gb_enterprises/data_repository/Preview/spacer.gif" 
+                  width=6></TD></TR></TBODY></TABLE></TD></TR>
+              <TR>
+                <TD class=colorThemeBG2 colSpan=18><IMG height=8 alt="" 
+                  src="/suppliers/gb_enterprises/data_repository/Preview/spacer.gif" width=1></TD></TR>
+              <TR>
+                <TD class=colorThemeBG1 colSpan=18><IMG height=2 alt="" 
+                  src="/suppliers/gb_enterprises/data_repository/Preview/spacer.gif" width=1></TD></TR></TBODY></TABLE><!-- tempShoppingPath.htm : startPathNew  --><!--- Java "cookie crumbs" area. Delete the following spacer when implemented --->
+            <TABLE cellSpacing=0 cellPadding=0 width=760 align=center 
+              border=0><TBODY>
+              <TR>
+                <TD>&nbsp; <A 
+                  title="Click here to return to the gb_enterprises.com home page." 
+                  href="http://www.gb_enterprises.com/webapp/wcs/stores/servlet/Shop_10151_-1_10001?cmid=SP_HOME">Home</A> 
+                  :&nbsp;<A title="" 
+                  href="http://www.gb_enterprises.com/webapp/wcs/stores/servlet/Department_10151_-1_10001_400000000?cmid=SP_OS_HUNTING">Household</A> 
+                  :&nbsp;<A title="" 
+                  href="http://www.gb_enterprises.com/webapp/wcs/stores/servlet/Subdepartment_10151_-1_10001_400013000_400000000?cmid=SP_OS_HUNTING_CUTLERY"><%=catDisplayName%></A> 
+                  :&nbsp;</TD>
+                <TD align=right width=195><A 
+                  title="Click here to view items in your wish list" 
+                  href="http://www.gb_enterprises.com/webapp/wcs/stores/servlet/GearWishListView?storeId=10151&amp;catalogId=10001&amp;langId=-1"> 
+                  Wish 
+                  List</A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                  <A title="Click here to view items in your shopping cart" 
+                  href="http://www.gb_enterprises.com/webapp/wcs/stores/servlet/OrderCalculate?storeId=10151&amp;catalogId=10001&amp;langId=-1&amp;orderId=.&amp;URL=OrderItemDisplay&amp;updatePrices=0&amp;calculationUsageId=-1"><IMG 
+                  src="/suppliers/gb_enterprises/data_repository/Preview/cart_icon.gif" align=absMiddle border=0>View 
+                  Cart</A> 
+            </TD><!--- End Java "cookie crumbs" area ---></TR></TBODY></TABLE>
+            <SCRIPT>
+function bowserObject() {
+	this.owner = navigator.userAgent.toLowerCase();
+	if(document.getElementById)	this.domCapable = 1;
+		else this.domCapable =  0;
+	if(!this.domCapable  &&  document.layers) this.netscape4 = 1;
+		else this.netscape4 = 0;
+	this.opera = window.opera;
+	if(this.owner.indexOf("gecko") > -1 || window.sidebar) this.mozilla = 1;
+		else this.mozilla = 0;
+	if(this.owner.indexOf("msie") > -1 && !this.opera) this.msie = 1;
+		else this.msie = 0;
+	if(this.opera) {
+		if(this.owner.indexOf("opera 5") > -1 || this.owner.indexOf("opera/5") > -1) this.opera5 = 1;
+			else this.opera5 = 0;
+		this.opera6 = (this.owner.indexOf("opera 6") > -1 || this.owner.indexOf("opera/6") > -1);
+		this.opera7 = this.domCapable && !this.opera5 && !this.opera6;
+	} else if(this.mozilla) {
+		this.netscape6 = 1;
+	} else if(this.msie) {
+		if(!this.domCapable && document.all) this.msie4 = 1; else this.msie4 = 0;
+		if(this.owner.indexOf("msie 5") > -1) this.msie5 = 1; else this.msie5 = 0;
+		if(this.msie5 && this.owner.indexOf("msie 5.5") > -1) this.msie55 = 1; else this.msie55 = 0;
+		if(this.domCapable && !this.msie4 && !this.msie5 && ! this.msie55) this.msie6 = 1; else this.msie6 = 0;
+	}
+	if(this.owner.indexOf("mac") > -1) this.mac = 1; else this.mac = 0;
+	if(this.msie6 || this.msie5 || this.msie4 || this.netscape4 || this.netscape6 || this.opera5 || this.opera6 || this.opera7)	this.bowser = 1; else this.bowser = 0;
+	if(this.netscape6 || this.opera7) this.docObjModel = 1;	else this.docObjModel = 0;
+	if(this.msie || this.opera7 || this.docObjModel) this.recycle = 1;else this.recycle = 0;
+	if(this.domCapable && !this.opera5) this.px = "px"; else this.px = "";
+	return this;
+}
+var bowser = new bowserObject();
+</SCRIPT>
+<!-- tempNavbottom.htm : NavbottomScriptBottomNew -->
+            <SCRIPT src="/suppliers/gb_enterprises/data_repository/Preview/pump601_2005.js"></SCRIPT>
+<!-- tempNavbottom.htm : NavbottomImportTopMenu-->
+            <SCRIPT src="/suppliers/gb_enterprises/data_repository/Preview/bps_header_menu2.js"></SCRIPT>
+
+            <SCRIPT>
+	bpsH.addItem('bpsH_home','','<div align="center"><strong>Home</strong></div>','http://www.gb_enterprises.com/webapp/wcs/stores/servlet/Shop_10151_-1_10001?CMID=MH_HOME','',45,'');
+	bpsH.addItem('bpsH_subHome','bpsH_home','Home','http://www.gb_enterprises.com/webapp/wcs/stores/servlet/Shop_10151_-1_10001?CMID=MH_SUBHOME','',65,20);
+
+	bpsH.addItem('bpsH_storeLocations','','<div align="center"><strong>Store Locations Events</strong></div>','http://www.gb_enterprises.com/webapp/wcs/stores/servlet/CFPage?appID=94&storeId=10151&catalogId=10001&langId=-1&CMID=MH_IN_EVENTS','',140,'');
+	bpsH.addItem('bpsH_subStoreLocations','bpsH_storeLocations','Store Locations Events','http://www.gb_enterprises.com/webapp/wcs/stores/servlet/CFPage?appID=94&storeId=10151&catalogId=10001&langId=-1&CMID=MH_IN_EVENTS','',160,20);
+
+	bpsH.addItem('bpsH_yourAccount','','<div align="center"><strong>Your Account</strong></div>','https://www.gb_enterprises.com/webapp/wcs/stores/servlet/LogonForm?storeId=10151&catalogId=10001&langId=-1&CMID=MH_IN_ACCOUNT','',90,'');
+	bpsH.addItem('bpsH_accountInfo','bpsH_yourAccount','Account Info','https://www.gb_enterprises.com/webapp/wcs/stores/servlet/LogonForm?storeId=10151&catalogId=10001&langId=-1&CMID=MH_ACCOUNTINFO','',165,'');
+	bpsH.addItem('bpsH_rewards','bpsH_yourAccount','Rewards Program','http://www.gb_enterprises.com/webapp/wcs/stores/servlet/RewardPointsView?storeId=10151&catalogId=10001&langId=-1&CMID=MH_REWARDLOOKUP','',165,'');
+	bpsH.addItem('bpsH_orderHistory','bpsH_yourAccount','Order History','http://www.gb_enterprises.com/webapp/wcs/stores/servlet/OrderHistoryView?storeId=10151&catalogId=10001&langId=-1&CMID=MH_ORDERHISTORY','',165,'');
+	bpsH.addItem('bpsH_wishList','bpsH_yourAccount','Wish List','http://www.gb_enterprises.com/webapp/wcs/stores/servlet/GearWishListView?storeId=10151&catalogId=10001&langId=-1&CMID=MH_WISHLIST','',165,'');
+	bpsH.addItem('bpsH_FAQ','bpsH_yourAccount','FAQ','http://www.gb_enterprises.com/webapp/wcs/stores/servlet/CFPage?storeId=10151&catalogId=10001&langId=-1&appID=243&navid=customerservice&CMID=MH_FAQ','',165,'');
+	bpsH.addItem('bpsH_emailNewsLetter','bpsH_yourAccount','Email Newsletter','http://www.gb_enterprises.com/webapp/wcs/stores/servlet/EmailPrefUpdate?storeId=10151&catalogId=10001&langId=-1&CMID=MH_EMAILPREFS','',165,'');
+
+	
+	 
+	bpsH.addItem('bpsH_LogOff','bpsH_yourAccount','Log Out','http://www.gb_enterprises.com/webapp/wcs/stores/servlet/Logoff?storeId=10151&catalogId=10001&langId=-1&personalizedCatalog=true&URL=LogonForm&CMID=MH_LOGOFF','',165,20);
+
+	bpsH.addItem('bpsH_Catalog','','<div align="center"><strong>Catalogs</strong></div>','http://www.gb_enterprises.com/webapp/wcs/stores/servlet/Article_10151_-1_10001_gbpro/Promotions/Promotions3waysUseCatalogs?CMID=MH_3WAYSTOUSECATALOG','',60,'');
+	bpsH.addItem('bpsH_subCatalogs','bpsH_Catalog','Catalogs','http://www.gb_enterprises.com/webapp/wcs/stores/servlet/Article_10151_-1_10001_gbpro/Promotions/Promotions3waysUseCatalogs?CMID=MH_3WAYSTOUSECATALOG','',135,'');
+
+	bpsH.addItem('bpsH_SiteMap','','<div align="center"><strong>Site Map</strong></div>','http://www.gb_enterprises.com/webapp/wcs/stores/servlet/CFPage?langId=-1&storeId=10151&catalogId=10001&appID=35&CMID=MH_IN_SITEMAP','',70,'');
+	bpsH.addItem('bpsH_subSiteMap','bpsH_SiteMap','SiteMap','http://www.gb_enterprises.com/webapp/wcs/stores/servlet/CFPage?langId=-1&storeId=10151&catalogId=10001&appID=35&CMID=MH_IN_SITEMAP','',85,20);
+
+	bpsH.addItem('bpsH_giftCards','','<div align="center"><strong>Gift Cards</strong></div>','http://www.gb_enterprises.com/webapp/wcs/stores/servlet/PageDisplayView?langId=-1&storeId=10151&catalogId=10001&pagename=GiftCardSelection&section=Home&CMID=MH_GIFTCARD','',65,'');
+	bpsH.addItem('bpsH_subGiftCards','bpsH_giftCards','Buy Gift Cards','http://www.gb_enterprises.com/webapp/wcs/stores/servlet/PageDisplayView?langId=-1&storeId=10151&catalogId=10001&pagename=GiftCardSelection&section=Home&CMID=MH_GIFTCARD','',115,20);
+	bpsH.addItem('bpsH_subGiftCardsCheckBalance','bpsH_giftCards','Check Balance','https://www.gb_enterprises.com/webapp/wcs/stores/servlet/CheckGiftCardBalance?storeId=10151&catalogId=10001&langId=-1&CMID=MH_CHECKGIFTCARD','',115,20);
+
+	bpsH.addItem('bpsH_clearance','','<div align="center"><span class="topClearanceLink"><strong>Clearance</strong></span></div>','http://www.gb_enterprises.com/webapp/wcs/stores/servlet/ClearanceView?storeId=10151&catalogId=10001&langId=-1&CMID=MH_CLEARANCE','',75,'');
+	bpsH.addItem('bpsH_subClearance','bpsH_clearance','Clearance','http://www.gb_enterprises.com/webapp/wcs/stores/servlet/ClearanceView?storeId=10151&catalogId=10001&langId=-1&CMID=MH_CLEARANCE','',95,20);
+</SCRIPT>
+<!-- tempNavbottom.htm : scriptOpen -->
+            <SCRIPT>
+ <!-- tempNavbottom : NavbottomConstructTopMenu-->
+	bpsH.construct(); <!-- //bd-01-10-05 -->
+ <!-- tempNavbottom.htm : scriptClose -->
+</SCRIPT>
+<!--END HEADER--><!-- End - JSP File name:  style1/CachedHeaderDisplay.jsp --><!-- END HeaderDisplay.jspf --><!-- /Header --></TD></TR>
+        <TR>
+          <TD vAlign=top width="100%" height="100%"><!-- Content Container --><!-- Start - JSPF File Name: JSTLEnvironmentSetup.jspf --><!--c:out value="include/styles/style1/"/--><!-- End - JSPF File Name: JSTLEnvironmentSetup.jspf --><!-- BEGIN ContentContainerTop.jsp -->
+            <TABLE id=WC_ContentContainerTop_Table_1 height="100%" cellSpacing=0 
+            cellPadding=0 width="100%" align=center border=0>
+              <TBODY>
+              <TR>
+                <TD class=c_back vAlign=top align=middle>
+                  <TABLE class=p_width cellSpacing=0 cellPadding=0 border=0>
+                    <TBODY>
+                    <TR>
+                      <TD><!-- END ContentContainerTop.jsp --><!-- Content --><!-- END LayoutContainerTop.jspf -->
+                        <TABLE id=WC_CachedItemDisplay_Table_1 cellSpacing=0 
+                        cellPadding=0 width=760 align=center border=0>
+                          <TBODY>
+                          <TR align=middle>
+                            <TD>
+                              <TABLE cellSpacing=0 cellPadding=0 width=760 
+                              border=0>
+                                <TBODY>
+                                <TR vAlign=top>
+                                <TD width=760><!-- Start - JSP File Name:  ProductDisplay.jsp --><!-- Start - JSPF File Name: JSTLEnvironmentSetup.jspf --><!--c:out value="include/styles/style1/"/--><!-- End - JSPF File Name: JSTLEnvironmentSetup.jspf --><!-- Start - JSP File Name: CachedProductItemDisplay.jsp --><!-- Start - JSPF File Name: JSTLEnvironmentSetup.jspf --><!--c:out value="include/styles/style1/"/--><!-- End - JSPF File Name: JSTLEnvironmentSetup.jspf --><!-- Start - JSP File Name:  ErrorMessageSetup.jspf --><!-- End - JSP File Name:  ErrorMessageSetup.jspf --><!-- Start- JSP File Name: DiscountJavaScriptSetup.jsp --><!-- Start - JSPF File Name: JSTLEnvironmentSetup.jspf --><!--c:out value="include/styles/style1/"/--><!-- End - JSPF File Name: JSTLEnvironmentSetup.jspf -->
+                                <SCRIPT language=JavaScript>
+
+	
+	function Discount1() {
+		
+		this.categoryDiscount = new Array();  	// Array of all category IDs on the page to store category discounts
+		this.productDiscount = new Array();	// Array of all product IDs on the page to store product discounts
+		this.itemDiscount = new Array();		// Array of all item IDs on the page to store item discounts
+		this.thisCategoryDiscount = '';		// String to store discount for the current category
+		
+		this.foundDiscount = false;
+
+		
+		
+		
+		
+		
+		
+		
+		
+	
+		
+		
+			
+				
+	
+				
+	
+				
+				
+					
+					
+					
+					
+					
+					
+				
+	
+				// Initialize the discount string
+				this.productDiscount[-82040] = '';
+	
+				
+					
+				
+			
+		
+		
+	
+		
+		
+			
+				
+				
+	
+				
+				
+					
+					
+					
+					
+					
+					
+				
+	
+				// Initialize the discount string
+				this.itemDiscount[-1269284] = '';
+	
+				
+					
+				
+			
+		
+		
+	} // end function Discount1
+
+	
+	// Function getThisCategoryDiscountText();
+	Discount1.prototype.getThisCategoryDiscountText = function()
+	{
+		return this.thisCategoryDiscount;
+	}
+	
+	// Function getCategoryDiscountText(categoryId);
+	Discount1.prototype.getCategoryDiscountText = function(categoryId)
+	{
+		if (this.categoryDiscount[categoryId] == null || typeof(this.categoryDiscount[categoryId]) == 'undefined') {
+			return '';
+		}else {
+			return this.categoryDiscount[categoryId];
+		}
+	} // End getCategoryDiscountText(categoryId)
+
+	// Function getProductDiscountText(productId);
+	Discount1.prototype.getProductDiscountText = function(productId)
+	{
+		if (this.productDiscount[productId] == null || typeof(this.productDiscount[productId]) == 'undefined') {
+			return '';
+		}else {
+			return this.productDiscount[productId];
+		}
+	} // End getProductDiscountText(productId)
+	
+	// Function getItemDiscountText(itemId)
+	Discount1.prototype.getItemDiscountText = function(itemId)
+	{
+		if (this.itemDiscount[itemId] == null || typeof(this.itemDiscount[itemId]) == 'undefined') {
+			return '';
+		}else {
+			return this.itemDiscount[itemId];
+		}
+	} // End getItemDiscountText(itemId)
+	
+	// Function getAreThereAnyDiscounts();
+	// Returns true if any discounts were found 
+	Discount1.prototype.getAreThereAnyDiscounts = function() {
+		return this.foundDiscount;
+	}
+	
+	
+	var Discount = new Discount1();
+	
+	
+</SCRIPT>
+<!-- End - JSP File Name: DiscountJavaScriptSetup.jsp -->
+                                <SCRIPT language=javascript 
+                                src="/suppliers/gb_enterprises/data_repository/Preview/ProductItemDisplaySetup.js"></SCRIPT>
+                                <LINK href="/suppliers/gb_enterprises/data_repository/Preview/bazaarvoice.css" 
+                                type=text/css rel=STYLESHEET></LINK>
+                                <SCRIPT language=JavaScript 
+                                src="/suppliers/gb_enterprises/data_repository/Preview/bazaarvoice.js" 
+                                type=text/javascript></SCRIPT>
+<!-- MIDDLE TABLE --><BR>
+                                <TABLE id=WC_CachedProductOnlyDisplay_Table_1 
+                                cellSpacing=0 cellPadding=0 width=760 
+                                align=center border=0>
+                                <TBODY>
+                                <TR vAlign=top>
+                                <TD align=middle width=598>
+                                <TABLE cellSpacing=0 cellPadding=0 width="95%" 
+                                bgColor=#ffffff>
+                                <TBODY>
+                                <TR>
+                                <TD align=left><B>
+                                <DIV align=center>
+                                <H1 class=breadcrumb_bold><%=displayName%></H1></DIV></B><BR><BR>
+                                <TABLE align=left>
+                                <TBODY>
+                                <TR>
+                                <TD><IMG 
+                                alt="<%=displayName%>" 
+                                src="<%=smallImage%>" 
+                                border=0><BR></TD></TR>
+                                <TR>
+                                <TD align=middle><!-- Enlarge--><!-- Zoom --><!-- Enlarge--><!-- Zoom --><!-- Enlarge--><A 
+                                href="#" onclick="window.open('<%=largeImage%>', 'newWin', 'scrollbars=no,status=no,menubar=no,location=no,width=164,height=220');return(false);"><IMG 
+                                src="/suppliers/gb_enterprises/data_repository/Preview/enlarge.gif" border=0></A> <!-- Zoom --><!-- Enlarge--><!-- Zoom --><A 
+                                onclick="window.open('SceneSevenDisplay?catalogId=10001&amp;storeId=10151&amp;langId=-1&amp;productId=-82040&amp;scene7Path=gbPro%2f95871-a&amp;sourceName=images2%2f95500%2f95871-a.jpg&amp;type=1&amp;linkEnabled=false', 'newWin', 'scrollbars=no,status=no,menubar=no,location=no,width=375,height=500');return(false);" 
+                                href="http://www.gb_enterprises.com/webapp/wcs/stores/servlet/"><IMG 
+                                src="/suppliers/gb_enterprises/data_repository/Preview/zoom.gif" border=0></A> 
+                                </TD></TR></TBODY></TABLE><%=longDescription%> <BR><BR>
+                                <CENTER><FONT color=red><A 
+                                href="http://www.gb_enterprises.com/webapp/wcs/stores/servlet/Product_10151_-1_10001_82040_400013001_400000000_400013000_400-13-1#chart">Place 
+                                Order 
+                                Below</A></FONT></CENTER><BR></TD></TR></TBODY></TABLE><BR><BR><BR><BR><!--- Bazaarvoice diff BEGIN - Ratings Summary --->
+                                <DIV id=BVCustomerRatings></DIV>
+                                <DIV id=BVdefaultURL><A 
+                                href="http://reviews.gb_enterprises.com/2010/82040/reviews.htm">Product 
+                                Reviews</A></DIV><!--- Bazaarvoice diff END - Ratings Summary --->
+                                <SCRIPT>
+       			function newPopWindow() {
+       				window.open("","windowname","toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=410,height=485,top=50,left=50");
+       			}
+       			
+       	function SubmitForm(submitType) {
+ 			var quantityError = false;
+ 			var quantityErrorString = "";
+ 			var allZeros = true;       	
+       		var theForm = document.OrderItemAddForm;
+       		var totalNonZero = 0;
+			for (var i = 0; i < theForm.elements.length; i++) {
+				var elem = theForm.elements[i];
+				if (elem.name.length >= 9  && elem.name.substring(0, 9) == "quantity_") {
+			   		var tempQuantity = theForm.elements[i].value;
+					var quantityInt = parseInt(tempQuantity);
+					if (isNaN(quantityInt) || quantityInt < 0) {
+						quantityError=true;					
+						var tempIndex = elem.name.substring(9,elem.name.length);
+						var tempItemNo = eval("document.getElementsByName('in_" + tempIndex + "')[0].value");
+						quantityErrorString = quantityErrorString + tempItemNo + "    -    " + tempQuantity + "\n";
+						allZeros = false;
+					} else {
+						if (quantityInt != 0) {
+						    totalNonZero = totalNonZero + 1;
+							allZeros = false;
+						} 
+					}
+				}
+			}	
+ 			if (allZeros) {
+ 				alert("Before we can add items to your " + submitType + ", you must specify a quantity.");			
+				return false;
+ 			} else {
+ 				if (quantityError) {
+ 					alert("The following Qty value(s) entered are not correct:\n\nItem Number    -    Qty\n\n" + quantityErrorString + "\nPlease add a number zero or greater for the Qty value(s) and try again.");
+ 					return false;
+	 			} else {
+					for (var i = 0; i < theForm.elements.length; i++) {
+						var elem = theForm.elements[i];
+						if (elem.name.length >= 3  && elem.name.substring(0, 3) == "in_") {
+							elem.parentNode.removeChild(elem);
+						}
+					}
+	 				if (submitType == 'Wish List') {
+	 				    var isIE=(navigator.appName.indexOf("Microsoft")!=-1)?1:0;
+	 				    if (totalNonZero > 15 && isIE) {
+	 				       alert("You can only add 15 items to your Wish List at a time. \nPlease reduce the number of items to 15 and try again.");
+	 				       return false;
+	 				    } else {
+	 						theForm.action='https://www.gb_enterprises.com/webapp/wcs/stores/servlet/GiftRegistryClean?langId=-1&storeId=10151&catalogId=10001&URL=GiftRegistryItemAdd%3fURL%3dGearWishListView';
+	 						theForm.submit();
+	 						return false;
+	 					}
+	 				} else {
+	 					return true;	
+	 				}
+ 				}
+ 			}
+       	}
+			</SCRIPT>
+
+                                <FORM id=OrderItemAddForm name=OrderItemAddForm 
+                                action=https://www.gb_enterprises.com/webapp/wcs/stores/servlet/OrderItemAdd 
+                                method=post><INPUT 
+                                id=WC_CachedProductItemDisplay_FormInput_promoCode_In_OrderItemAddForm_1 
+                                type=hidden name=promoCode> <INPUT 
+                                id=WC_CachedProductItemDisplay_FormInput_storeId_In_OrderItemAddForm_1 
+                                type=hidden value=10151 name=storeId> <INPUT 
+                                id=WC_CachedProductItemDisplay_FormInput_orderId_In_OrderItemAddForm_1 
+                                type=hidden value=. name=orderId> <INPUT 
+                                id=WC_CachedProductItemDisplay_FormInput_catalogId_In_OrderItemAddForm_1 
+                                type=hidden value=10001 name=catalogId> <INPUT 
+                                id=WC_CachedProductItemDisplay_FormInput_URL_In_OrderItemAddForm_1 
+                                type=hidden 
+                                value=https://www.gb_enterprises.com/webapp/wcs/stores/servlet/OrderCalculate?URL=OrderItemDisplay&amp;hvarCatId=400-13-1 
+                                name=URL> <INPUT 
+                                id=WC_CachedProductItemDisplay_FormInput_errorViewName_In_OrderItemAddForm_1 
+                                type=hidden value=ProductDisplayErrorView 
+                                name=errorViewName> <INPUT 
+                                id=WC_CachedProductItemDisplay_FormInput_calculationUsageId_In_OrderItemAddForm_1 
+                                type=hidden value=-1 name=calculationUsageId> 
+                                <INPUT 
+                                id=WC_CachedProductItemDisplay_FormInput_shouldCachePage_In_OrderItemAddForm_1 
+                                type=hidden value=false name=shouldCachePage> 
+                                <INPUT type=hidden value=400-13-1 name=field2> 
+                                <STYLE type=text/css>TD.item {
+	BORDER-RIGHT: black 1px solid; BORDER-TOP: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-BOTTOM: black 1px solid
+}
+TD.nothing {
+	BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; BORDER-RIGHT-WIDTH: 0px
+}
+</STYLE>
+                                <A name=chart></A>
+                                <TABLE cellSpacing=0 cellPadding=2 
+                                bgColor=#ffffff border=0>
+                                <TBODY>
+                                <TR>
+                                <TD class=item align=middle bgColor=#c6cdcf 
+                                border="1"><B>Order<BR>Qty</B></TD><!-- <TD ALIGN=center class=item border=1><b>Your<br>Cost</b></TD>  -->
+                                <TD class=item align=middle>Item<BR>Number</TD>
+                                <TD class=item align=middle colspan="2">Description</TD>
+
+                                <TD class=item align=middle 
+                                border="1"><B>Your<BR>Cost</B> </TD>
+                                <TD class=nothing align=middle></TD></TR>
+                                <TR 
+                                style="BORDER-LEFT-COLOR: #0000ff; BORDER-BOTTOM-COLOR: #0000ff; BORDER-TOP-COLOR: #0000ff; BORDER-RIGHT-COLOR: #0000ff">
+                                <TD class=item align=middle bgColor=#c6cdcf 
+                                border="1"><LABEL 
+                                for=WC_CachedProductItemDisplay_FormInput_quantity_In_OrderItemAddForm_1_1></LABEL><INPUT 
+                                id=WC_CachedProductItemDisplay_FormInput_quantity_In_OrderItemAddForm_1_1 
+                                maxLength=2 size=2 value=1 
+                                name=quantity_-1269284> <INPUT type=hidden 
+                                value=-1269284 name=catEntryId_-1269284> </TD>
+                                <TD class=item noWrap align=left><%=internalPartNumber%> 
+                                <INPUT type=hidden value=38-886-518-00 
+                                name=in_-1269284> <FONT color=red>*</FONT> </TD>
+                                <TD class=item align=middle colspan="2"><%=displayName%></TD>
+                                
+                                <TD class=item noWrap align=right><SPAN 
+                                color:#AA0000><!-- Start - JSP File Name:  CatalogEntryPriceDisplay.jspf -->
+                                <CENTER><B>$99.99 </B></CENTER><!-- End - JSP File Name:  CatalogEntryPriceDisplay.jspf --></SPAN></TD>
+                                <TD class=nothing 
+                                align=middle></TD></TR></TBODY></TABLE><FONT 
+                                face=arial color=red size=2><B>* Items with an 
+                                asterisk are low in stock and may need to be 
+                                back ordered.</B></FONT> <BR><BR><INPUT 
+                                onclick="return SubmitForm('Shopping Cart');" 
+                                type=image src="/suppliers/gb_enterprises/data_repository/Preview/add_to_cart.gif" 
+                                value=Add border=0 name=button1> <BR><BR><A 
+                                onclick="return SubmitForm('Wish List');" 
+                                href="http://www.gb_enterprises.com/webapp/wcs/stores/servlet/"><IMG 
+                                src="/suppliers/gb_enterprises/data_repository/Preview/spacer.gif" 
+                                border=0></A> <BR><BR></FORM>
+                                <SCRIPT language=javascript>
+			  setPromoCodeFromCookie(document.OrderItemAddForm, "bpsAID");
+			</SCRIPT>
+<!-- Bazaarvoice diff begin --><!-- Reviews Display -->
+                                <SCRIPT language=javascript type=text/javascript>
+   	 			var BVisLoaded = false;
+   	 			function BVcheckLoadState(){
+   	     			if(!BVisLoaded){
+   	         			document.getElementById('BVFrame').src="";
+   	     			}
+   	 			}
+    		</SCRIPT>
+                                <NOSCRIPT><IFRAME src="about:blank" 
+                                width="100%"></iframe></IFRAME><BR></NOSCRIPT>
+                                <DIV id=BVCustomerID 
+                                style="DISPLAY: none">__USERID__</DIV>
+                                <DIV id=BVReturnURL 
+                                style="DISPLAY: none">http://www.gb_enterprises.com/webapp/wcs/stores/servlet/Product_10151_-1_10001_82040</DIV>
+                                <DIV id=BVtabSimulation style="DISPLAY: none">
+                                <DIV id=BVReviewsContainer></DIV></DIV>
+                                <SCRIPT language=javascript 
+type=text/javascript>
+    			function showReviewMarkup(){
+        document.getElementById('BVtabSimulation').style.display = "block";
+    			}
+			</SCRIPT>
+
+                                <DIV></DIV>
+                                <SCRIPT language=javascript 
+type=text/javascript>
+				<!-- Timeout for review load.  Consider reviews unavailable if not loaded within 15 seconds -->
+        		setTimeout("BVcheckLoadState()", 15000);
+   			</SCRIPT>
+<!-- End Reviews --><!-- Bazaarvoice diff end --><BR><BR><A 
+                                href="http://www.gb_enterprises.com/webapp/wcs/stores/servlet/"><IMG 
+                                src="/suppliers/gb_enterprises/data_repository/Preview/bpsbrand.gif" border=0></A> <A 
+                                href="http://www.gb_enterprises.com/webapp/wcs/stores/servlet/">= 
+                                GB Enterprise Branded Items</A> <BR><BR><A 
+                                onclick=newPopWindow() 
+                                href="http://www.gb_enterprises.com/webapp/wcs/stores/servlet/DynamicIncludeDisplayView?catalogId=10001&amp;storeId=10151&amp;langId=-1&amp;inc=EmailAFriend.jsp&amp;partNumber=82040" 
+                                target=windowname><IMG height=18 alt="" 
+                                src="/suppliers/gb_enterprises/data_repository/Preview/email-a-friend-link.gif" 
+                                width=148 border=0></A><BR><BR><BR></TD><!-- END ITEM COLUMN -->
+                                <TD vAlign=top width=160><!-- BEGIN RIGHT NAV POPULAR SELLERS HTML -->
+                                <TABLE cellSpacing=0 cellPadding=0 align=center 
+                                border=0>
+                                <TBODY>
+                                <TR>
+                                <TD width=150 colSpan=3><IMG 
+                                alt="Popular Sellers" 
+                                src="/suppliers/gb_enterprises/data_repository/Preview/otherpopularproducts.gif" 
+                                border=0></TD></TR>
+                                <TR>
+                                <TD class=colorThemeBG6 width=1><SPACER 
+                                width="1" type="block"></SPACER></TD>
+                                <TD class=colorThemeBG2 align=middle width=148 
+                                height=10><SPACER type="block" 
+                                height="10"></SPACER></TD>
+                                <TD class=colorThemeBG6 width=1><SPACER 
+                                width="1" type="block"></SPACER></TD></TR>
+                                <TR>
+                                <TD class=colorThemeBG6 width=1><SPACER 
+                                width="1" type="block"></SPACER></TD>
+                                <TD class=colorThemeBG2 align=middle width=148>
+                                <TABLE cellSpacing=0 cellPadding=0 width=160>
+                                <TBODY>
+                                
+<%
+if (relatedItemHM.size() > 0){
+%>
+                                
+                                
+                                <TR>
+                                <TD class=Sgreen vAlign=top align=middle 
+                                width=160><A class=Sgreen 
+                                href="http://www.gb_enterprises.com/webapp/wcs/stores/servlet/Product_10151_-1_10001_97698?cmCat=CROSSSELL&amp;cmid=PP_P0_1"><IMG 
+                                class=borderblack height=100 
+                                alt="<%=relatedItemHM["displayName"]%>" 
+                                src="<%=relatedItemHM["smallImage"]%>" width=100 
+                                border=1></A><BR><A class=Sgreen 
+                                href="http://www.gb_enterprises.com/webapp/wcs/stores/servlet/Product_10151_-1_10001_97698?cmCat=CROSSSELL&amp;cmid=PP_P0_2"><SPAN 
+                                class=descAttrib3>NEW</SPAN> <%=relatedItemHM["displayName"]%></A><BR><SPAN 
+                                class=Mred> 
+                                </SPAN></TD></TR>
+<%
+}
+%>						</TBODY></TABLE><BR><BR>
+                                
+                                </TD>
+                                <TD class=colorThemeBG6 width=1><SPACER 
+                                width="1" type="block"></SPACER></TD></TR>
+                                <TR>
+                                <TD class=colorThemeBG6 width=1><SPACER 
+                                width="1" type="block"></SPACER></TD>
+                                <TD class=colorThemeBG2 align=middle width=148>
+                                <TABLE class=colorThemeBG2 cellSpacing=0 
+                                cellPadding=0 width="100%" border=0>
+                                <TBODY>
+                                <TR>
+                                <TD class=colorThemeBG2 align=middle>
+             
+                                </TD></TR></TBODY></TABLE></TD>
+                                <TD width=1 bgColor=#9c907d><SPACER width="1" 
+                                type="block"></SPACER></TD></TR>
+                                <TR>
+                                <TD width=160 colSpan=3><IMG 
+                                alt="GB Enterprises" 
+                                src="/suppliers/gb_enterprises/data_repository/Preview/popular_sellers_footer.gif" 
+                                width=162 
+                                border=0></TD></TR></TBODY></TABLE></TD></TR></TBODY></TABLE>
+                                <SCRIPT language=JavaScript1.1>
+ 		 cmCreateProductviewTag("82040", "Benchmade® NRA Osborne Guthook Knife", "400-13-1", "")
+</SCRIPT>
+<!-- End - JSP File Name: CachedProductItemDisplay.jsp --></TD></TR></TBODY></TABLE></TD></TR></TBODY></TABLE><!-- BEGIN LayoutContainerBottom.jspf --><!-- /Content --><!-- Start - JSPF File Name: JSTLEnvironmentSetup.jspf --><!--c:out value="include/styles/style1/"/--><!-- End - JSPF File Name: JSTLEnvironmentSetup.jspf --><!-- BEGIN ContentContainerBottom.jsp --><!-- This file is empty. Add content here that you want as a common wrapper for your main content. --></TD></TR></TBODY></TABLE></TD></TR></TBODY></TABLE><!-- END ContentContainerBottom.jsp --><!-- /Content Container--></TD></TR>
+        <TR>
+          <TD vAlign=top colSpan=3><!-- Footer --><!-- BEGIN FooterDisplay.jspf --><!-- Start - JSP File name:  style1/CachedFooterDisplay.jsp --><!-- Start - JSPF File Name: JSTLEnvironmentSetup.jspf --><FLOW:FILEREF 
+            id=vfileColor fileId="vfile.color" /><FLOW:FILEREF id=StyleDir 
+            fileId="StyleDir" /><FLOW:FILEREF id=vfileStylesheet 
+            fileId="vfile.stylesheet" /><!--c:out value=""/--><!-- End - JSPF File Name: JSTLEnvironmentSetup.jspf --><!-- Start - JSP File name:  include/departmentLinks.jspf --><!-- End - JSP File name:  include/departmentLinks.jspf --><!--START FOOTER-->
+            <TABLE cellSpacing=0 cellPadding=0 width=760 align=center 
+              border=0><TBODY>
+              <TR>
+                <TD height=10><SPACER type="block" height="10"></SPACER></TD></TR>
+              <TR>
+                <TD align=middle>Prices shown are in U.S. funds</TD></TR>
+              <TR>
+                <TD align=middle><A 
+                  href="http://www.gb_enterprises.com/webapp/wcs/stores/servlet/Department_10151_-1_10001_100000000">Freshwater 
+                  Fishing</A>&nbsp;|&nbsp;<A 
+                  href="http://www.gb_enterprises.com/webapp/wcs/stores/servlet/Department_10151_-1_10001_175000000">Fly 
+                  Fishing</A>&nbsp;|&nbsp;<A 
+                  href="http://www.gb_enterprises.com/webapp/wcs/stores/servlet/Department_10151_-1_10001_151000000">Saltwater 
+                  Fishing</A>&nbsp;|&nbsp;<A 
+                  href="http://www.gb_enterprises.com/webapp/wcs/stores/servlet/Department_10151_-1_10001_400000000">Hunting</A>&nbsp;|&nbsp;<A 
+                  href="http://www.gb_enterprises.com/webapp/wcs/stores/servlet/Department_10151_-1_10001_350000000">Camping 
+                  / Auto</A>&nbsp;|&nbsp;<A 
+                  href="http://www.gb_enterprises.com/webapp/wcs/stores/servlet/Department_10151_-1_10001_200000000">Marine 
+                  / Electronics</A>&nbsp;|&nbsp;<A 
+                  href="http://www.gb_enterprises.com/webapp/wcs/stores/servlet/Department_10151_-1_10001_600000000">Apparel</A>&nbsp;|&nbsp;<A 
+                  href="http://www.gb_enterprises.com/webapp/wcs/stores/servlet/Department_10151_-1_10001_500000000">Footwear</A>&nbsp;|&nbsp;<A 
+                  href="http://www.gb_enterprises.com/webapp/wcs/stores/servlet/Department_10151_-1_10001_700000000">Gift 
+                  / Home / Golf</A></TD></TR>
+              <TR>
+                <TD height=10><SPACER type="block" height="10"></SPACER></TD></TR>
+              <TR>
+                <TD align=middle><A 
+                  href="http://www.gb_enterprises.com/webapp/wcs/stores/servlet/PageDisplayView?langId=-1&amp;storeId=10151&amp;catalogId=10001&amp;section=MyAccount&amp;pagename=PrivacyPolicySummaryDisplay&amp;CMID=SECUREBN_IN_PRIVACY">Privacy 
+                  Policy</A>&nbsp;|&nbsp;<A 
+                  href="http://www.gb_enterprises.com/webapp/wcs/stores/servlet/CFPage?storeId=10151&amp;catalogId=10001&amp;langId=-1&amp;appID=243&amp;navid=customerservice&amp;cmid=BN_IN_CUSTSERV">Contact 
+                  Us</A>&nbsp;|&nbsp;<A 
+                  href="http://www.gb_enterprises.com/webapp/wcs/stores/servlet/CFPage?langId=-1&amp;storeId=10151&amp;catalogId=10001&amp;appID=35&amp;CMID=BN_IN_SITEMAP"><STRONG>Site 
+                  Map</STRONG></A>&nbsp;|&nbsp;<A 
+                  href="http://www.gb_enterprises.com/webapp/wcs/stores/servlet/CFPage?storeId=10151&amp;catalogId=10001&amp;langId=-1&amp;appID=23&amp;cmid=BN_IN_CAREERS">Career 
+                  Opportunities</A>&nbsp;|&nbsp;<A 
+                  href="http://www.gb_enterprises.com/webapp/wcs/stores/servlet/CFPage?storeId=10151&amp;catalogId=10001&amp;langId=-1&amp;pageID=101&amp;cmid=BN_IN_COMMITMENT">Our 
+                  Commitment</A>&nbsp;|&nbsp;<A 
+                  href="http://www.onlinepressroom.net/gb">Newsroom</A>&nbsp;|&nbsp;<A 
+                  href="http://vendorrelations.gb_enterprises.com/VendorPortal/Home.aspx">Vendor 
+                  Relations</A>&nbsp;|&nbsp;<A 
+                  href="http://www.gb_enterprises.com/webapp/wcs/stores/servlet/CFPage?storeId=10151&amp;catalogId=10001&amp;langId=-1&amp;pageID=143&amp;CMID=EASYASK_SIZECHART">Sizing 
+                  Information</A><BR><A 
+                  href="http://www.gb_enterprises.com/webapp/wcs/stores/servlet/CFPage?storeId=10151&amp;catalogId=10001&amp;langId=-1&amp;pageID=181&amp;cmid=BN_IN_GIVTPROG">Government 
+                  Program</A>&nbsp;|&nbsp;<A 
+                  href="http://www.ar-g.com/index.cfm?cmid=BN_IN_DEALERS">Dealer 
+                  Program</A>&nbsp;|&nbsp;<A 
+                  href="http://www.gb_enterprises.com/webapp/wcs/stores/servlet/CFPage?storeId=10151&amp;catalogId=10001&amp;langId=-1&amp;pageID=235&amp;cmid=LN_IN_CONSERVATION">Conservation 
+                  Orgs</A>&nbsp;|&nbsp;<A 
+                  href="http://www.gb_enterprises.com/webapp/wcs/stores/servlet/CFPage?storeId=10151&amp;catalogId=10001&amp;langId=-1&amp;appID=170&amp;cmid=BN_IN_RECALLINFO">Recall 
+                  Information</A>&nbsp;|&nbsp;<A 
+                  href="http://www.gb_enterprises.com/webapp/wcs/stores/servlet/SearchResults?storeId=10151&amp;catalogId=10001&amp;langId=-1&amp;hvarSearchString=rebate&amp;cmid=BN_IN_REBATE">Rebate 
+                  Information</A></TD></TR>
+              <TR>
+                <TD height=10><SPACER type="block" height="10"></SPACER></TD></TR>
+              <TR>
+                <TD width=760>
+                  <CENTER>
+                  <TABLE align=center border=0>
+                    <TBODY>
+                    <TR>
+                      <TD><A 
+                        href="http://www.bbbonline.org/cks.asp?id=101062115403017660&amp;CMID=BN_BBB"><IMG 
+                        src="/suppliers/gb_enterprises/data_repository/Preview/bbb.gif" border=0></A></TD>
+                      <TD>&nbsp;&nbsp;</TD>
+                      <TD><A 
+                        onclick="window.open('https://seal.verisign.com/splash?form_file=fdf/splash.fdf&amp;dn=www.gb_enterprises.com&amp;lang=en','welcome','width=560,height=500,menubar=no,status=no,location=no,toolbar=no,scrollbars=yes')" 
+                        href="javascript:void(0)"><IMG 
+                        src="/suppliers/gb_enterprises/data_repository/Preview/verisignseal.gif" 
+                    border=0></A></TD></TR></TBODY></TABLE></CENTER></TD></TR>
+              <TR>
+                <TD height=10><SPACER type="block" height="10"></SPACER></TD></TR>
+              <TR>
+                <TD align=middle><SPAN style="CURSOR: default">All pages 
+                  Copyright 2006 - 2007 GB Enterprises Online 
+              LLC</SPAN></TD></TR></TBODY></TABLE><!--END FOOTER--><!-- End - JSP File name:  style1/CachedFooterDisplay.jsp --><!-- END FooterDisplay.jspf --><!-- /Footer --></TD></TR></TBODY></TABLE><!-- /Layout enclosing table --><!-- END LayoutContainerBottom.jspf --></TD></TR></TBODY></TABLE><!-- End - JSP File Name:  SiteTemplate.jsp --><!-- End - JSP File Name:  ProductDisplay.jsp --></BODY></HTML>

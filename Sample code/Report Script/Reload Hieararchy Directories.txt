@@ -1,0 +1,93 @@
+var ctgName = "Master Product Catalog";
+var directoryPath = "/home/collabmdm/collabmdmV11/public_html/suppliers/gb_enterprises/";
+
+function makeDirectoryIfDoesntExist(directoryName){
+	
+	//File directory = new File(dir);
+	// test = directory.mkdir();
+   
+  var createDirectoryTest = false;
+     
+  catchError(e){ 
+				var directoryConstructor = createJavaConstructor("java.io.File","java.lang.String");
+				var directoryObj = runJavaConstructor(directoryConstructor, directoryName);
+						
+				var writeMethod = createJavaMethod("java.io.File","mkdir");
+					
+				createDirectoryTest = runJavaMethod(directoryObj, writeMethod);
+	
+}
+	
+	
+	out.writeln("result of directory build: " + createDirectoryTest);
+	
+	return createDirectoryTest;
+}
+
+function iterateTree(cat){
+
+		var pathValues = cat.getFullPaths("/", true);
+		
+		//might need to modify this function according to need for displaying right category/directory values
+		locale = getDefaultLocale();
+		catDisplayValue = checkString(cat.getDisplayValue(locale), "");
+		
+                   catDisplayValue = replace(catDisplayValue , " ", "_");
+
+		var pathValue = pathValues[0];
+		
+		pathValue = replace(pathValue, " ", "_");
+		
+		directoryNameStr = directoryPath + pathValue;
+		
+		out.writeln("to build: " + directoryNameStr);
+		out.writeln("to build: " + cat.getPrimaryKey());			
+		
+		makeDirectoryIfDoesntExist(directoryNameStr);
+		
+		var catChildren = cat.getCategoryChildren();
+		
+		for (var catChildrenCount=0; catChildrenCount < catChildren.size(); catChildrenCount++){
+					
+					var childCat = catChildren[catChildrenCount];
+					
+					iterateTree(childCat);
+		}
+		
+}
+
+function pullHierarchyCategories(ctgName){
+	
+			ctg = getCtgByName(ctgName);
+	
+			ctr = ctg.getPrimaryCategoryTree();
+
+			ctrName = ctr.getCategoryTreeName();
+			
+			//clean this better later
+			ctrName = replace(ctrName, " ", "_");
+
+			//build primary hierarchy directory
+			var directoryNameStr = directoryPath + ctrName;
+			makeDirectoryIfDoesntExist(directoryNameStr);
+
+			//build unassigned directory
+			var unassignedBin = directoryNameStr + "/Unassigned";
+			makeDirectoryIfDoesntExist(unassignedBin);
+
+			topLevelCategories = ctr.getCategorySetByLevel(1);
+
+			out.writeln(topLevelCategories);
+
+
+			forEachCategorySetElement(topLevelCategories, cat) {
+				
+							
+						iterateTree(cat);
+			}
+
+}
+
+
+
+pullHierarchyCategories(ctgName);

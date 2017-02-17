@@ -1,0 +1,104 @@
+/// @file export all hierarchies
+/// $Title: Template $ export all Hierarchies
+/// $Description: $ export all Hierarchies
+/// @brief 
+/// export all Hierarchies
+/// @author Vis Bowatte
+/// @date Oct 20th 2006
+/// @date June 2008
+
+
+function writeCSVExportForHierarchy(sHierarchyName, thisFile, fullFile)
+{
+
+	var myCtr = getCategoryTreeByName(sHierarchyName);
+	var catset;
+	var iMaxLevel = 30;
+	var iLevel = 0;
+	for (iLevel = 0; iLevel < iMaxLevel; iLevel++)
+	{
+		catset = myCtr.getCategorySetByLevel(iLevel);
+
+		if (catset != null) 
+		{
+			var ctrLeaf;
+			forEachCategorySetElement(catset, ctrLeaf ) 
+			{
+
+				var fullPath = ctrLeaf.getFullPaths("//", false)[0];
+				thisFile.writeln(buildCSV(sHierarchyName, fullPath, "ME_MYSELF_I"));
+				fullFile.writeln(buildCSV(sHierarchyName, fullPath, "ME_MYSELF_I"));
+
+				beginPerf("my specs");
+				var specCatSecSpec = ctrLeaf.getSecondarySpecsForCategory();
+				if (specCatSecSpec != null) {
+					var j = 0;
+					for(j=0; j < specCatSecSpec.size(); j++) 
+					{
+						thisFile.writeln(buildCSV(sHierarchyName, fullPath, "CAT_SPEC",specCatSecSpec[j].getSpecName()));
+						fullFile.writeln(buildCSV(sHierarchyName, fullPath, "CAT_SPEC",specCatSecSpec[j].getSpecName()));
+					}
+				}
+				endPerf("my specs");
+
+
+				beginPerf("item specs");
+				var specItemSecSpec = ctrLeaf.getItemSecondarySpecsForCategory();
+				if (specItemSecSpec != null) 
+				{
+					var k = 0;
+					for(k=0; k<specItemSecSpec.size(); k++) 
+					{
+						thisFile.writeln(buildCSV(sHierarchyName, fullPath, "ITEM_SPEC", specItemSecSpec[k].getSpecName()));
+						fullFile.writeln(buildCSV(sHierarchyName, fullPath, "ITEM_SPEC", specItemSecSpec[k].getSpecName()));
+					}
+				}
+				endPerf("item specs");
+
+				beginPerf("my attrs");
+				var myRootEn = ctrLeaf.getRootEntryNode();
+				var en=myRootEn.getEntry();
+				var myENs = en.getFlatEntryNodes();
+				for(var l=0; l<myENs.size(); l++) 
+				{
+					var thisEn = myENs[l];
+					var myNode = thisEn.getNodeFromEntryNode();
+					if ((myNode != null)
+							&& !myNode.isNodeSpecRoot() 
+							&& !myNode.isNodeGrouping() 
+							&&  (checkString(myNode.getNodeAttributeValue("LOCALIZED"), "no") != "yes") 
+							&& thisEn.hasNonInheritedValue()) 
+					{
+						thisFile.writeln(buildCSV(sHierarchyName, fullPath, "DATA", thisEn.getEntryNodeExactPath(), thisEn.getEntryNodeValue()));
+						fullFile.writeln(buildCSV(sHierarchyName, fullPath, "DATA", thisEn.getEntryNodeExactPath(), thisEn.getEntryNodeValue()));
+					}
+				}
+				endPerf("my attrs");
+			}
+		}
+	}
+}
+
+
+var dt = today().formatDate("yyyyMMdd");
+var tm = today().formatDate("HHmmss");
+var fullFileName = "/migration/data_export/Hierarchy/all_hierarchies/" + dt + "/" + dt + "_" + tm + "_all_hierarchies_UTF8_Hierarchy_Export.csv";
+
+out.writeln(fullFileName);
+
+var fullFile = createOtherOut(fullFileName);
+
+var hmCategoryTreeNamesList = getCategoryTreeNamesList();
+var hmSize = hmCategoryTreeNamesList.size();
+for (var iHmCounter = 0; iHmCounter < hmSize; iHmCounter++)
+{
+	beginPerf("one loop");
+	var sHierarchyName = hmCategoryTreeNamesList[iHmCounter];
+	var thisFileName = "/migration/data_export/Hierarchy/" + sHierarchyName + "/" + dt + "/" + dt + "_" + tm + "_" + sHierarchyName + "_UTF8_Hierarchy_Export.csv";
+	var thisFile = createOtherOut(thisFileName);	
+	writeCSVExportForHierarchy(sHierarchyName, thisFile, fullFile);
+	thisFile.save(thisFileName);
+	endPerf("one loop");
+}
+
+fullFile.save(fullFileName);
