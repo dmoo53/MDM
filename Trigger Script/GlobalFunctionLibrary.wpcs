@@ -1,0 +1,14 @@
+function getCategory(ctrName, catCode){
+	
+	ctr = getCategoryTreeByName(ctrName);
+	cats = ctr.getCategorySetByPrimaryKey(catCode);
+	
+	var cat;
+	
+	forEachCategorySetElement(cats, tempCat) { 
+	
+		cat = tempCat;	
+	}
+
+	return cat;
+}
