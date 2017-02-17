@@ -1,4 +1,4 @@
-//set values
+///set values
 entry.setEntryAttrib("UCoA Analysis Item/Parent", "N") ;
 entry.setEntryAttrib("UCoA Analysis Item/Allow Budgeting", "Y") ;
 entry.setEntryAttrib("UCoA Analysis Item/Allow Posting", "Y") ;
@@ -8,7 +8,7 @@ entry.setEntryAttrib("UCoA Analysis Item/Allow Posting", "Y") ;
 var library  = getScriptByPath("scripts/triggers/GlobalFunctionLibrary");
 getCat = library.getFunctionByName("getCategory");
 Cat = getCat.invoke("UCoA Analysis Default","List of Analysis Codes");
-
+item.mapCtgItemToCategory(Cat);
 
 
 //Verify regular expression for Code
