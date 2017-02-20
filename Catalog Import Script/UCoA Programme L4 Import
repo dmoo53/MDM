@@ -22,14 +22,17 @@ function insertItem(attrs,DFFSub,ctr){
 	//currentDate = today();
 	//nextDate = currentDate;
 	//nextDate = nextDate.addDate("YEAR" , 10);
-	var newItem = new CtgItem("UCoA Programme"");
-	var cat =ctr.getEntrySetByPrimaryKey(parentCategoryID);
-	var catset=[]
-	catset.add(cat)
+	var newItem = new CtgItem("UCoA Programme");
+
+	var cat =ctr.getEntryByPrimaryKey(parentCategoryID);
+	var catset=[];
+	catset.add(cat);
+out.writeln(cat);
+out.writeln(catset);
 	newItem.moveCtgItemToCategories(catset);
 	
-
-	newItem.saveCtgItem();
+newItem.saveCtgItem();
+	
 
 	newItem.setEntryAttrib("UCoA Programme Item/Code", itemID );
 	newItem.setEntryAttrib("UCoA Programme Item/Name", itemName );
@@ -39,17 +42,17 @@ function insertItem(attrs,DFFSub,ctr){
 	
 	
 	
-	
+	newItem.saveCtgItem();
 	
 
 
 	}
 
-}
+
 parser = newCSVParser(in);
 
 //var headers = parser.splitLine();
-var DFFSub	=getCtgByName("UCoA DFF Sub Segment);
+var DFFSub	=getCtgByName("UCoA DFF Sub Segment");
 
 ctr = getCategoryTreeByName("UCoA Programme Default"); 
 bDone = false;
