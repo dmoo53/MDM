@@ -71,7 +71,7 @@ var item=ctgDFFRing.getCtgItemByPrimaryKey(DFFRingFence );
 myCat.setEntryRelationshipAttribUsingItem("UCoA Programme L 3/DFF Estimate Row", item);
 
 
-	    myCat.setCategoryAttrib("UCoA Programme L 2/Voted", Voted);
+	 
 
 	//I think the line below just writes out attributes, I have commented it in.
 	//getScriptByPath("/scripts/triggers/WPC.Utils.Global.FunctionLibrary").getFunctionByName("writeCat").invoke(myCat);
