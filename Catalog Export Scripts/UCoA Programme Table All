@@ -1,4 +1,4 @@
-var exportPath="UCoA Exports/Programme/Programme_Table_All";
+var exportPath="Exports/Programme_Table_All";
 var export=createOtherOut(exportPath);
 ctgDFFRingfence = getCtgByName("UCoA DFF Ringfence");
 
