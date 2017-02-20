@@ -1,5 +1,6 @@
 var exportPath="UCoA Exports/Programme/Programme_Table_All";
 var export=createOtherOut(exportPath);
+ctgDFFRingfence = getCtgByName("UCoA DFF Ringfence");
 
 export.writeln(buildCSV(
 "L1 Code",
@@ -21,14 +22,21 @@ forEachCtgItem("UCoA Programme", item)
 {
 var catl3set=item.getCtgItemCategories("UCoA Programme Default");
 var catl3=catl3set[0];
-out.writeln(catl3);
+
 
 var catl2 = catl3.getCategoryParent();
-out.writeln(catl2);
+
 
 
 var catl1 = catl2.getCategoryParent();
-out.writeln(catl1);
+
+
+
+//Get DFF Ringfence value
+pk = catl3.getEntryRelationshipAttrib("UCoA Programme L 3/DFF Ringfence")[1];
+out.writeln(pk);
+valueDFFRingfence=ctgDFFRingfence.getEntryByPrimaryKey(pk).getEntryAttrib("UCoA Supporting Entity Auto Key Item/Name");
+out.writeln(valueDFFRingfence);
 
 
 export.writeln(buildCSV(
@@ -41,13 +49,14 @@ checkString(catl2.getEntryAttrib("UCoA Programme L 2/Admin Programme"),""),
 checkString(catl2.getEntryAttrib("UCoA Programme L 2/Voted"),""),
 checkString(catl3.getEntryAttrib("UCoA Programme Category/Code"),""),
 checkString(catl3.getEntryAttrib("UCoA Programme Category/Name"),""),
-checkString(catl3.getEntryAttrib("UCoA Programme L 3/DFF Ringfence"),""),
+checkString(valueDFFRingfence,""),
 checkString(catl3.getEntryAttrib("UCoA Programme L 3/DFF Estimate Row"),""),
 checkString(item.getEntryAttrib("UCoA Programme Item/Code"),""),
 checkString(item.getEntryAttrib("UCoA Programme Item/Name"),""),
-checkString(item.getEntryAttrib("UCoA Programme L 4/DFF Sub Segment"),""))); 
-
+checkString(item.getEntryRelationshipAttrib("UCoA Programme L 4/DFF Sub Segment")[1],""))); 
 
 
 
 }
+
+export.save(exportPath);
