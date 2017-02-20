@@ -1,0 +1,17 @@
+forEachCtgItem("UCoA Programme", item)
+{
+var catl3set=item.getCtgItemCategories("UCoA Programme Default");
+var catl3=catl3set[0];
+out.writeln(catl3);
+
+var catl2 = catl3.getCategoryParent();
+out.writeln(catl2);
+
+
+var catl1 = catl2.getCategoryParent();
+out.writeln(catl1);
+
+
+
+
+}
