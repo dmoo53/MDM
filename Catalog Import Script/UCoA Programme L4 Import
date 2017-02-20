@@ -22,16 +22,22 @@ function insertItem(attrs,DFFSub,ctr){
 	//currentDate = today();
 	//nextDate = currentDate;
 	//nextDate = nextDate.addDate("YEAR" , 10);
-	var newItem = new CtgItem();
+	var newItem = new CtgItem("UCoA Programme"");
+	var cat =ctr.getEntrySetByPrimaryKey(parentCategoryID);
+	var catset=[]
+	catset.add(cat)
+	newItem.moveCtgItemToCategories(catset);
+	
+
+	newItem.saveCtgItem();
+
 	newItem.setEntryAttrib("UCoA Programme Item/Code", itemID );
 	newItem.setEntryAttrib("UCoA Programme Item/Name", itemName );
 	newItem.setEntryAttrib("UCoA Programme Item/Enable", Enable );
 	var itemSub=DFFSub.getCtgItemByPrimaryKey(DFFSubSegment);
 	newItem.setEntryRelationshipAttribUsingItem("UCoA Programme L 4/DFF Sub Segment", itemSub);
 	
-	//categorize
-	var catset =ctr.getCategorySetByPrimaryKey("parentCategoryID");
-	newitem.moveCtgItemToCategories(catset);
+	
 	
 	
 	
