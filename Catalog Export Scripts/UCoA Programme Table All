@@ -1,3 +1,22 @@
+var exportPath="UCoA Exports/Programme/Programme_Table_All";
+var export=createOtherOut(exportPath);
+
+export.writeln(buildCSV(
+"L1 Code",
+"L1 Name",
+"L2 Code",
+"L2 Name",
+"DFF Control Budget",
+"Admin Programme",
+"Voted",
+"L3 Code",
+"L3 Name",
+"DFF Ringfence",
+"DFF Estimate Row",
+"L4 Code",
+"L4 Name",
+"DFF Sub Segment")); 
+
 forEachCtgItem("UCoA Programme", item)
 {
 var catl3set=item.getCtgItemCategories("UCoA Programme Default");
@@ -10,6 +29,9 @@ out.writeln(catl2);
 
 var catl1 = catl2.getCategoryParent();
 out.writeln(catl1);
+
+
+
 
 
 
