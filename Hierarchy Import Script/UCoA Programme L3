@@ -1,5 +1,4 @@
 
-
 function buildMyCategory(attrs,ctgDFFEst,ctgDFFRing,ctr){
 
 	
@@ -85,7 +84,7 @@ myCat.setEntryRelationshipAttribUsingItem("UCoA Programme L 3/DFF Estimate Row",
 parser = newCSVParser(in);
 
 var headers = parser.splitLine();
-var ctgDFFEst	=getCtgByName("UCoA Estimate Row);
+var ctgDFFEst	=getCtgByName("UCoA DFF Estimate Row");
 var ctgDFFRing=getCtgByName("UCoA DFF Ringfence");
 ctr = getCategoryTreeByName("UCoA Programme Default"); 
 bDone = false;
