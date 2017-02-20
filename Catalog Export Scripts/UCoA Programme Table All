@@ -31,7 +31,21 @@ var catl1 = catl2.getCategoryParent();
 out.writeln(catl1);
 
 
-
+export.writeln(buildCSV(
+checkString(catl1.getEntryAttrib("UCoA Programme Category/Code"),""),
+checkString(catl1.getEntryAttrib("UCoA Programme Category/Name"),""),
+checkString(catl2.getEntryAttrib("UCoA Programme Category/Code"),""),
+checkString(catl2.getEntryAttrib("UCoA Programme Category/Name"),""),
+checkString(catl2.getEntryAttrib("UCoA Programme L 2/DFF Control Budget"),""),
+checkString(catl2.getEntryAttrib("UCoA Programme L 2/Admin Programme"),""),
+checkString(catl2.getEntryAttrib("UCoA Programme L 2/Voted"),""),
+checkString(catl3.getEntryAttrib("UCoA Programme Category/Code"),""),
+checkString(catl3.getEntryAttrib("UCoA Programme Category/Name"),""),
+checkString(catl3.getEntryAttrib("UCoA Programme L 3/DFF Ringfence"),""),
+checkString(catl3.getEntryAttrib("UCoA Programme L 3/DFF Estimate Row"),""),
+checkString(item.getEntryAttrib("UCoA Programme Item/Code"),""),
+checkString(item.getEntryAttrib("UCoA Programme Item/Name"),""),
+checkString(item.getEntryAttrib("UCoA Programme L 4/DFF Sub Segment"),""))); 
 
 
 
