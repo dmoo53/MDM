@@ -30,8 +30,8 @@ function insertItem(attrs,DFFSub,ctr){
 	newItem.setEntryRelationshipAttribUsingItem("UCoA Programme L 4/DFF Sub Segment", itemSub);
 	
 	//categorize
-	var catset =ctr.getCategorySetByPrimaryKey("parentCategoryID")
-	newitem.moveCtgItemToCategories(catset)
+	var catset =ctr.getCategorySetByPrimaryKey("parentCategoryID");
+	newitem.moveCtgItemToCategories(catset);
 	
 	
 	
