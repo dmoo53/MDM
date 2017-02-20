@@ -62,11 +62,11 @@ function buildMyCategory(attrs,ctgDFFEst,ctgDFFRing,ctr){
 		//myCat.setCategoryAttrib("UCoA Programme Category/Third Party Control Account", ThirdPartyControlAccount);
 		//myCat.setCategoryAttrib("UCoA Programme Category/Reconcile", Reconcile);
 
-var item=ctgDFFEst.getCtgItemByPrimaryKey(DFFRingFence);
+var item=ctgDFFRing.getCtgItemByPrimaryKey(DFFRingFence);
 myCat.setEntryRelationshipAttribUsingItem("UCoA Programme L 3/DFF Ringfence", item);
 
 
-var item=ctgDFFRing.getCtgItemByPrimaryKey(DFFEstimate );
+var item=ctgDFFEst.getCtgItemByPrimaryKey(DFFEstimate );
 myCat.setEntryRelationshipAttribUsingItem("UCoA Programme L 3/DFF Estimate Row", item);
 
 
