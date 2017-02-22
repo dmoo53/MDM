@@ -1,0 +1,53 @@
+var exportPath="Exports/Analysis1_PC_Values_All";
+var export=createOtherOut(exportPath);
+ctgAnalysis1 = getCtgByName("UCoA Analysis 1");
+
+export.writeln(buildCSV(
+"Code",
+"Attribute Name",
+"Value")); 
+
+forEachCtgItem("UCoA Analysis 1", item)
+{
+
+
+
+//write Name
+export.writeln(buildCSV(
+checkString(item.getEntryAttrib("UCoA Analysis Item/Code"),""),
+"Name",
+checkString(item.getEntryAttrib("UCoA Analysis Item/Name"),"")
+)); 
+
+//write Enable
+export.writeln(buildCSV(
+checkString(item.getEntryAttrib("UCoA Analysis Item/Code"),""),
+"Enable",
+checkString(item.getEntryAttrib("UCoA Analysis Item/Enable"),"")
+)); 
+
+//write Parent
+export.writeln(buildCSV(
+checkString(item.getEntryAttrib("UCoA Analysis Item/Code"),""),
+"Parent",
+checkString(item.getEntryAttrib("UCoA Analysis Item/Parent"),"")
+)); 
+
+//write Allow Budgeting
+export.writeln(buildCSV(
+checkString(item.getEntryAttrib("UCoA Analysis Item/Code"),""),
+"Allow Budgeting",
+checkString(item.getEntryAttrib("UCoA Analysis Item/Allow Budgeting"),"")
+)); 
+
+//write Allow Posting
+export.writeln(buildCSV(
+checkString(item.getEntryAttrib("UCoA Analysis Item/Code"),""),
+"Allow Posting",
+checkString(item.getEntryAttrib("UCoA Analysis Item/Allow Posting"),"")
+)); 
+
+
+}
+
+export.save(exportPath);
