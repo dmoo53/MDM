@@ -1,0 +1,14 @@
+var library  = getScriptByPath("scripts/triggers/UCoAFunctionLibrary");
+export = library.getFunctionByName("exportAnalysisTable");
+
+
+
+var exportPath="Exports/Analysis1_Table_All";
+var exportPathArchive=("Exports/Archive/Analysis1_Table_All_T"+today());
+var ctg = "UCoA Analysis 1";
+
+ 
+export.invoke(exportPath, exportPathArchive,ctg);
+
+
+//res = getEnumeration.invoke("Account Type")
