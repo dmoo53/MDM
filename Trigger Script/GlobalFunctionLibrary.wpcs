@@ -12,3 +12,13 @@ function getCategory(ctrName, catCode){
 
 	return cat;
 }
+
+function clearCatalog(ctgName) 
+{
+
+forEachCtgItem(ctgName, itemDel)
+{
+deleteCtgItem(itemDel);
+
+}
+}
