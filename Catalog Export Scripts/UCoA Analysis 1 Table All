@@ -17,12 +17,12 @@ forEachCtgItem("UCoA Analysis 1", item)
 
 
 export.writeln(buildCSV(
-checkString(catl1.getEntryAttrib("UCoA Analysis Item/Code"),""),
-checkString(catl1.getEntryAttrib("UCoA Analysis Item/Name"),""),
-checkString(catl2.getEntryAttrib("UCoA Analysis Item/Enable"),""),
-checkString(catl2.getEntryAttrib("UCoA Analysis Item/Parent"),""),
-checkString(catl3.getEntryAttrib("UCoA Analysis Item/Allow Budgeting"),""),
-checkString(catl3.getEntryAttrib("UCoA Analysis Item/Name"),""),
+checkString(item.getEntryAttrib("UCoA Analysis Item/Code"),""),
+checkString(item.getEntryAttrib("UCoA Analysis Item/Name"),""),
+checkString(item.getEntryAttrib("UCoA Analysis Item/Enable"),""),
+checkString(item.getEntryAttrib("UCoA Analysis Item/Parent"),""),
+checkString(item.getEntryAttrib("UCoA Analysis Item/Allow Budgeting"),""),
+checkString(item.getEntryAttrib("UCoA Analysis Item/Allow Posting"),"")
 )); 
 
 
