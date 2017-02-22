@@ -1,0 +1,41 @@
+function exportAnalysisTable (exportPath, exportPathArchive,ctg)
+
+{
+
+var export=createOtherOut(exportPath);
+
+
+export.writeln(buildCSV(
+"Code",
+"Name",
+"Enabled",
+"Parent",
+"Allow Budgeting",
+"Allow Posting")); 
+
+forEachCtgItem(ctg, item)
+{
+
+
+
+
+export.writeln(buildCSV(
+checkString(item.getEntryAttrib("UCoA Analysis Item/Code"),""),
+checkString(item.getEntryAttrib("UCoA Analysis Item/Name"),""),
+checkString(item.getEntryAttrib("UCoA Analysis Item/Enable"),""),
+checkString(item.getEntryAttrib("UCoA Analysis Item/Parent"),""),
+checkString(item.getEntryAttrib("UCoA Analysis Item/Allow Budgeting"),""),
+checkString(item.getEntryAttrib("UCoA Analysis Item/Allow Posting"),"")
+)); 
+
+
+
+}
+
+export.save(exportPath);
+doc = getDocByPath(exportPath);
+doc.copyDoc(exportPathArchive);
+
+
+
+}
