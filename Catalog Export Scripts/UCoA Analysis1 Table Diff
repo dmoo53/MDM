@@ -1,0 +1,12 @@
+var library  = getScriptByPath("scripts/triggers/UCoAFunctionLibrary");
+export = library.getFunctionByName("exportAnalysisTable");
+
+
+
+var exportPath="Exports/Analysis1_Table_Diff";
+var exportPathArchive=("Exports/Archive/Analysis1_Table_Diff_"+today());
+var ctg = "UCoA Analysis 1";
+
+ 
+export.invoke(exportPath, exportPathArchive,ctg);
+
