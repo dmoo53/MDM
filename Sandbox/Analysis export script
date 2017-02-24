@@ -1,11 +1,11 @@
-var exportPathPCValues="Exports/Analysis1_PC_Values";
-var exportPathArchivePCValues=("Exports/Archive/Analysis1_PC_Values_"+today());
+var exportPathPCValues="Exports/Analysis1_PC_Values.csv";
+var exportPathArchivePCValues=("Exports/Archive/Analysis1_PC_Values_"+today()+".csv");
 
-var exportPathTableAT="Exports/Analysis1_Table_AT";
-var exportPathArchiveTableAT=("Exports/Archive/Analysis1_Table_AT_"+today());
+var exportPathTableAT="Exports/Analysis1_Table_AT.csv";
+var exportPathArchiveTableAT=("Exports/Archive/Analysis1_Table_AT_"+today()+".csv");
 
-var exportPathTableOracle="Exports/Analysis1_Table_Oracle";
-var exportPathArchiveTableOracle=("Exports/Archive/Analysis1_Table_Oracle_"+today());
+var exportPathTableOracle="Exports/Analysis1_Table_Oracle.csv";
+var exportPathArchiveTableOracle=("Exports/Archive/Analysis1_Table_Oracle_"+today()+".csv");
 
 
 var ctg = "UCoA Analysis 1";
@@ -26,7 +26,7 @@ var exportPCValues=createOtherOut(exportPathPCValues);
 exportPCValues.writeln(buildCSV(
 "Code",
 "Attribute",
-"Value")); 
+"Value")+"\r"); 
 
 var exportTableOracle=createOtherOut(exportPathTableOracle);
 exportTableOracle.writeln(buildCSV(
@@ -36,14 +36,14 @@ exportTableOracle.writeln(buildCSV(
 "Enabled",
 "Parent",
 "Allow Budgeting",
-"Allow Posting")); 
+"Allow Posting")+"\r"); 
 
 
 var exportTableAT=createOtherOut(exportPathTableAT);
 exportTableAT.writeln(buildCSV(
 "Code",
 "Name"
-)); 
+)+"\r"); 
 
 
 
@@ -90,41 +90,41 @@ exportPCValues.writeln(buildCSV(
 checkString(codeChanged,""),
 "Name",
 checkString(item.getEntryAttrib("UCoA Analysis Item/Name"),"")
-)); 
+)+"\r"); 
 
 //write Enable
 exportPCValues.writeln(buildCSV(
 checkString(codeChanged,""),
 "Enable",
 checkString(item.getEntryAttrib("UCoA Analysis Item/Enable"),"")
-)); 
+)+"\r"); 
 
 //write Parent
 exportPCValues.writeln(buildCSV(
 checkString(codeChanged,""),
 "Parent",
 checkString(item.getEntryAttrib("UCoA Analysis Item/Parent"),"")
-)); 
+)+"\r"); 
 
 //write Allow Budgeting
 exportPCValues.writeln(buildCSV(
 checkString(codeChanged,""),
 "Allow Budgeting",
 checkString(item.getEntryAttrib("UCoA Analysis Item/Allow Budgeting"),"")
-)); 
+)+"\r"); 
 
 //write Allow Posting
 exportPCValues.writeln(buildCSV(
 checkString(codeChanged,""),
 "Allow Posting",
 checkString(item.getEntryAttrib("UCoA Analysis Item/Allow Posting"),"")
-)); 
+)+"\r"); 
 
 //Export line to Admin Tool
 exportTableAT.writeln(buildCSV(
 checkString(codeChanged,""),
 checkString(item.getEntryAttrib("UCoA Analysis Item/Name"),"")
-)); 
+)+"\r"); 
 
 
 //export line to Table Oracle
@@ -138,7 +138,7 @@ checkString(item.getEntryAttrib("UCoA Analysis Item/Enable"),""),
 checkString(item.getEntryAttrib("UCoA Analysis Item/Parent"),""),
 checkString(item.getEntryAttrib("UCoA Analysis Item/Allow Budgeting"),""),
 checkString(item.getEntryAttrib("UCoA Analysis Item/Allow Posting"),"")
-)); 
+)+"\r"); 
 
 }
 
