@@ -7,7 +7,7 @@ entry.setEntryAttrib("UCoA Analysis Item/Allow Posting", "Y") ;
 //assign to default category
 var library  = getScriptByPath("scripts/triggers/GlobalFunctionLibrary");
 getCat = library.getFunctionByName("getCategory");
-Cat = getCat.invoke("UCoA Analysis Default","List of Analysis Codes");
+Cat = getCat.invoke("UCoA Analysis Default","List of Analysis 1 Codes");
 item.mapCtgItemToCategory(Cat);
 
 
