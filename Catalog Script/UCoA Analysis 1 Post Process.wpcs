@@ -21,9 +21,7 @@ var node = rootnode.getEntryNode("UCoA Analysis Item/Code");
 var NameAfterRe = rexp.substitute(Name,"OK");
 if(NameAfterRe!="OK"){
 	// fail validation
-	node.throwValidationError("PATTERN",NameAfterRe);
+	node.throwValidationError("PATTERN","The code should be five digits or should be one of the historical shorter codes");
 } else { 
 	//OK
 }
-//remove this line
-//entry.setEntryAttrib("UCoA Analysis Item/Name", NameAfterRe) ;
