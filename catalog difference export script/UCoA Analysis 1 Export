@@ -1,0 +1,275 @@
+var exportPathsPCAttributes="Exports/Analysis1_PC_Attributes.csv";
+var exportPathArchivePCAttributes=("Exports/Archive/Analysis1_PC_Attributes_"+today()+".csv");
+
+var exportPathsPCHierarchy="Exports/Analysis1_PC_Hierarchy.csv";
+var exportPathArchivePCHierarchy=("Exports/Archive/Analysis1_PC_Hierarchy_"+today()+".csv");
+
+var exportPathTableAT="Exports/Analysis1_Table_AT.csv";
+var exportPathArchiveTableAT=("Exports/Archive/Analysis1_Table_AT_"+today()+".csv");
+
+var exportPathTableEPM="Exports/Analysis1_EPM.csv";
+var exportPathArchiveTableEPM=("Exports/Archive/Analysis1_EPM_"+today()+".csv");
+
+var exportPathTableOracle="Exports/Analysis1_Table_Oracle.csv";
+var exportPathArchiveTableOracle=("Exports/Archive/Analysis1_Table_Oracle_"+today()+".csv");
+
+
+var ctg = "UCoA Analysis 1";
+
+
+
+function exportAnalysis (exportPathTableEPM,exportPathArchiveTableEPM,exportPathsPCHierarchy, exportPathArchivePCHierarchy,exportPathsPCAttributes,exportPathArchivePCAttributes,exportPathTableAT,exportPathArchiveTableAT,exportPathTableOracle,exportPathArchiveTableOracle,ctg)
+
+{
+//myCtg=getCtgByName(ctg);
+//mySpec=getSpecByName("UCoA Analysis export all table");
+//mySpecMap=getSpecMapByName("UCoA Analysis 1 to export");
+//out.writeln("myCTg " + myCtg);
+//myCtg.exportCatalog(mySpec,mySpecMap);
+
+//Build Headers
+var exportPCHierarchy=createOtherOut(exportPathsPCHierarchy);
+exportPCHierarchy.writeln(
+"\"ChildCode\","+
+"\"ParentCode\""+"\r"); 
+
+
+var exportPCAttributes=createOtherOut(exportPathsPCAttributes);
+exportPCAttributes.writeln(
+"\"Code\","+
+"\"Attribute\","+
+"\"Value\""+"\r"); 
+
+//Write the line for name attribute for top level 
+
+exportPCAttributes.writeln(
+"\"ALLANAL1\","+
+"\"Description\","+
+"\"All Analysis 1\""+"\r"); 
+
+
+
+var exportTableOracle=createOtherOut(exportPathTableOracle);
+exportTableOracle.writeln(buildCSV(
+"Status",
+"Code",
+"Name",
+"Enabled",
+"Parent",
+"Allow Budgeting",
+"Allow Posting")+"\r"); 
+
+
+//Tailor EPM to current format
+var exportTableEPM=createOtherOut(exportPathTableEPM);
+exportTableEPM.writeln(buildCSV(
+"",
+"Analysis One - Values",
+"",
+"",
+"",
+"",
+"",
+"",
+"")+"\r"); 
+exportTableEPM.writeln(buildCSV(
+"",
+"",
+"",
+"",
+"",
+"",
+"",
+"",
+"")+"\r"); 
+exportTableEPM.writeln(buildCSV(
+"",
+"",
+"",
+"",
+"",
+"",
+"",
+"",
+"")+"\r"); 
+exportTableEPM.writeln(buildCSV(
+"",
+"",
+"",
+"",
+"",
+"",
+"",
+"",
+"")+"\r"); 
+exportTableEPM.writeln(buildCSV(
+"j",
+"Value",
+"Description",
+"Enabled",
+"Parent",
+"Allow Budgeting",
+"Allow Posting",
+"Closed?",
+"Hierarchy Level")+"\r"); 
+
+
+var exportTableAT=createOtherOut(exportPathTableAT);
+exportTableAT.writeln(buildCSV(
+"Code",
+"Name"
+)+"\r"); 
+
+
+
+
+forEachCtgItem( item)
+{
+//get Status
+status=item.getCtgItemDiffStatus();
+// pad the code with zeroes in case it is shorter
+codeRaw=item.getEntryAttrib("UCoA Analysis Item/Code");
+
+codeLength=length(codeRaw);
+
+
+if (codeLength==1)
+{
+	codeChanged="0000"+codeRaw;
+}
+
+if (codeLength==2)
+{
+	codeChanged="000"+codeRaw;
+}
+
+if (codeLength==3)
+{
+	codeChanged="00"+codeRaw;
+}
+if (codeLength==4)
+{
+	codeChanged="0"+codeRaw;
+}
+if (codeLength==5)
+{
+	codeChanged=codeRaw;
+}
+
+
+out.writeln(codeLength + "_" +codeRaw +"_"+codeChanged);
+
+if (status!="D")
+{
+//export line to EPM file
+
+exportTableEPM.writeln(buildCSV(
+"",
+checkString(codeChanged,""),
+checkString(item.getEntryAttrib("UCoA Analysis Item/Name"),""),
+checkString(item.getEntryAttrib("UCoA Analysis Item/Enable"),""),
+checkString(item.getEntryAttrib("UCoA Analysis Item/Parent"),""),
+checkString(item.getEntryAttrib("UCoA Analysis Item/Allow Budgeting"),""),
+checkString(item.getEntryAttrib("UCoA Analysis Item/Allow Posting"),""),
+"No",
+"1"
+)+"\r"); 
+
+//export line to PC Hierarchy
+
+exportPCHierarchy.writeln(
+"\""+checkString(codeChanged,"")+"\""+","+
+"\"ALLANAL1\""+"\r"); 
+
+
+//export lines to PC Attributes
+
+
+//write Name
+exportPCAttributes.writeln(
+"\""+checkString(codeChanged,"")+"\""+","+
+"\"Description\""+","+
+"\""+checkString(item.getEntryAttrib("UCoA Analysis Item/Name"),"")+"\""
++"\r"); 
+
+//write Enable
+exportPCAttributes.writeln(
+"\""+checkString(codeChanged,"")+"\""+","+
+"\"Enable\""+","+
+"\""+checkString(item.getEntryAttrib("UCoA Analysis Item/Enable"),"")+"\""
++"\r"); 
+
+exportPCAttributes.writeln(
+"\""+checkString(codeChanged,"")+"\""+","+
+"\"Parent\""+","+
+"\""+checkString(item.getEntryAttrib("UCoA Analysis Item/Parent"),"")+"\""
++"\r"); 
+
+exportPCAttributes.writeln(
+"\""+checkString(codeChanged,"")+"\""+","+
+"\"Allow Budgeting\""+","+
+"\""+checkString(item.getEntryAttrib("UCoA Analysis Item/Allow Budgeting"),"")+"\""
++"\r");  
+
+exportPCAttributes.writeln(
+"\""+checkString(codeChanged,"")+"\""+","+
+"\"Allow Posting\""+","+
+"\""+checkString(item.getEntryAttrib("UCoA Analysis Item/Allow Posting"),"")+"\""
++"\r"); 
+
+
+
+//Export line to Admin Tool
+
+exportTableAT.writeln(buildCSV(
+checkString(codeChanged,""),
+checkString(item.getEntryAttrib("UCoA Analysis Item/Name"),"")
+)+"\r"); 
+}
+
+//export line to Table Oracle
+
+if (status!="U")
+{
+exportTableOracle.writeln(buildCSV(
+status,
+checkString(codeChanged,""),
+checkString(item.getEntryAttrib("UCoA Analysis Item/Name"),""),
+checkString(item.getEntryAttrib("UCoA Analysis Item/Enable"),""),
+checkString(item.getEntryAttrib("UCoA Analysis Item/Parent"),""),
+checkString(item.getEntryAttrib("UCoA Analysis Item/Allow Budgeting"),""),
+checkString(item.getEntryAttrib("UCoA Analysis Item/Allow Posting"),"")
+)+"\r"); 
+}
+}
+
+exportPCAttributes.save(exportPathsPCAttributes);
+docPCAttributes = getDocByPath(exportPathsPCAttributes);
+docPCAttributes.copyDoc(exportPathArchivePCAttributes);
+
+exportPCHierarchy.save(exportPathsPCHierarchy);
+docPCHierarchy = getDocByPath(exportPathsPCHierarchy);
+docPCHierarchy.copyDoc(exportPathArchivePCHierarchy);
+
+
+exportTableAT.save(exportPathTableAT);
+docTableAT = getDocByPath(exportPathTableAT);
+docTableAT.copyDoc(exportPathArchiveTableAT);
+
+exportTableEPM.save(exportPathTableEPM);
+docTableEPM = getDocByPath(exportPathTableEPM);
+docTableEPM.copyDoc(exportPathArchiveTableEPM);
+
+exportTableOracle.save(exportPathTableOracle);
+docTableOracle = getDocByPath(exportPathTableOracle);
+docTableOracle.copyDoc(exportPathArchiveTableOracle);
+
+
+
+
+
+}
+
+
+
+exportAnalysis (exportPathTableEPM,exportPathArchiveTableEPM,exportPathsPCHierarchy, exportPathArchivePCHierarchy,exportPathsPCAttributes, exportPathArchivePCAttributes,exportPathTableAT,exportPathArchiveTableAT,exportPathTableOracle,exportPathArchiveTableOracle,ctg);
