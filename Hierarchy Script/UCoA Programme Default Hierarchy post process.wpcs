@@ -72,3 +72,52 @@ for(i=1; i<validationRules.size();i++)
 	//no validation 
 	}
 }
+
+//check old codes for L2
+//check old L1 Code
+if (itemLevel==2)
+{
+var rexp =  buildRE("^\d\d\d\d(A|N|D)T$",1);	
+var Name = checkString(entry.getEntryAttrib("UCoA Programme L 2/Old L 1 Code"),"");
+var rootnode = entry.getRootEntryNode();
+var node = rootnode.getEntryNode("UCoA Programme L 2/Old L 1 Code");
+var NameAfterRe = rexp.substitute(Name,"OK");
+
+if(NameAfterRe!="OK"){
+	// fail validation
+	node.throwValidationError("PATTERN","The L1 Old code should be four digits then either (A,N,D) and then T");
+} else { 
+	//OK
+}
+
+
+}
+
+
+//check old L2 Code
+if (itemLevel==2)
+{
+var rexp =  buildRE("(000000|000001|\d\d\d\d\D\D)",1);	
+var Name = checkString(entry.getEntryAttrib("UCoA Programme L 2/Old L 2 Code"),"");
+var rootnode = entry.getRootEntryNode();
+var node = rootnode.getEntryNode("UCoA Programme L 2/Old L 2 Code");
+var NameAfterRe = rexp.substitute(Name,"OK");
+
+if(NameAfterRe!="OK"){
+	// fail validation
+	node.throwValidationError("PATTERN","The L2 Old code should be either 000000 or 000001 or four digits two leters");
+} else { 
+	//OK
+}
+
+
+}
+
+
+
+
+//no old code validation if level is not 2
+else{
+
+}
+
