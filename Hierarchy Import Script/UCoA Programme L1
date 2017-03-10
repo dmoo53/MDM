@@ -1,0 +1,86 @@
+function buildMyCategory(attrs,ctr){
+
+	
+
+	code	= attrs[0];
+	description 	= attrs[1];
+
+
+	
+
+	key = code;
+	//Replaced 101 with1000TT for top level
+	
+	//path = "1000TT" + "/" + code + "/" + description;
+	path = code;
+	
+	//out.writeln(ctr);
+	
+	var myCat;
+	
+	cats = ctr.getCategorySetByPrimaryKey(key);
+	
+	if (cats.getCategorySetSize() < 1){
+	
+               myCat = new Category(ctr, path, "/", key);
+
+	}else{
+	
+		forEachCategorySetElement(cats, cat) { 
+			
+			myCat = cat;	
+		}
+	}
+
+	if (myCat != null){
+		
+		out.writeln("Building category " + key + "....");
+		
+		out.writeln("key: " + key);
+		out.writeln("path: " + path);
+		out.writeln("displayName: " + categoryName);
+
+		myCat.setCategoryAttrib("UCoA Programme Category/Name", description);
+		myCat.setCategoryAttrib("UCoA Programme Category/Enable", "Y");
+		//myCat.setCategoryAttrib("UCoA Programme Category/Parent", Parent);
+		//myCat.setCategoryAttrib("UCoA Programme Category/Allow Budgeting", AllowBudgeting);
+		//myCat.setCategoryAttrib("UCoA Programme Category/Allow Posting", AllowPosting);
+		//myCat.setCategoryAttrib("UCoA Programme Category/Account Type", AccountType);
+		//myCat.setCategoryAttrib("UCoA Programme Category/Third Party Control Account", ThirdPartyControlAccount);
+		//myCat.setCategoryAttrib("UCoA Programme Category/Reconcile", Reconcile);
+
+
+
+	//I think the line below just writes out attributes, I have commented it in.
+	//getScriptByPath("/scripts/triggers/WPC.Utils.Global.FunctionLibrary").getFunctionByName("writeCat").invoke(myCat);
+
+		//out.writeln(myCat);
+		ctr.saveCategoryTree();
+	}
+
+}
+parser = newCSVParser(in);
+
+var headers = parser.splitLine();
+
+//var ctg=getCtgByName("UCoA DFF Control Budget");
+var ctr = getCategoryTreeByName("UCoA Programme Default"); 
+bDone = false;
+
+//for (lineCount=0; lineCount < 5; lineCount++){
+while(!bDone){
+	attrs = parser.splitLine();
+	
+	
+		 
+	bDone = (null == attrs);
+	
+	if (bDone==false){
+						
+		  if (attrs != null){
+  			  	
+			buildMyCategory(attrs,ctr);
+
+		}
+	}
+}
