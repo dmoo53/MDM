@@ -1,6 +1,3 @@
-
-
-
 //set values
 entry.setEntryAttrib("UCoA Programme Category/Parent", "Y") ;
 entry.setEntryAttrib("UCoA Programme Category/Allow Budgeting", "N") ;
